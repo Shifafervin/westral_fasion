@@ -1,0 +1,1282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Variant Management</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+
+/* ================= RESET ================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f6f3f0;
+    font-family:'Manrope',sans-serif;
+    color:#261815;
+}
+
+/* ================= MAIN ================= */
+.main{
+    width:100%;
+    min-height:100vh;
+    padding:34px 42px;
+}
+/* TOPBAR */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:26px;
+}
+
+.search-box{
+    width:300px;
+    height:42px;
+
+    background:#f1ece8;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:0 14px;
+}
+
+.search-box span{
+    font-size:18px;
+    color:#998b81;
+}
+
+.search-box input{
+    width:100%;
+
+    border:none;
+    outline:none;
+
+    background:none;
+
+    font-size:13px;
+}
+
+.top-icons span{
+    color:#77685f;
+    cursor:pointer;
+}
+
+/* ================= HEADER ================= */
+
+.header{
+    margin-bottom:24px;
+}
+
+.header h1{
+    font-family:'Noto Serif',serif;
+    font-size:42px;
+    line-height:1.1;
+}
+
+.header p{
+    margin-top:10px;
+
+    color:#8f8075;
+
+    font-size:14px;
+}
+
+/* ================= PRODUCT OVERVIEW ================= */
+
+.product-card{
+    background:#f8f5f2;
+
+    border-radius:24px;
+
+    padding:22px 26px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:26px;
+
+    border:1px solid #eee6df;
+}
+
+.product-left{
+    display:flex;
+    align-items:center;
+    gap:24px;
+}
+
+.product-left img{
+    width:90px;
+    height:120px;
+
+    object-fit:cover;
+}
+
+.collection{
+    font-size:10px;
+    letter-spacing:2px;
+    color:#a09085;
+
+    margin-bottom:6px;
+}
+
+.product-name{
+    font-family:'Noto Serif',serif;
+    font-size:28px;
+    line-height:1.1;
+}
+
+.tags{
+    margin-top:14px;
+
+    display:flex;
+    gap:10px;
+}
+
+.tag{
+    background:#efe9e3;
+
+    color:#75665d;
+
+    padding:7px 14px;
+
+    border-radius:20px;
+
+    font-size:11px;
+    font-weight:700;
+}
+
+.product-stats{
+    display:flex;
+    gap:60px;
+}
+
+.stat{
+    text-align:center;
+}
+
+.stat small{
+    display:block;
+
+    margin-bottom:10px;
+
+    color:#9c8d82;
+
+    font-size:10px;
+
+    letter-spacing:1px;
+}
+
+.stat h2{
+    font-size:28px;
+    font-family:'Noto Serif',serif;
+}
+
+/* ================= FILTER BAR ================= */
+
+.filter-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:18px;
+}
+
+.variant-search{
+    width:340px;
+    height:42px;
+
+    background:#f3eeea;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:0 14px;
+}
+
+.variant-search input{
+    width:100%;
+
+    border:none;
+    outline:none;
+
+    background:none;
+
+    font-size:13px;
+}
+
+.variant-search span{
+    color:#9b8d83;
+    font-size:18px;
+}
+
+.filter-actions{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.filter-btn{
+    height:42px;
+
+    border:none;
+
+    padding:0 18px;
+
+    background:#f3eeea;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    cursor:pointer;
+
+    color:#685b52;
+
+    font-weight:600;
+
+    font-size:12px;
+}
+
+.add-btn{
+    height:42px;
+
+    border:none;
+
+    background:#341818;
+
+    color:white;
+
+    padding:0 20px;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    cursor:pointer;
+
+    font-size:12px;
+    font-weight:700;
+}
+
+/* ================= TABLE ================= */
+
+.table-card{
+    background:#fcfaf8;
+
+    border-radius:24px;
+
+    overflow:hidden;
+
+    border:1px solid #eee7e1;
+}
+
+/* TABLE HEAD */
+
+.table-head{
+    display:grid;
+
+    grid-template-columns:
+    80px
+    2fr
+    1fr
+    1fr
+    1fr
+    1fr
+    120px;
+
+    padding:22px 26px;
+
+    border-bottom:1px solid #f0e9e3;
+}
+
+.table-head div{
+    font-size:10px;
+    letter-spacing:1px;
+
+    color:#9c8e84;
+
+    font-weight:700;
+}
+
+/* ROW */
+
+.row{
+    display:grid;
+
+    grid-template-columns:
+    80px
+    2fr
+    1fr
+    1fr
+    1fr
+    1fr
+    120px;
+
+    align-items:center;
+
+    padding:24px 26px;
+
+    border-bottom:1px solid #f3ede8;
+}
+
+/* RADIO */
+
+.default-radio{
+    width:14px;
+    height:14px;
+
+    border:2px solid #d4c8bf;
+
+    border-radius:50%;
+
+    position:relative;
+}
+
+.default-radio.active{
+    border-color:#341818;
+}
+
+.default-radio.active::after{
+    content:"";
+
+    position:absolute;
+
+    width:6px;
+    height:6px;
+
+    background:#341818;
+
+    border-radius:50%;
+
+    top:50%;
+    left:50%;
+
+    transform:translate(-50%,-50%);
+}
+
+/* VARIANT */
+
+.variant-info{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.variant-info img{
+    width:52px;
+    height:52px;
+
+    border-radius:10px;
+
+    object-fit:cover;
+}
+
+.variant-details h4{
+    font-size:14px;
+    margin-bottom:4px;
+}
+
+.variant-details small{
+    color:#9a8b81;
+    font-size:10px;
+}
+
+/* SKU */
+
+.sku{
+    font-size:12px;
+    color:#786a60;
+    line-height:1.5;
+}
+
+/* PRICE */
+
+.price{
+    font-size:15px;
+    font-weight:700;
+}
+
+/* STATUS */
+
+.badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:6px 14px;
+
+    border-radius:20px;
+
+    font-size:10px;
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+.shipped{
+    background:#3d2525;
+    color:white;
+}
+
+.processing{
+    background:#efe3d7;
+    color:#8a6c56;
+}
+
+.draft{
+    background:#ececec;
+    color:#666;
+}
+
+/* STOCK */
+
+.stock h4{
+    font-size:16px;
+    margin-bottom:4px;
+}
+
+.stock small{
+    font-size:10px;
+    color:#918278;
+}
+
+.low-stock{
+    color:#a54f4f !important;
+}
+
+/* ACTIONS */
+
+.actions{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.actions span{
+    font-size:18px;
+    color:#7b6d63;
+    cursor:pointer;
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:18px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.footer small{
+    color:#8f8177;
+    font-size:11px;
+}
+
+.pagination{
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.page{
+    width:30px;
+    height:30px;
+
+    border-radius:8px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#f2ece7;
+
+    font-size:12px;
+
+    color:#6f6258;
+
+    cursor:pointer;
+}
+
+.page.active{
+    background:#341818;
+    color:white;
+}
+.variant-search button{
+
+    border:none;
+    background:none;
+
+    display:flex;
+    align-items:center;
+
+    cursor:pointer;
+}a{
+    text-decoration:none;
+}/* ================= MESSAGE TOAST ================= */
+
+.message-container{
+
+    position:fixed;
+
+    top:30px;
+    right:30px;
+
+    z-index:9999;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:14px;
+}
+
+.alert{
+
+    min-width:320px;
+
+    padding:16px 18px;
+
+    border-radius:16px;
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    color:#ffffff;
+
+    font-size:14px;
+    font-weight:600;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.12);
+
+    animation:slideIn .35s ease;
+
+    transition:.3s;
+}
+
+/* SUCCESS */
+
+.alert.success{
+
+    background:linear-gradient(
+        90deg,
+        #059669,
+        #10b981
+    );
+}
+
+/* ERROR */
+
+.alert.error{
+
+    background:linear-gradient(
+        90deg,
+        #dc2626,
+        #ef4444
+    );
+}
+
+.alert span{
+
+    font-size:22px;
+}
+
+/* ANIMATION */
+
+@keyframes slideIn{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateX(40px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        translateX(0);
+
+    }
+}
+.breadcrumbs{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+    font-size:13px;
+}
+
+.breadcrumbs a{
+    text-decoration:none;
+    color:#7b6d63;
+    font-weight:600;
+}
+
+.breadcrumbs span{
+    color:#a09186;
+}
+.filter-select{
+    height:42px;
+    border:none;
+    background:#f3eeea;
+    border-radius:12px;
+    padding:0 16px;
+    font-size:12px;
+    font-weight:600;
+    color:#685b52;
+    outline:none;
+    cursor:pointer;
+}
+
+.header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:26px;
+}
+
+.top-add-btn{
+    flex-shrink:0;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+        {% if messages %}
+
+<div class="message-container">
+
+    {% for message in messages %}
+
+        <div class="alert {{ message.tags }}">
+
+            <span class="material-symbols-outlined">
+
+                {% if 'success' in message.tags %}
+
+                    check_circle
+
+                {% else %}
+
+                    error
+
+                {% endif %}
+
+            </span>
+
+            {{ message }}
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+
+        
+
+ 
+<!-- MAIN -->
+
+<div class="main">
+
+    <div class="breadcrumbs">
+
+    <a href="{% url 'product_management' %}">
+        Products
+    </a>
+
+    <span>›</span>
+
+    <span>
+        Variants
+    </span>
+
+</div>
+
+    <!-- HEADER -->
+
+<div class="header-top">
+
+    <div>
+
+        <h1>
+            Variant Management
+        </h1>
+
+        <p>
+            Configure and manage product SKU variations for your atelier collections.
+        </p>
+
+    </div>
+
+    <a
+    href="{% url 'add_variant' product.id %}"
+    class="add-btn top-add-btn"
+    >
+
+        <span class="material-symbols-outlined">
+            add
+        </span>
+
+        Add Variant
+
+    </a>
+
+</div>
+
+    <!-- PRODUCT OVERVIEW -->
+
+    <div class="product-card">
+
+        <div class="product-left">
+
+            {% with image=default_variant.images.first %}
+
+    {% if image and image.image %}
+
+        <img src="{{ image.image.url }}">
+
+    {% else %}
+
+        <img src="{% static 'images/no-image.png' %}">
+
+    {% endif %}
+
+{% endwith %}
+            <div>
+
+                <div class="collection">
+
+    PRODUCT COLLECTION
+
+</div>
+
+<div class="product-name">
+
+    {{ product.product_name }}
+
+</div>
+
+<div class="tags">
+
+    <div class="tag">
+
+        {{ product.category.category_name }}
+
+    </div>
+
+    {% if product.fit_type %}
+
+    <div class="tag">
+
+        {{ product.fit_type }}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+            </div>
+
+        </div>
+
+        <div class="product-stats">
+
+            <div class="stat">
+
+                <small>TOTAL VARIANTS</small>
+
+               <h2>{{ total_variants }}</h2>
+
+            </div>
+
+            <div class="stat">
+
+                <small>ACTIVE</small>
+
+                <h2>{{ active_variants }}</h2>
+
+            </div>
+            <div class="stat">
+
+                <small>OUT OF STOCK</small>
+
+                <h2>{{ out_of_stock }}</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FILTER BAR -->
+
+    <div class="filter-bar">
+
+        <form
+method="GET"
+class="variant-search"
+>
+
+    <!-- SEARCH BUTTON -->
+
+    <button
+    type="submit"
+    style="
+    border:none;
+    background:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    "
+    >
+
+        <span class="material-symbols-outlined">
+            search
+        </span>
+
+    </button>
+
+    <!-- SEARCH INPUT -->
+
+    <input
+    type="text"
+    name="search"
+    placeholder="Search SKU or attribute..."
+    value="{{ search }}">
+
+</form>
+
+        <div class="filter-actions">
+
+<div class="filter-actions">
+
+<form method="GET">
+
+    <select
+    name="stock"
+    class="filter-select"
+    onchange="this.form.submit()"
+    >
+
+        <option value="">
+            All Stock
+        </option>
+
+        <option
+        value="in"
+        {% if stock_filter == "in" %}
+        selected
+        {% endif %}
+        >
+            In Stock
+        </option>
+
+        <option
+        value="out"
+        {% if stock_filter == "out" %}
+        selected
+        {% endif %}
+        >
+            Out of Stock
+        </option>
+
+    </select>
+
+</form>
+    
+<form method="GET">
+
+    <select
+    name="status"
+    class="filter-select"
+    onchange="this.form.submit()"
+    >
+
+        <option value="">
+            All Status
+        </option>
+
+        <option
+        value="active"
+        {% if status_filter == "active" %}
+        selected
+        {% endif %}
+        >
+            Active
+        </option>
+
+        <option
+        value="disabled"
+        {% if status_filter == "disabled" %}
+        selected
+        {% endif %}
+        >
+            Disabled
+        </option>
+
+    </select>
+
+</form>
+
+</div>
+            
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <!-- TABLE HEAD -->
+
+        <div class="table-head">
+
+            <div>DEFAULT</div>
+
+            <div>VARIANTS</div>
+
+            <div>SKU</div>
+
+            <div>PRICE</div>
+
+            <div>STATUS</div>
+
+            <div>STOCK</div>
+
+            <div>ACTIONS</div>
+
+        </div>
+
+        <!-- ROW 1 -->
+
+        {% for variant in variants %}
+
+<div class="row">
+
+    <!-- DEFAULT -->
+
+    <div>
+
+        {% if variant.is_default %}
+
+            <div class="default-radio active"></div>
+
+        {% else %}
+
+            <div class="default-radio"></div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- VARIANT INFO -->
+
+    <div class="variant-info">
+
+        {% with image=variant.images.first %}
+
+            {% if image %}
+
+                <img src="{{ image.image.url }}">
+
+            {% else %}
+
+                <img src="{% static 'images/no-image.png' %}">
+
+            {% endif %}
+
+        {% endwith %}
+
+        <div class="variant-details">
+
+            <h4>
+
+                {{ variant.color }} / {{ variant.size }}
+
+            </h4>
+
+            <small>
+
+                SKU :
+                {{ variant.sku }}
+
+            </small>
+
+        </div>
+
+    </div>
+
+    <!-- SKU -->
+
+    <div class="sku">
+
+        {{ variant.sku }}
+
+    </div>
+ 
+    <!-- PRICE -->
+
+    <div class="price">
+
+        ₹{{ variant.price }}
+
+    </div>
+
+    <!-- STATUS -->
+
+    <div>
+
+        {% if variant.is_active %}
+
+            <span class="badge shipped">
+
+                ACTIVE
+
+            </span>
+
+        {% else %}
+
+            <span class="badge draft">
+
+                DISABLED
+
+            </span>
+
+        {% endif %}
+
+    </div>
+
+    <!-- STOCK -->
+
+    <div class="stock">
+
+        <h4>
+
+            {{ variant.stock }}
+
+        </h4>
+
+        {% if available_stock <= 0 %}
+
+            <small class="low-stock">
+
+                LOW STOCK
+
+            </small>
+
+        {% else %}
+
+            <small>
+
+                IN STOCK
+
+            </small>
+
+        {% endif %}
+
+    </div>
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <!-- EDIT VARIANT -->
+
+        <a href="{% url 'edit_variant' variant.id %}">
+
+            <span class="material-symbols-outlined">
+
+                edit
+
+            </span>
+
+        </a>
+
+        <!-- REMOVE VARIANT -->
+
+        <a href="{% url 'delete_variant_page' variant.id %}">
+
+            <span class="material-symbols-outlined">
+
+                delete
+
+            </span>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% empty %}
+
+<div
+style="
+padding:40px;
+text-align:center;
+font-size:14px;
+color:#8f8177;
+">
+
+   {% if search %}
+
+    No variants found matching "{{ search }}".
+
+{% else %}
+
+    No variants available.
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+<small>
+
+    Showing
+    {{ variants.start_index }}
+    -
+    {{ variants.end_index }}
+
+    of
+
+    {{ variants.paginator.count }}
+    variants
+
+</small>
+
+<div class="pagination">
+
+    {% if variants.has_previous %}
+
+    <a
+    href="?page={{ variants.previous_page_number }}&search={{ search }}&status={{ status_filter }}&stock={{ stock_filter }}"
+    class="page"
+    >
+
+        ‹
+
+    </a>
+
+    {% endif %}
+
+    {% for num in variants.paginator.page_range %}
+
+        <a
+        href="?page={{ num }}&search={{ search }}&status={{ status_filter }}&stock={{ stock_filter }}"
+        class="page {% if variants.number == num %}active{% endif %}"
+        >
+
+            {{ num }}
+
+        </a>
+
+    {% endfor %}
+
+    {% if variants.has_next %}
+
+    <a
+    href="?page={{ variants.next_page_number }}&search={{ search }}&status={{ status_filter }}&stock={{ stock_filter }}"
+    class="page"
+    >
+
+        ›
+
+    </a>
+
+    {% endif %}
+
+</div>
+
+    </div>
+
+</div>
+<script>
+
+history.pushState(null, null, location.href);
+
+window.onpopstate = function () {
+
+    window.location.href = "{% url 'product_management' %}";
+
+};
+
+</script>
+
+<script>
+
+setTimeout(()=>{
+
+    const alerts =
+        document.querySelectorAll('.alert');
+
+    alerts.forEach((alert)=>{
+
+        alert.style.opacity = '0';
+
+        alert.style.transform =
+            'translateX(40px)';
+
+        setTimeout(()=>{
+
+            alert.remove();
+
+        },300);
+
+    });
+
+},2000);
+
+</script>
+</body>
+</html>

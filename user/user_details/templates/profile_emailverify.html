@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verify OTP</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* CARD */
+.container {
+    width: 400px;
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+}
+
+/* TITLE */
+h2 {
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 25px;
+}
+
+/* OTP BOXES */
+.otp-box {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.otp-box input {
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+}
+
+/* BUTTON */
+.btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    background: #5a3b2e;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* RESEND */
+.resend {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.resend a {
+    color: #5a3b2e;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* TIMER */
+.timer {
+    margin: 15px auto;
+    background: #f3e4d8;
+    color: #5a3b2e;
+    width: fit-content;
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+/* BACK */
+.back {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.back a {
+    text-decoration: none;
+    color: #333;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Verify OTP</h2>
+    <div class="subtitle">
+        We sent a 6-digit code to your email. Enter it below.
+    </div>
+
+    <form method="POST">
+    {% csrf_token %}
+
+    <div class="otp-box">
+        <input type="text" name="otp1" maxlength="1" required>
+        <input type="text" name="otp2" maxlength="1" required>
+        <input type="text" name="otp3" maxlength="1" required>
+        <input type="text" name="otp4" maxlength="1" required>
+        <input type="text" name="otp5" maxlength="1" required>
+        <input type="text" name="otp6" maxlength="1" required>
+    </div>
+
+    <button class="btn" type="submit">VERIFY & PROCEED</button>
+</form>
+
+    <div class="resend">
+        Didn't receive the code? <a href="{% url 'user_details:resend_email_otp' %}">Resend</a>
+    </div>
+
+    <div class="timer" id="timer">01:00</div>
+
+    <div class="back">
+        <a href="{% url "login" %}">← Back to login</a>
+    </div>
+
+</div>
+
+<script>
+let time = 60; // 🔥 1 minute
+
+let timer = document.getElementById("timer");
+
+let countdown = setInterval(() => {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+
+    timer.innerHTML = 
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
+
+    time--;
+
+    if (time < 0) {
+        clearInterval(countdown);
+        timer.innerHTML = "00:00";
+    }
+}, 1000);
+</script>
+<script>
+const inputs = document.querySelectorAll(".otp-box input");
+
+inputs.forEach((input, index) => {
+    input.addEventListener("input", () => {
+        if (input.value && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+    });
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
+});
+</script>
+
+</body>
+</html>

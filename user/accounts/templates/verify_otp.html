@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verify OTP</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT */
+.left {
+    width: 50%;
+    position: relative;
+}
+
+.left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.brand {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.bottom-text {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+}
+
+.bottom-text h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+/* RIGHT */
+.right {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.card {
+    width: 360px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* TEXT */
+.title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: gray;
+    margin: 10px 0 20px;
+}
+
+/* OTP BOXES */
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.otp-container input {
+    width: 40px;
+    height: 45px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* BUTTON */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    background: #5a3b2e;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* RESEND */
+.resend {
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.resend a {
+    color: #5a3b2e;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* TIMER */
+.timer {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 5px 12px;
+    background: #f3e1d6;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* BACK */
+.back {
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.back a {
+    text-decoration: none;
+    color: #333;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LEFT -->
+<div class="left">
+    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTred6d_VA_XhazIthuKSTvSwv3x4sMGk49pKpJvdSYi_8N490NQWmUEn8aACujATWeBX-YGYGngFi4PlR_fGiM6x2WDaqcxSnBzlaa4SeBJNhcTiMJhVAFeeHiPrgCj49S-emiKjrXBJgXXmaA4f1qD_I-CAxSlfD5bdG8H0lfkJyaB9N3xqPFT1d3rlN_B0EvPZKo1T0091G5QTQjBpP4l56xlgAwjktAc07UB6mWjQXDpvpX-Jh_Sc3xgmM_Etfuedxt9HTIeA">
+
+    <div class="brand">WESTRAL FASHION</div>
+
+    <div class="bottom-text">
+        <h1>STEP INTO YOUR STYLE</h1>
+        <p>Enter the verification code to continue</p>
+    </div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+<div class="card">
+    {% if otp_message %}
+    <p style="color:green;">{{ otp_message }}</p>
+{% endif %}
+
+
+    <div class="title">Verify OTP</div>
+    <div class="subtitle">
+        We sent a 6-digit code to your email. Enter it below.
+    </div>
+
+    <form method="POST" action="{% url 'verify_otp' %}">
+        {% csrf_token %}
+        <div class="otp-container">
+            <input type="text" name="otp1" maxlength="1">
+            <input type="text" name="otp2" maxlength="1">
+            <input type="text" name="otp3" maxlength="1">
+            <input type="text" name="otp4" maxlength="1">
+            <input type="text" name="otp5" maxlength="1">
+            <input type="text" name="otp6" maxlength="1">
+        </div>
+
+        <button type="submit" class="btn">VERIFY & PROCEED</button>   
+ </form>
+
+    <!-- replace the dead href="#" -->
+    <div class="resend">
+    Didn't receive the code?
+    <a href="{% url 'resend_otp' %}" id="resendLink" style="pointer-events:none; opacity:0.5;">
+        Resend
+    </a>
+</div>
+
+<div class="timer" id="timer">01:00</div>
+
+{% if error %}
+    <p style="color:red; margin-top:10px;">{{ error }}</p>
+{% endif %}
+
+    <div class="back">
+        <a href="{% url "login" %}">← Back to login</a>
+    </div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+
+    // 🔥 BLOCK BACK BUTTON
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+/* OTP AUTO FOCUS */
+const inputs = document.querySelectorAll(".otp-container input");
+inputs.forEach((input, index) => {
+    input.addEventListener("input", () => {
+        if (input.value && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+    });
+});
+
+let time = 60; // 🔥 1 minute
+let timerEl = document.getElementById("timer");
+let resendBtn = document.getElementById("resendLink");
+
+let interval = setInterval(() => {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+
+    timerEl.textContent =
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
+
+    if (time <= 0) {
+        clearInterval(interval);
+
+        // 🔥 ENABLE RESEND
+        resendBtn.style.pointerEvents = "auto";
+        resendBtn.style.opacity = "1";
+        timerEl.textContent = "Expired";
+    }
+
+    time--;
+}, 1000);
+</script>
+
+</body>
+</html>

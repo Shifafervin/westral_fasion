@@ -1,6 +1,16 @@
-from django.urls import path 
+from django.urls import path
 from . import views
+
 urlpatterns = [
-    path('',views.signup_view,name='signup')
+    path('',                 views.home_view,      name='home'),
+    path('login/',           views.login_view,     name='login'),
+    path('signup/',          views.signup_view,    name='signup'),
+    path('signup-verify/', views.signup_verify, name='signup_verify'),
+    path('logout/',          views.logout_view,    name='logout'),
     
+    path('forgot-password/', views.forgot_password, name='forgot_password'),
+    path('verify-otp/',      views.verify_otp,     name='verify_otp'),
+    path('resend-otp/',      views.resend_otp,     name='resend_otp'),
+    path('reset-password/',  views.reset_password, name='reset_password'), 
+    path("search/",         views.navbar_search,name="navbar_search"), 
 ]

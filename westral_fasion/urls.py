@@ -1,24 +1,25 @@
-"""
-URL configuration for westral_fasion project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('user.accounts.urls')),
+
+    path('', include('user.accounts.urls')),
+    path('profile/', include('user.user_details.urls')),
+    path('address/', include('user.address_details.urls')),
+    path('products/',include('user.user_products.urls')),
+    path('orders/',include('user.user_orders.urls')),
+
+
+    path('admin-auth/', include('admin.admin_auth.urls')),
+    path('admin-category/',include('admin.admin_category.urls')),
+    path('admin-product/',include('admin.admin_product.urls')),
+    path('admin-orders/',include('admin.admin_orders.urls')),
     
+
+    path('accounts/', include('allauth.urls')),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

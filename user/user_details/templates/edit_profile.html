@@ -1,0 +1,554 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ================= LAYOUT ================= */
+.container{
+
+    max-width:1100px;
+
+    margin:auto;
+
+    padding:40px 20px 80px;
+}
+
+/* ================= WRAPPER ================= */
+
+.edit-wrapper{
+
+    background:white;
+
+    border-radius:32px;
+
+    padding:45px;
+
+    border:1px solid #eee;
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,.05);
+}
+
+/* ================= TOP ================= */
+
+.edit-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:28px;
+
+    padding-bottom:35px;
+
+    border-bottom:1px solid #f1ece8;
+
+    margin-bottom:35px;
+}
+
+/* ================= PROFILE IMAGE ================= */
+
+.profile-img{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:24px;
+}
+
+.profile-img img{
+
+    width:110px;
+
+    height:110px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:4px solid #f8f5f2;
+}
+
+/* ================= IMAGE ACTIONS ================= */
+
+.image-actions{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.image-btn{
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#6B4F3B;
+
+    cursor:pointer;
+}
+
+.remove-btn{
+
+    color:#c0392b;
+}
+
+.image-note{
+
+    font-size:11px;
+
+    color:#999;
+}
+
+/* ================= GRID ================= */
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:24px;
+}
+
+/* ================= FIELD ================= */
+
+.input-box label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    color:#9b8d83;
+}
+
+.input-box input{
+
+    width:100%;
+
+    height:58px;
+
+    border-radius:16px;
+
+    border:1px solid #f1ece8;
+
+    background:#f8f5f2;
+
+    padding:0 18px;
+
+    font-size:14px;
+
+    color:#3f2d22;
+
+    outline:none;
+
+    transition:.2s;
+}
+
+.input-box input:focus{
+
+    border-color:#6B4F3B;
+
+    background:white;
+}
+
+/* ================= BUTTONS ================= */
+
+.buttons{
+
+    display:flex;
+
+    gap:18px;
+
+    margin-top:40px;
+}
+
+.cancel{
+
+    height:52px;
+
+    padding:0 28px;
+
+    border-radius:14px;
+
+    border:1px solid #e5d8ce;
+
+    background:white;
+
+    color:#6B4F3B;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.cancel:hover{
+
+    background:#faf7f4;
+}
+
+.save{
+
+    height:52px;
+
+    padding:0 28px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        #6B4F3B,
+        #8a654b
+    );
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:
+    0 8px 20px rgba(107,79,59,.18);
+}
+
+.save:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 14px 28px rgba(107,79,59,.25);
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+    .edit-wrapper{
+
+        padding:28px;
+    }
+
+    .edit-top{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+    }
+
+    .form-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .buttons{
+
+        flex-direction:column;
+    }
+
+    .cancel,
+    .save{
+
+        width:100%;
+    }
+}
+/* ================= FOOTER ================= */
+.footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+}
+
+.footer-links {
+    margin-bottom: 10px;
+}
+
+.footer-links a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: #666;
+}
+
+.footer-links a:hover {
+    color: #6B4F3B;
+}
+/* ================= PAGE HEADER ================= */
+
+.page-header{
+
+    margin-bottom:38px;
+}
+
+.title{
+
+    font-size:48px;
+
+    font-weight:800;
+
+    line-height:1.1;
+
+    color:#2f241e;
+
+    margin-bottom:12px;
+
+    letter-spacing:-1px;
+}
+
+.subtitle{
+
+    font-size:15px;
+
+    color:#8d7e74;
+
+    line-height:1.7;
+
+    max-width:520px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+    .title{
+
+        font-size:36px;
+    }
+
+    .subtitle{
+
+        font-size:14px;
+    }
+}
+
+
+</style>
+</head>
+
+<body>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+
+
+<!-- CONTENT -->
+<div class="content">
+<div class="page-header">
+
+    <div class="title">
+
+        Edit Your Profile
+
+    </div>
+
+    <div class="subtitle">
+
+        Update your personal information and profile picture
+
+    </div>
+
+</div>
+<div class="edit-wrapper">
+
+<form method="POST" enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<!-- ================= TOP ================= -->
+
+<div class="edit-top">
+
+    <div class="profile-img">
+
+        <img
+        id="preview"
+        src="{% if request.user.profile_image %}
+                {{ request.user.profile_image.url }}
+             {% else %}
+                {% static 'default.png' %}
+             {% endif %}"
+        >
+
+        <div class="image-actions">
+
+            <input
+            type="file"
+            name="profile_image"
+            id="imageUpload"
+            hidden
+            >
+
+            <span
+            class="image-btn"
+            onclick="document.getElementById('imageUpload').click();"
+            >
+
+                Change Photo
+
+            </span>
+
+            <span
+            class="image-btn remove-btn"
+            onclick="removeImage()"
+            >
+
+                Remove Photo
+
+            </span>
+
+            <div class="image-note">
+
+                JPG, PNG OR GIF · MAX 800KB
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= GRID ================= -->
+
+<div class="form-grid">
+
+    <div class="input-box">
+
+        <label>FULL NAME</label>
+
+        <input
+        type="text"
+        name="full_name"
+        value="{{ request.user.first_name }} {{ request.user.last_name }}"
+        >
+
+    </div>
+
+    <div class="input-box">
+
+        <label>EMAIL ADDRESS</label>
+
+        <input
+        type="email"
+        name="email"
+        value="{{ request.user.email }}"
+        >
+
+    </div>
+
+    <div class="input-box">
+
+        <label>PHONE NUMBER</label>
+
+        <input
+        type="text"
+        name="phone"
+        pattern="\d{10}"
+        maxlength="10"
+        value="{{ request.user.profile.phone }}"
+        >
+
+    </div>
+
+</div>
+
+<!-- ================= BUTTONS ================= -->
+
+<div class="buttons">
+
+    <button
+    type="button"
+    class="cancel"
+    onclick="window.location.href='{% url 'user_details:profile' %}'"
+    >
+
+        CANCEL
+
+    </button>
+
+    <button
+    type="submit"
+    class="save"
+    >
+
+        SAVE CHANGES
+
+    </button>
+
+</div>
+
+</form>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Shipping Info</a>
+        <a href="#">Contact Us</a>
+    </div>
+
+    <div class="footer-bottom">
+        © 2024 WESTRAL FASHION. CURATED EXCELLENCE.
+    </div>
+</div>
+
+<script>
+
+/* IMAGE PREVIEW */
+document.getElementById("imageUpload").onchange = function (e) {
+    const reader = new FileReader();
+    reader.onload = function(){
+        document.getElementById("preview").src = reader.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);
+}
+
+/* REMOVE IMAGE */
+function removeImage() {
+
+    // change preview instantly
+    document.getElementById("preview").src = "{% static 'default.png' %}";
+
+    // send hidden input to backend
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = "remove_image";
+    input.value = "true";
+
+    document.querySelector("form").appendChild(input);
+}
+</script>
+</body>
+{% endblock %}
+</html>     

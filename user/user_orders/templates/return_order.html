@@ -1,0 +1,885 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Return Order
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* ================= PAGE ================= */
+
+.return-page{
+
+    padding:40px 60px 80px;
+
+    background:#f8f5f2;
+
+    min-height:100vh;
+}
+
+/* ================= HEADER ================= */
+
+.return-title{
+
+    font-size:38px;
+
+    font-weight:800;
+
+    color:#2f241e;
+
+    margin-bottom:12px;
+}
+
+.return-subtitle{
+
+    font-size:13px;
+
+    color:#8d7e74;
+
+    line-height:1.8;
+
+    margin-bottom:40px;
+}
+
+/* ================= GRID ================= */
+
+.return-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 360px;
+
+    gap:32px;
+
+    align-items:start;
+}
+
+/* ================= PRODUCTS ================= */
+
+.products-column{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:24px;
+}
+
+.product-card{
+
+    background:white;
+
+    border-radius:14px;
+
+    padding:24px;
+
+    border:1px solid #eee;
+
+    display:grid;
+
+    grid-template-columns:30px 110px 1fr auto;
+
+    gap:22px;
+
+    align-items:center;
+}
+
+/* ================= CHECKBOX ================= */
+
+.checkbox-wrapper{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+}
+
+.return-checkbox{
+
+    width:18px;
+
+    height:18px;
+
+    accent-color:#6B4F3B;
+
+    cursor:pointer;
+}
+
+/* ================= IMAGE ================= */
+
+.product-image{
+
+    width:110px;
+
+    height:140px;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    background:#f3efeb;
+}
+
+.product-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+/* ================= DETAILS ================= */
+
+.product-name{
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:#2f241e;
+
+    margin-bottom:12px;
+}
+
+.product-meta{
+
+    font-size:12px;
+
+    line-height:1.9;
+
+    color:#8d7e74;
+
+    text-transform:uppercase;
+}
+
+.product-price{
+
+    font-size:20px;
+
+    font-weight:800;
+
+    color:#2f241e;
+
+    margin-top:16px;
+}
+
+/* ================= STATUS ================= */
+
+.delivery-box{
+
+    text-align:right;
+}
+
+.delivery-label{
+
+    font-size:10px;
+
+    letter-spacing:2px;
+
+    color:#9b8d83;
+
+    margin-bottom:10px;
+
+    font-weight:800;
+}
+
+.delivery-date{
+
+    font-size:13px;
+
+    color:#5f5147;
+
+    line-height:1.8;
+}
+
+/* ================= REASON ================= */
+
+.reason-card{
+
+    background:white;
+
+    border-radius:14px;
+
+    border:1px solid #eee;
+
+    padding:28px;
+
+    margin-top:28px;
+}
+
+.reason-title{
+
+    font-size:12px;
+
+    letter-spacing:2px;
+
+    font-weight:800;
+
+    color:#6B4F3B;
+
+    margin-bottom:28px;
+}
+
+.field-group{
+
+    margin-bottom:22px;
+}
+
+.field-label{
+
+    display:block;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+    color:#8d7e74;
+
+    margin-bottom:12px;
+
+    font-weight:700;
+}
+
+.reason-select{
+
+    width:100%;
+
+    height:52px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    padding:0 16px;
+
+    outline:none;
+
+    font-size:13px;
+
+    background:white;
+}
+
+.reason-textarea{
+
+    width:100%;
+
+    height:140px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    padding:16px;
+
+    resize:none;
+
+    outline:none;
+
+    font-size:13px;
+
+    font-family:inherit;
+}
+
+.reason-select:focus,
+.reason-textarea:focus{
+
+    border-color:#6B4F3B;
+}
+
+/* ================= SUMMARY ================= */
+
+.summary-card{
+
+    background:white;
+
+    border-radius:14px;
+
+    border:1px solid #eee;
+
+    padding:30px;
+
+    position:sticky;
+
+    top:30px;
+}
+
+.summary-title{
+
+    font-size:22px;
+
+    font-weight:700;
+
+    color:#2f241e;
+
+    margin-bottom:30px;
+}
+
+.summary-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:20px;
+
+    font-size:14px;
+
+    color:#5f5147;
+}
+
+.refund-value{
+
+    color:#d32f2f;
+
+    font-weight:700;
+}
+
+.total-row{
+
+    border-top:1px solid #eee;
+
+    margin-top:25px;
+
+    padding-top:25px;
+
+    font-size:20px;
+
+    font-weight:800;
+
+    color:#2f241e;
+}
+
+/* ================= RETURN METHOD ================= */
+
+.method-title{
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+    color:#8d7e74;
+
+    margin:30px 0 18px;
+
+    font-weight:800;
+}
+
+.method-box{
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    padding:18px;
+
+    margin-bottom:14px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+}
+
+.method-name{
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#2f241e;
+}
+
+.method-badge{
+
+    font-size:10px;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    background:#f3efeb;
+
+    color:#6B4F3B;
+
+    font-weight:700;
+}
+
+/* ================= CHECK ================= */
+
+.policy-check{
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:flex-start;
+
+    margin:24px 0;
+}
+
+.policy-check input{
+
+    margin-top:3px;
+
+    accent-color:#6B4F3B;
+}
+
+.policy-check label{
+
+    font-size:12px;
+
+    color:#7d6e65;
+
+    line-height:1.8;
+}
+
+/* ================= BUTTONS ================= */
+
+.return-btn{
+
+    width:100%;
+
+    height:54px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:0.2s;
+}
+
+.return-btn:hover{
+
+    background:#563c2c;
+}
+
+.cancel-link{
+
+    display:block;
+
+    text-align:center;
+
+    margin-top:16px;
+
+    text-decoration:none;
+
+    color:#8d7e74;
+
+    font-size:12px;
+
+    font-weight:700;
+}
+
+/* ================= FOOTER INFO ================= */
+
+.footer-note{
+
+    margin-top:28px;
+
+    text-align:center;
+
+    font-size:10px;
+
+    letter-spacing:1px;
+
+    line-height:2;
+
+    color:#9b8d83;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1000px){
+
+    .return-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .summary-card{
+
+        position:relative;
+
+        top:0;
+    }
+}
+
+@media(max-width:750px){
+
+    .return-page{
+
+        padding:25px 18px 60px;
+    }
+
+    .product-card{
+
+        grid-template-columns:1fr;
+
+        text-align:center;
+    }
+
+    .delivery-box{
+
+        text-align:center;
+    }
+
+    .product-image{
+
+        margin:auto;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="return-page">
+
+    <!-- ================= HEADER ================= -->
+
+    <div class="return-title">
+
+        Return Order
+
+    </div>
+
+    <div class="return-subtitle">
+
+        You are returning selected items from this order.
+        Please review the details and confirm your return.
+
+    </div>
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <div class="return-grid">
+
+            <!-- ================= LEFT ================= -->
+
+            <div>
+
+                <div class="products-column">
+
+                    {% for item in order.items.all %}
+
+                    <div class="product-card">
+
+                        <!-- CHECKBOX -->
+
+                        <div class="checkbox-wrapper">
+
+                            <input
+                            type="checkbox"
+                            name="selected_items"
+                            value="{{ item.id }}"
+                            class="return-checkbox"
+                            >
+
+                        </div>
+
+                        <!-- IMAGE -->
+
+                        <div class="product-image">
+
+                            {% with image=item.variant.images.first %}
+
+                                {% if image %}
+
+                                <img src="{{ image.image.url }}">
+
+                                {% endif %}
+
+                            {% endwith %}
+
+                        </div>
+
+                        <!-- DETAILS -->
+
+                        <div>
+
+                            <div class="product-name">
+
+                                {{ item.variant.product.product_name }}
+
+                            </div>
+
+                            <div class="product-meta">
+
+                                SIZE :
+                                {{ item.variant.size }}
+
+                                |
+
+                                COLOR :
+                                {{ item.variant.color }}
+
+                            </div>
+
+                            <div class="product-price">
+
+                                ₹{{ item.total_price }}
+
+                            </div>
+
+                        </div>
+
+                        <!-- STATUS -->
+
+                        <div class="delivery-box">
+
+                            <div class="delivery-label">
+
+                                DELIVERY STATUS
+
+                            </div>
+
+                            <div class="delivery-date">
+
+                                Delivered on
+                                {{ order.created_at|date:"d M Y" }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <!-- ================= REASON ================= -->
+
+                <div class="reason-card">
+
+                    <div class="reason-title">
+
+                        WHY ARE YOU RETURNING THIS ORDER?
+
+                    </div>
+
+                    <!-- REASON -->
+
+                    <div class="field-group">
+
+                        <label class="field-label">
+
+                            SELECT A REASON
+
+                        </label>
+
+                        <select
+                        name="return_reason"
+                        class="reason-select"
+                        required
+                        >
+
+                            <option value="">
+                                Select a reason
+                            </option>
+
+                            <option value="Wrong Size">
+                                Wrong Size
+                            </option>
+
+                            <option value="Damaged Product">
+                                Damaged Product
+                            </option>
+
+                            <option value="Quality Not Good">
+                                Quality Not Good
+                            </option>
+
+                            <option value="Received Wrong Item">
+                                Received Wrong Item
+                            </option>
+
+                            <option value="Changed My Mind">
+                                Changed My Mind
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- OPTIONAL -->
+
+                    <div class="field-group">
+
+                        <label class="field-label">
+
+                            WRITE YOUR REASON (OPTIONAL)
+
+                        </label>
+
+                        <textarea
+                        name="additional_reason"
+                        class="reason-textarea"
+                        placeholder="Share more details about your return..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- ================= RIGHT ================= -->
+
+            <div>
+
+                <div class="summary-card">
+
+                    <div class="summary-title">
+
+                        Refund Details
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>Product Price Total</span>
+
+                        <span>
+                            ₹{{ order.total_amount }}
+                        </span>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>Shipping Fee</span>
+
+                        <span class="refund-value">
+
+                            +₹0.00
+
+                        </span>
+
+                    </div>
+
+                    <div class="summary-row total-row">
+
+                        <span>Total Refund</span>
+
+                        <span>
+                            ₹{{ order.total_amount }}
+                        </span>
+
+                    </div>
+
+                    <!-- METHOD -->
+
+                    <div class="method-title">
+
+                        RETURN METHOD
+
+                    </div>
+
+                    <div class="method-box">
+
+                        <div class="method-name">
+
+                            Original Payment Method
+
+                        </div>
+
+                    </div>
+
+                    <div class="method-box">
+
+                        <div class="method-name">
+
+                            Store Wallet
+
+                        </div>
+
+                        <div class="method-badge">
+
+                            FASTER RECOMMENDED 
+
+                        </div>
+
+                    </div>
+
+                    <!-- CHECK -->
+
+                    <div class="policy-check">
+
+                        <input
+                        type="checkbox"
+                        required
+                        >
+
+                        <label>
+
+                            I confirm that the item is unused
+                            and in original condition with all tags intact.
+
+                        </label>
+
+                    </div>
+
+                    <!-- BUTTON -->
+
+                    <button
+                    type="submit"
+                    class="return-btn"
+                    >
+
+                        CONFIRM RETURN
+
+                    </button>
+
+                    <a
+                    href="{% url 'order_detail' order.order_id %}"
+                    class="cancel-link"
+                    >
+
+                        Cancel / Keep Item
+
+                    </a>
+
+                    <!-- FOOTER -->
+
+                    <div class="footer-note">
+
+                        HASSLE-FREE RETURNS WITHIN 7 DAYS.
+                        <br>
+                        SECURE TRANSACTIONS GUARANTEED.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

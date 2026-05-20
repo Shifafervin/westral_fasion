@@ -1,0 +1,652 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Product</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+
+/* ================= RESET ================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ================= HTML ================= */
+
+html{
+    scroll-behavior:smooth;
+}
+
+/* ================= BODY ================= */
+
+body{
+    background:#f7f5f2;
+    font-family:'Manrope',sans-serif;
+    color:#1d1b19;
+
+    overflow-x:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+
+.bg{
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:1;
+
+    pointer-events:none;
+}
+.bg-inner{
+    width:100%;
+    height:100vh;
+
+    overflow:hidden;
+
+    filter:blur(5px);
+}
+
+body::-webkit-scrollbar{
+    width:8px;
+}
+
+body::-webkit-scrollbar-track{
+    background:#f1ece7;
+}
+
+body::-webkit-scrollbar-thumb{
+    background:#b9aca1;
+    border-radius:20px;
+}
+
+
+.bg::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:rgba(0,0,0,.20);
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    position:relative;
+
+    z-index:5;
+
+    width:100%;
+
+    min-height:100vh;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    width:100%;
+
+    min-height:100vh;
+
+    padding:26px 34px;
+}
+
+/* ================= TOPBAR ================= */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:26px;
+}
+
+.left-top{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+.back{
+    display:flex;
+    align-items:center;
+    gap:6px;
+
+    color:#6f6257;
+
+    font-size:11px;
+    font-weight:600;
+
+    text-decoration:none;
+}
+
+.page-title{
+    font-family:'Noto Serif',serif;
+
+    font-size:28px;
+    font-style:italic;
+
+    color:#3b2b2b;
+}
+
+/* ================= ACTIONS ================= */
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+
+.discard{
+    border:none;
+
+    background:none;
+
+    color:#a09287;
+
+    font-size:10px;
+    letter-spacing:1px;
+
+    cursor:pointer;
+}
+
+.save-btn{
+    height:38px;
+
+    padding:0 22px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#341818;
+
+    color:white;
+
+    font-size:11px;
+    font-weight:600;
+
+    cursor:pointer;
+}
+
+.top-icons{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.top-icons span{
+    color:#94867b;
+    font-size:18px;
+    cursor:pointer;
+}
+
+/* ================= LAYOUT ================= */
+
+.layout{
+    display:block;
+}
+
+/* ================= CARD ================= */
+
+.card{
+    background:white;
+
+    border-radius:18px;
+
+    padding:24px;
+
+    max-width:850px;
+
+    margin:auto;
+
+    box-shadow:0 4px 20px rgba(0,0,0,.03);
+}
+
+/* ================= CARD LABEL ================= */
+
+.card-label{
+    font-size:10px;
+    letter-spacing:1px;
+
+    color:#b0a399;
+
+    margin-bottom:8px;
+}
+
+/* ================= CARD TITLE ================= */
+
+.card-title{
+    font-family:'Noto Serif',serif;
+
+    font-size:30px;
+
+    color:#2e1d1d;
+
+    margin-bottom:24px;
+}
+
+/* ================= FIELD ================= */
+
+.field{
+    margin-bottom:18px;
+}
+
+.field label{
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:10px;
+    letter-spacing:1px;
+
+    color:#9d9186;
+
+    font-weight:700;
+}
+
+/* ================= INPUT ================= */
+
+.field input,
+.field select,
+.field textarea{
+    width:100%;
+
+    border:none;
+
+    background:#f7f4f1;
+
+    border-radius:10px;
+
+    padding:14px;
+
+    outline:none;
+
+    font-size:13px;
+
+    font-family:'Manrope',sans-serif;
+}
+
+.field textarea{
+    resize:none;
+    height:130px;
+}
+
+/* ================= TWO COL ================= */
+
+.two-col{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+}
+/* ================= STATUS ================= */
+
+.status-box{
+    width:260px;
+
+    background:#f8f5f2;
+
+    height:54px;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 18px;
+}
+
+.status-box small{
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#7f7268;
+}
+
+/* SWITCH */
+
+.switch{
+    position:relative;
+
+    display:inline-block;
+
+    width:50px;
+    height:26px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+
+    inset:0;
+
+    background:#d6cbc3;
+
+    border-radius:30px;
+
+    transition:.3s;
+}
+
+.slider::before{
+    content:"";
+
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    left:3px;
+    bottom:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#341818;
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(24px);
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= BLUR BACKGROUND ================= -->
+
+<div class="bg">
+
+    <div class="bg-inner">
+
+        {% include "product_management.html" %}
+
+    </div>
+
+</div>
+
+<!-- ================= OVERLAY ================= -->
+
+<div class="overlay">
+
+<div class="main">
+
+<form method="POST">
+
+{% csrf_token %}
+
+<!-- ================= TOPBAR ================= -->
+
+<div class="topbar">
+
+    <div class="left-top">
+
+        <a
+        href="{% url 'product_management' %}"
+        class="back">
+
+            <span class="material-symbols-outlined">
+
+                arrow_back
+
+            </span>
+
+            BACK
+
+        </a>
+
+        <div class="page-title">
+
+    Edit Product:
+    {{ product.product_name }}
+
+</div>
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        {% if "product" in message.tags %}
+
+            <div
+            style="
+            background:#f8ece8;
+            color:#7a4b42;
+            padding:14px 16px;
+            border-radius:10px;
+            margin-top:18px;
+            font-size:13px;
+            max-width:850px;
+            "
+            >
+
+                {{ message }}
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+            
+        </div>
+
+    </div>
+
+    <div class="top-actions">
+
+        <button
+        type="button"
+        class="discard"
+        onclick="window.location.href='{% url 'product_management' %}'">
+
+            DISCARD
+
+        </button>
+
+        <button
+        type="submit"
+        class="save-btn">
+
+            SAVE CHANGES
+
+        </button>
+
+        <div class="top-icons">
+
+            <span class="material-symbols-outlined">
+
+                notifications
+
+            </span>
+
+            <span class="material-symbols-outlined">
+
+                settings
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= LAYOUT ================= -->
+
+<div class="layout">
+
+    <!-- ================= LEFT ================= -->
+
+    <div class="card">
+
+        <div class="card-label">
+
+            DETAILS
+
+        </div>
+
+        <div class="card-title">
+
+            Product Information
+
+        </div>
+
+        <!-- PRODUCT NAME -->
+
+        <div class="field">
+
+            <label>PRODUCT NAME</label>
+
+            <input
+            type="text"
+            name="product_name"
+            value="{{ request.POST.product_name|default:product.product_name }}"
+            required>
+
+        </div>
+
+        <!-- CATEGORY -->
+
+        <div class="field">
+
+    <label>CATEGORY</label>
+
+    <select
+    name="category"
+    required>
+
+        {% for category in categories %}
+
+        <option
+        value="{{ category.id }}"
+
+        {% if request.POST.category == category.id|stringformat:"s" %}
+
+            selected
+
+        {% elif category.id == product.category.id %}
+
+            selected
+
+        {% endif %}
+        >
+
+            {{ category.category_name }}
+
+        </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+        <!-- MATERIALS -->
+
+        <div class="field">
+
+            <label>FABRIC / MATERIAL COMPOSITION</label>
+
+            <input
+            type="text"
+            name="materials"
+            value="{{ request.POST.materials|default:product.materials }}">
+
+        </div>
+
+        <!-- FIT TYPE -->
+
+        <div class="field">
+
+            <label>FIT TYPE</label>
+
+            <input
+            type="text"
+            name="fit_type"
+            value="{{ request.POST.fit_type|default:product.fit_type }}">
+
+        </div>
+
+        <!-- DESCRIPTION -->
+
+        <div class="field">
+
+            <label>DESCRIPTION</label>
+
+            <textarea
+            name="description"
+            required>{{request.POST.description|default:product.description }}</textarea>
+
+        </div>
+        <!-- ACTIVE STATUS -->
+
+<div class="field">
+
+    <div class="status-box">
+
+        <small>ACTIVE PRODUCT</small>
+
+        <label class="switch">
+
+            <input
+            type="checkbox"
+            name="is_active"
+            value="on"
+
+            {% if product.is_active %}
+            checked
+            {% endif %}
+            >
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+</div>
+
+    </div>
+
+
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>
+

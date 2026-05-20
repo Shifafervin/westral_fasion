@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Westral Admin</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    font-family: 'Inter', sans-serif;
+    background: #e7e4e1;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* MAIN WRAPPER */
+.wrapper {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+}
+
+/* TITLE */
+.title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    color: #3b1f1f;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #9a9a9a;
+    margin-top: 12px;
+    margin-bottom: 40px;
+}
+
+/* CARD */
+.card {
+    width: 380px;
+    margin: auto;
+    background: #f4f2f0;
+    padding: 45px 35px;
+    border-radius: 14px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+}
+
+/* FORM GROUP */
+.form-group {
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+label {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: #e6e2df;
+    font-size: 14px;
+    outline: none;
+}
+
+/* PASSWORD HEADER */
+.password-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.password-header a {
+    font-size: 11px;
+    text-decoration: none;
+    color: #666;
+}
+
+/* PASSWORD BOX */
+.password-box {
+    position: relative;
+}
+
+.eye {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    cursor: pointer;
+}
+
+/* BUTTON */
+.btn {
+    width: 100%;
+    padding: 14px;
+    background: #4b2a2a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-top: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #381b1b;
+}
+
+/* NOTE */
+.note {
+    margin-top: 22px;
+    font-size: 10px;
+    color: #777;
+    line-height: 1.6;
+    text-align: center;
+}
+.alert{
+    padding:10px;
+    margin-bottom:15px;
+    border-radius:6px;
+    font-size:12px;
+}
+
+/* ERROR */
+.alert.error{
+    background:#ffe5e5;
+    color:#b30000;
+}
+
+/* SUCCESS */
+.alert.success{
+    background:#e5ffe5;
+    color:#1a7f37;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+    <h1 class="title">WESTRAL FASHION ADMIN PORTAL</h1>
+    <p class="subtitle">SECURE ACCESS FOR AUTHORIZED PERSONNEL ONLY.</p>
+
+    <form method="POST">
+    {% csrf_token %}
+
+    <div class="card">
+        {% if messages %}
+    {% for message in messages %}
+        <div class="alert {{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+        <div class="form-group">
+            <label>Email</label>
+
+        <input type="text" name="email">
+        </div>
+
+        <div class="form-group">
+            <div class="password-header">
+                <label>Password</label>
+                
+            </div>
+
+            <div class="password-box">
+                <input type="password" name="password" id="password" placeholder="••••••••" required>
+                <span class="eye" onclick="togglePassword()">👁</span>
+            </div>
+        </div>
+
+        <button type="submit" class="btn">SIGN IN TO DASHBOARD</button>
+
+    </div>
+</form>
+
+        <p class="note">
+            By accessing this portal, you agree to the Westral Fashion internal
+            security guidelines and confidentiality agreements.
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+function togglePassword() {
+    const pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+setTimeout(() => {
+    document.querySelectorAll('.alert').forEach(el => el.style.display = 'none');
+}, 3000);
+
+</script>
+
+</body>
+</html>

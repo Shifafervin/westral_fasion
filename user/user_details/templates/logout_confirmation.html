@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Logout</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Inter", sans-serif;
+}
+
+/* 🔥 FULL SCREEN BACKGROUND */
+.bg {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    z-index:1;
+}
+
+/* 🔥 BLUR FIX (IMPORTANT) */
+.bg-inner {
+    width:100%;
+    height:100%;
+    filter: blur(8px);
+    transform: scale(1.08); /* 🔥 prevents white edges */
+    overflow:hidden;
+}
+
+/* DARK OVERLAY */
+.bg::after {
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background: rgba(0,0,0,0.25);
+    top:0;
+    left:0;
+}
+
+/* ===== MODAL (UNCHANGED) ===== */
+.overlay {
+    position: fixed;
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:2;
+}
+
+.modal {
+    background:white;
+    padding:35px;
+    border-radius:12px;
+    width:380px;
+    text-align:center;
+    box-shadow:0 20px 40px rgba(0,0,0,0.2);
+}
+
+.icon {
+    width:60px;
+    height:60px;
+    background:#F5F1ED;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 auto 20px;
+    font-size:26px;
+    color:#6B4F3B;
+}
+
+.modal h3 {
+    margin-bottom:25px;
+}
+
+.btns {
+    display:flex;
+    gap:10px;
+}
+
+.cancel {
+    flex:1;
+    padding:12px;
+    border:1px solid #6B4F3B;
+    background:white;
+    cursor:pointer;
+}
+
+.confirm {
+    flex:1;
+    padding:12px;
+    background:#6B4F3B;
+    color:white;
+    border:none;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🔥 REAL PROFILE BACKGROUND -->
+<div class="bg">
+    <div class="bg-inner">
+        {% include "profile.html" %}
+    </div>
+</div>
+
+<!-- 🔥 YOUR LOGOUT MODAL (UNCHANGED) -->
+<div class="overlay">
+
+    <div class="modal">
+
+        <div class="icon">⎋</div>
+
+        <h3>Are you sure you want to log out?</h3>
+
+        <div class="btns">
+
+            <button class="cancel"
+                onclick="window.location.href='{% url 'user_details:profile' %}'">
+                Cancel
+            </button>
+
+            <button class="confirm"
+                onclick="window.location.href='{% url 'user_details:logout' %}'">
+                Logout
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

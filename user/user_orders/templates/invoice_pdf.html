@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+
+body{
+    font-family:Arial;
+    font-size:14px;
+    color:#222;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+table, th, td{
+    border:1px solid #ddd;
+}
+
+th, td{
+    padding:10px;
+    text-align:left;
+}
+
+.heading{
+    font-size:28px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+.total{
+    margin-top:30px;
+    text-align:right;
+    font-size:18px;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="heading">
+
+    WESTRAL FASHION INVOICE
+
+</div>
+
+<p>
+
+    Order ID :
+    {{ order.order_id }}
+
+</p>
+
+<p>
+
+    Customer :
+    {{ order.user.username }}
+
+</p>
+
+<p>
+
+    Date :
+    {{ order.created_at }}
+
+</p>
+
+<hr>
+
+<table>
+
+    <thead>
+
+        <tr>
+
+            <th>Product</th>
+
+            <th>Size</th>
+
+            <th>Color</th>
+
+            <th>Qty</th>
+
+            <th>Price</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for item in order.items.all %}
+
+        <tr>
+
+            <td>
+
+                {{ item.variant.product.product_name }}
+
+            </td>
+
+            <td>
+
+                {{ item.variant.size }}
+
+            </td>
+
+            <td>
+
+                {{ item.variant.color }}
+
+            </td>
+
+            <td>
+
+                {{ item.quantity }}
+
+            </td>
+
+            <td>
+
+                ₹{{ item.total_price }}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<div class="total">
+
+    Total :
+    ₹{{ order.total_amount }}
+
+</div>
+
+</body>
+</html>

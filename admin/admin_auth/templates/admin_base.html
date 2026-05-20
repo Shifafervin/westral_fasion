@@ -1,0 +1,612 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}
+            Admin Panel
+        {% endblock %}
+    </title>
+
+    <!-- GOOGLE FONTS -->
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+            font-family:'Manrope',sans-serif;
+            background:#f7f5f2;
+            color:#1d1b19;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar{
+            width:250px;
+            height:100vh;
+            background:#f5f2ef;
+            border-right:1px solid #e7e2dc;
+
+            padding:26px 16px;
+
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+
+            position:fixed;
+            left:0;
+            top:0;
+        }
+
+        .logo{
+            margin-bottom:38px;
+        }
+
+        .logo h1{
+            font-family:'Noto Serif',serif;
+            font-size:22px;
+            line-height:1.2;
+            letter-spacing:2px;
+        }
+
+        .logo span{
+            display:block;
+            margin-top:6px;
+            font-size:10px;
+            color:#9a8f85;
+            letter-spacing:1.5px;
+        }
+
+        /* MENU */
+
+        .menu{
+            display:flex;
+            flex-direction:column;
+            gap:6px;
+        }
+
+        .menu a{
+            text-decoration:none;
+            color:#7c6f64;
+
+            font-size:13px;
+            font-weight:500;
+
+            display:flex;
+            align-items:center;
+            gap:14px;
+
+            padding:12px 14px;
+
+            border-radius:12px;
+
+            transition:.2s;
+        }
+
+        .menu a span{
+            font-size:20px;
+        }
+
+        .menu a:hover{
+            background:#efebe7;
+            color:#1b1b1b;
+        }
+
+        .menu a.active{
+            background:#ece7e3;
+            color:#1b1b1b;
+            border-left:3px solid #3a1d1d;
+            font-weight:700;
+        }
+
+        /* PROFILE */
+
+        .profile{
+            border-top:1px solid #ebe6e1;
+            padding-top:18px;
+        }
+
+        .profile-info{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:14px;
+        }
+
+        .profile-info img{
+            width:42px;
+            height:42px;
+            border-radius:50%;
+            object-fit:cover;
+        }
+
+        .profile-info b{
+            font-size:13px;
+        }
+
+        .profile-info small{
+            color:#9b8f84;
+            font-size:10px;
+            letter-spacing:1px;
+        }
+
+        /* LOGOUT */
+
+        .logout-btn{
+            width:100%;
+            border:none;
+            background:#3b1f1f;
+            color:white;
+            padding:11px;
+            border-radius:10px;
+            font-size:12px;
+            cursor:pointer;
+        }
+
+        /* MAIN */
+
+        .main{
+            margin-left:250px;
+            width:calc(100% - 250px);
+            min-height:100vh;
+            padding:28px;
+        }
+
+        /* ================= GLOBAL TOAST ================= */
+
+.message-container{
+
+    position:fixed;
+
+    top:30px;
+    right:30px;
+
+    z-index:99999;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:16px;
+}
+
+/* ALERT */
+
+.alert{
+
+    min-width:340px;
+
+    max-width:420px;
+
+    padding:18px 20px;
+
+    border-radius:18px;
+
+    display:flex;
+    align-items:flex-start;
+
+    gap:14px;
+
+    color:#ffffff;
+
+    box-shadow:
+        0 12px 30px rgba(0,0,0,.14);
+
+    animation:
+        toastSlide .35s ease;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+/* SUCCESS */
+
+.alert.success{
+
+    background:
+    linear-gradient(
+        135deg,
+        #059669,
+        #10b981
+    );
+}
+
+/* ERROR */
+
+.alert.error{
+
+    background:
+    linear-gradient(
+        135deg,
+        #dc2626,
+        #ef4444
+    );
+}
+
+/* WARNING */
+
+.alert.warning{
+
+    background:
+    linear-gradient(
+        135deg,
+        #d97706,
+        #f59e0b
+    );
+}
+
+/* INFO */
+
+.alert.info{
+
+    background:
+    linear-gradient(
+        135deg,
+        #2563eb,
+        #3b82f6
+    );
+}
+
+/* ICON */
+
+.alert-icon{
+
+    width:42px;
+    height:42px;
+
+    border-radius:12px;
+
+    background:rgba(255,255,255,.18);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    flex-shrink:0;
+}
+
+.alert-icon span{
+
+    font-size:22px;
+}
+
+/* CONTENT */
+
+.alert-content{
+
+    flex:1;
+}
+
+.alert-title{
+
+    font-size:14px;
+    font-weight:700;
+
+    margin-bottom:4px;
+}
+
+.alert-message{
+
+    font-size:13px;
+
+    line-height:1.5;
+
+    opacity:.95;
+}
+
+/* PROGRESS BAR */
+
+.alert::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+    bottom:0;
+
+    width:100%;
+    height:4px;
+
+    background:rgba(255,255,255,.35);
+
+    animation:progress 4s linear forwards;
+}
+
+/* ANIMATION */
+
+@keyframes toastSlide{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateX(50px)
+            scale(.95);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateX(0)
+            scale(1);
+    }
+}
+
+@keyframes progress{
+
+    from{
+        width:100%;
+    }
+
+    to{
+        width:0%;
+    }
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .message-container{
+
+        left:20px;
+        right:20px;
+    }
+
+    .alert{
+
+        min-width:auto;
+        width:100%;
+    }
+}
+
+    </style>
+
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div>
+
+            <div class="logo">
+
+                <h1>
+                    WESTRAL<br>FASHION
+                </h1>
+
+                <span>
+                    MANAGEMENT SUITE
+                </span>
+
+            </div>
+
+            <div class="menu">
+
+                <a href="{% url 'admin_dashboard' %}">
+                    <span class="material-symbols-outlined">
+                        dashboard
+                    </span>
+                    Dashboard
+                </a>
+
+                <a href="{% url 'order_management' %}">
+                    <span class="material-symbols-outlined">
+                        shopping_bag
+                    </span>
+                    Orders
+                </a>
+
+                <a href="{% url 'product_management' %}">
+                    <span class="material-symbols-outlined">
+                        checkroom
+                    </span>
+                    Products
+                </a>
+
+                <a href="{% url 'admincategory_view' %}">
+                    <span class="material-symbols-outlined">
+                        category
+                    </span>
+                    Categories
+                </a>
+
+                <a href="{% url 'user_management' %}">
+                    <span class="material-symbols-outlined">
+                        group
+                    </span>
+                    Customers
+                </a>
+
+                <a href="{% url 'return_management' %}">
+                    <span class="material-symbols-outlined">
+                        assignment_return
+                    </span>
+                    Returns
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="profile">
+
+            <div class="profile-info">
+
+                <img src="https://i.pravatar.cc/100?img=5">
+
+                <div>
+                    <b>ADMIN</b><br>
+                    <small>MANAGEMENT</small>
+                </div>
+
+            </div>
+
+            <form action="{% url 'admin_logout' %}" method="POST">
+
+                {% csrf_token %}
+
+                <button type="submit" class="logout-btn">
+                    Logout
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+<!-- ================= TOAST MESSAGES ================= -->
+
+{% if messages %}
+
+<div class="message-container">
+
+    {% for message in messages %}
+
+        <div class="alert {{ message.tags }}">
+
+            <!-- ICON -->
+
+            <div class="alert-icon">
+
+                {% if message.tags == "success" %}
+
+                    <span class="material-symbols-outlined">
+
+                        check_circle
+
+                    </span>
+
+                {% elif message.tags == "error" %}
+
+                    <span class="material-symbols-outlined">
+
+                        error
+
+                    </span>
+
+                {% elif message.tags == "warning" %}
+
+                    <span class="material-symbols-outlined">
+
+                        warning
+
+                    </span>
+
+                {% else %}
+
+                    <span class="material-symbols-outlined">
+
+                        info
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            <!-- CONTENT -->
+
+            <div class="alert-content">
+
+                <div class="alert-title">
+
+                    {% if message.tags == "success" %}
+                        Success
+                    {% elif message.tags == "error" %}
+                        Error
+                    {% elif message.tags == "warning" %}
+                        Warning
+                    {% else %}
+                        Notification
+                    {% endif %}
+
+                </div>
+
+                <div class="alert-message">
+
+                    {{ message }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+    <!-- MAIN CONTENT -->
+
+    <div class="main">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+
+    {% block extra_js %}
+    {% endblock %}
+<script>
+
+setTimeout(()=>{
+
+    const alerts = document.querySelectorAll(
+        ".alert"
+    );
+
+    alerts.forEach((alert,index)=>{
+
+        setTimeout(()=>{
+
+            alert.style.transition =
+                ".35s ease";
+
+            alert.style.opacity = "0";
+
+            alert.style.transform =
+                "translateX(60px)";
+
+            setTimeout(()=>{
+
+                alert.remove();
+
+            },350);
+
+        },index * 150);
+
+    });
+
+},4000);
+
+</script>
+</body>
+</html>

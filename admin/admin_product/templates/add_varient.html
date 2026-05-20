@@ -1,0 +1,984 @@
+# Fully Fixed `add_variant.html`
+
+```django
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Variant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+/>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f6f3f0;
+    font-family:'Manrope',sans-serif;
+    color:#261815;
+    overflow:hidden;
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.15);
+    backdrop-filter:blur(10px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:999;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    width:720px;
+    background:white;
+    border-radius:24px;
+    padding:34px;
+    position:relative;
+
+    box-shadow:
+    0 25px 70px rgba(0,0,0,.18);
+
+    z-index:1000;
+}
+
+/* ================= CLOSE ================= */
+
+.close{
+    position:absolute;
+    top:20px;
+    right:20px;
+
+    font-size:22px;
+    color:#84766d;
+    cursor:pointer;
+}
+
+/* ================= TITLE ================= */
+
+.modal h2{
+    font-family:'Noto Serif',serif;
+    font-size:40px;
+    margin-bottom:26px;
+}
+
+/* ================= IMAGE GRID ================= */
+
+.image-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-bottom:28px;
+}
+
+.image-box{
+    height:132px;
+
+    border:2px dashed #dfd2c8;
+    border-radius:14px;
+
+    background:#fcfaf8;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:10px;
+
+    color:#7f7167;
+
+    cursor:pointer;
+
+    overflow:hidden;
+
+    transition:.2s;
+}
+
+.image-box:hover{
+    border-color:#4a2929;
+}
+
+.image-box span{
+    font-size:28px;
+}
+
+.image-box small{
+    font-size:11px;
+    letter-spacing:1px;
+}
+
+.image-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+/* ================= FORM ================= */
+
+.form-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(2,1fr);
+
+    gap:18px;
+
+    margin-bottom:20px;
+
+    align-items:start;
+}
+
+.form-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    width:100%;
+}
+
+.form-group label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:10px;
+
+    letter-spacing:1px;
+
+    color:#91837a;
+
+    font-weight:700;
+}
+
+.input,
+.select{
+
+    width:100%;
+
+    height:52px;
+
+    min-width:0;
+
+    border:none;
+
+    outline:none;
+
+    background:#f3efec;
+
+    border-radius:12px;
+
+    padding:0 16px;
+
+    font-size:14px;
+
+    appearance:none;
+}
+.full-width{
+    margin-bottom:22px;
+}
+
+/* ================= BOTTOM ================= */
+
+.bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-top:10px;
+
+    position:relative;
+    z-index:9999;
+}
+
+/* ================= STATUS ================= */
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.status small{
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.switch{
+    position:relative;
+    display:inline-block;
+
+    width:48px;
+    height:24px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+
+    background:#d5cbc3;
+
+    border-radius:30px;
+
+    transition:.3s;
+}
+
+.slider::before{
+    content:"";
+
+    position:absolute;
+
+    width:18px;
+    height:18px;
+
+    left:3px;
+    bottom:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#4a2929;
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(24px);
+}
+
+/* ================= BUTTONS ================= */
+
+.buttons{
+    display:flex;
+    align-items:center;
+    gap:14px;
+
+    position:relative;
+    z-index:9999;
+}
+
+.discard-btn{
+    width:120px;
+    height:48px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#f3e2d2;
+
+    color:#7b5b4c;
+
+    font-size:13px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.discard-btn:hover{
+    background:#ead4c2;
+}
+
+.save-btn{
+    height:48px;
+
+    border:none;
+
+    padding:0 28px;
+
+    border-radius:12px;
+
+    background:#4a2929;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.save-btn:hover{
+    opacity:.92;
+}
+
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= MODAL ================= -->
+
+<div class="overlay">
+
+    <div class="modal">
+
+        <form
+        method="POST"
+        enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+            <!-- CLOSE -->
+
+            <span
+class="material-symbols-outlined close"
+onclick="window.location.href='{% url 'variant_management' product.id %}'"
+>
+    close
+</span>
+
+            <!-- TITLE -->
+
+            <h2>Add Variant</h2>
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        {% if "variant" in message.tags %}
+
+            <div
+            style="
+            background:#f8ece8;
+            color:#7a4b42;
+            padding:14px 16px;
+            border-radius:10px;
+            margin-bottom:20px;
+            font-size:13px;
+            "
+            >
+
+                {{ message }}
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+            <!-- FILE INPUT -->
+
+            <input type="file" name="image1" id="imageInput0" hidden>
+            <input type="file" name="image2" id="imageInput1" hidden>
+            <input type="file" name="image3" id="imageInput2" hidden>
+
+            <!-- IMAGE GRID -->
+
+            <!-- IMAGE GRID -->
+
+<div class="image-grid">
+
+    <!-- MAIN -->
+
+    <div
+    class="image-box"
+    id="box0"
+    >
+
+        <span class="material-symbols-outlined">
+            add_photo_alternate
+        </span>
+
+        <small>MAIN</small>
+
+    </div>
+
+    <!-- FRONT -->
+
+    <div
+    class="image-box"
+    id="box1"
+    >
+
+        <span class="material-symbols-outlined">
+            image
+        </span>
+
+        <small>FRONT</small>
+
+    </div>
+
+    <!-- BACK -->
+
+    <div
+    class="image-box"
+    id="box2"
+    >
+
+        <span class="material-symbols-outlined">
+            image
+        </span>
+
+        <small>BACK</small>
+
+    </div>
+
+</div>
+
+            <!-- FORM GRID -->
+
+           <!-- FORM GRID -->
+
+<div class="form-grid">
+
+    <!-- COLOR -->
+
+    <div class="form-group">
+
+        <label>COLOR</label>
+
+        <select
+name="color"
+class="select">
+
+    <option value="">
+        Select One
+    </option>
+
+    <option value="Black"
+    {% if form.color.value == "Black" %}
+    selected
+    {% endif %}
+    >
+        Black
+    </option>
+
+    <option value="White"
+    {% if form.color.value == "White" %}
+    selected
+    {% endif %}
+    >
+        White
+    </option>
+
+    <option value="Blue"
+    {% if form.color.value == "Blue" %}
+    selected
+    {% endif %}
+    >
+        Blue
+    </option>
+
+    <option value="Red"
+    {% if form.color.value == "Red" %}
+    selected
+    {% endif %}
+    >
+        Red
+    </option>
+
+    <option value="Pink"
+    {% if form.color.value == "Pink" %}
+    selected
+    {% endif %}
+    >
+        Pink
+    </option>
+
+</select>
+    </div>
+
+    <!-- SIZE -->
+
+    <div class="form-group">
+
+        <label>SIZE</label>
+
+        <select
+name="size"
+class="select">
+
+    <option value="">
+        Select
+    </option>
+
+    <option value="S"
+    {% if form.size.value == "S" %}
+    selected
+    {% endif %}
+    >
+        S
+    </option>
+
+    <option value="M"
+    {% if form.size.value == "M" %}
+    selected
+    {% endif %}
+    >
+        M
+    </option>
+
+    <option value="L"
+    {% if form.size.value == "L" %}
+    selected
+    {% endif %}
+    >
+        L
+    </option>
+
+    <option value="XL"
+    {% if form.size.value == "XL" %}
+    selected
+    {% endif %}
+    >
+        XL
+    </option>
+
+</select>
+
+    </div>
+
+</div>
+
+
+<!-- SECOND GRID -->
+
+<div class="form-grid">
+
+    <!-- WEIGHT -->
+
+    <div class="form-group">
+
+        <label>WEIGHT</label>
+
+        <input
+type="number"
+name="weight"
+min="1"
+class="input"
+placeholder="200"
+value="{{ form.weight.value|default:'' }}"
+>
+
+    </div>
+
+    <!-- PRICE -->
+
+    <div class="form-group">
+
+        <label>PRICE</label>
+
+        <input
+type="number"
+step="0.01"
+min="1"
+name="price"
+class="input"
+placeholder="1499"
+value="{{ form.price.value|default:'' }}"
+>
+
+    </div>
+
+</div>
+
+
+<!-- THIRD GRID -->
+
+<div class="form-grid">
+
+    <!-- STOCK -->
+
+    <div class="form-group">
+
+        <label>STOCK</label>
+
+        <input
+type="number"
+name="stock"
+min="0"
+class="input"
+placeholder="0"
+value="{{ form.stock.value|default:'' }}"
+>
+
+    </div>
+
+    <!-- SKU -->
+
+    <div class="form-group">
+
+        <label>SKU</label>
+
+        <input
+type="text"
+name="sku"
+class="input"
+placeholder="BLK-M-001"
+value="{{ form.sku.value|default:'' }}"
+>
+
+    </div>
+
+</div>
+
+<!-- BOTTOM -->
+
+<div class="bottom">
+
+    <!-- LEFT TOGGLES -->
+
+    <div
+    style="
+    display:flex;
+    gap:24px;
+    align-items:center;
+    "
+    >
+
+        <!-- ACTIVE STATUS -->
+
+        <div class="status">
+
+            <label class="switch">
+
+                <input
+                type="checkbox"
+                name="is_active"
+                value="on"
+
+                {% if form.is_active.value %}
+                checked
+                {% endif %}
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+            <small>ACTIVE</small>
+
+        </div>
+
+        <!-- DEFAULT VARIANT -->
+
+        <div class="status">
+
+            <label class="switch">
+
+                <input
+                type="checkbox"
+                name="is_default"
+                value="on"
+
+                {% if form.is_default.value %}
+                checked
+                {% endif %}
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+            <small>DEFAULT</small>
+
+        </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+
+    <div class="buttons">
+
+        <button
+        type="button"
+        class="discard-btn"
+        onclick="window.location.href='{% url 'variant_management' product.id %}'"
+        >
+
+            Discard
+
+        </button>
+
+        <button
+        type="submit"
+        class="save-btn">
+
+            Add Variant
+
+        </button>
+
+    </div>
+
+</div>
+
+        </form>
+
+    </div>
+
+</div>
+<!-- ================= CROP MODAL ================= -->
+
+<div
+id="cropModal"
+style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.7);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:99999;
+"
+>
+
+    <div
+    style="
+    width:520px;
+    background:white;
+    border-radius:20px;
+    padding:24px;
+    "
+    >
+
+        <div
+        style="
+        width:100%;
+        height:420px;
+        overflow:hidden;
+        "
+        >
+
+            <img
+            id="cropImage"
+            style="
+            max-width:100%;
+            display:block;
+            "
+            >
+
+        </div>
+
+        <div
+        style="
+        margin-top:20px;
+        display:flex;
+        justify-content:flex-end;
+        gap:12px;
+        "
+        >
+
+            <button
+            type="button"
+            id="cancelCrop"
+            class="discard-btn"
+            >
+                Cancel
+            </button>
+
+            <button
+            type="button"
+            id="cropBtn"
+            class="save-btn"
+            >
+                Crop Image
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= IMAGE PREVIEW ================= -->
+
+<script>
+
+const imageBoxes =
+document.querySelectorAll(".image-box");
+
+const cropModal =
+document.getElementById("cropModal");
+
+const cropImage =
+document.getElementById("cropImage");
+
+const cropBtn =
+document.getElementById("cropBtn");
+
+const cancelCrop =
+document.getElementById("cancelCrop");
+
+let cropper;
+
+let currentIndex = 0;
+
+let currentFile = null;
+
+/* CLICK IMAGE BOX */
+
+imageBoxes.forEach((box,index)=>{
+
+    box.addEventListener("click",()=>{
+
+        currentIndex = index;
+
+        document
+        .getElementById(`imageInput${index}`)
+        .click();
+
+    });
+
+});
+
+/* FILE CHANGE */
+
+for(let i=0;i<3;i++){
+
+    const input =
+    document.getElementById(`imageInput${i}`);
+
+    input.addEventListener(
+
+        "change",
+
+        function(e){
+
+            const file =
+            e.target.files[0];
+
+            if(!file) return;
+
+            currentFile = file;
+
+            cropModal.style.display = "flex";
+
+            cropImage.src =
+            URL.createObjectURL(file);
+
+            if(cropper){
+                cropper.destroy();
+            }
+
+            cropper = new Cropper(cropImage,{
+
+                aspectRatio:4/5,
+
+                viewMode:1,
+
+                autoCropArea:1,
+
+                responsive:true
+
+            });
+
+        }
+
+    );
+
+}
+
+/* CROP */
+
+cropBtn.onclick = function(){
+
+    const canvas =
+    cropper.getCroppedCanvas({
+
+        width:800,
+        height:1000
+
+    });
+
+    canvas.toBlob(function(blob){
+
+        const croppedFile =
+        new File(
+
+            [blob],
+
+            currentFile.name,
+
+            {
+                type:"image/jpeg"
+            }
+
+        );
+
+        const dt =
+        new DataTransfer();
+
+        dt.items.add(croppedFile);
+
+        document.getElementById(
+            `imageInput${currentIndex}`
+        ).files = dt.files;
+
+        imageBoxes[currentIndex].innerHTML = `
+            <img src="${canvas.toDataURL()}">
+        `;
+
+        cropModal.style.display = "none";
+
+        cropper.destroy();
+
+    },
+
+    "image/jpeg",
+
+    0.9);
+
+};
+
+/* CANCEL */
+
+cancelCrop.onclick = function(){
+
+    cropModal.style.display = "none";
+
+    if(cropper){
+        cropper.destroy();
+    }
+
+};
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+</body>
+</html>
+```

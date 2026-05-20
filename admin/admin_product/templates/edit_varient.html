@@ -1,0 +1,1525 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Edit Variant</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+/>
+
+<style>
+
+/* ================= RESET ================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f6f3f0;
+    font-family:'Manrope',sans-serif;
+    color:#261815;
+    overflow:hidden;
+}
+
+/* ================= PAGE WRAPPER ================= */
+
+.page-wrapper{
+
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+
+    filter:blur(4px);
+
+    opacity:.55;
+
+    transform:scale(.995);
+
+    pointer-events:none;
+
+    user-select:none;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    width:245px;
+    height:100vh;
+
+    background:#f5f1ee;
+
+    border-right:1px solid #ebe5df;
+
+    padding:28px 18px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+/* LOGO */
+
+.logo h1{
+    font-family:'Noto Serif',serif;
+    font-size:24px;
+    line-height:1.1;
+    letter-spacing:2px;
+}
+
+.logo span{
+    display:block;
+    margin-top:8px;
+
+    font-size:10px;
+    color:#9c8e84;
+    letter-spacing:1px;
+}
+
+/* MENU */
+
+.menu{
+    margin-top:45px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:5px;
+}
+
+.menu a{
+    text-decoration:none;
+
+    display:flex;
+    align-items:center;
+
+    gap:12px;
+
+    color:#74665d;
+
+    padding:12px 14px;
+
+    border-radius:12px;
+
+    font-size:13px;
+    font-weight:500;
+
+    transition:.2s;
+}
+
+.menu a:hover{
+    background:#ece6e1;
+}
+
+.menu a.active{
+    background:#ece6e1;
+
+    border-left:3px solid #341818;
+
+    color:#1e1a18;
+
+    font-weight:700;
+}
+
+.menu a span{
+    font-size:18px;
+}
+
+/* PROFILE */
+
+.profile{
+    border-top:1px solid #e7dfd8;
+    padding-top:18px;
+}
+
+.profile-box{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.profile-box img{
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.profile-box b{
+    font-size:12px;
+}
+
+.profile-box small{
+    font-size:10px;
+    color:#998b81;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    flex:1;
+    padding:28px;
+}
+
+/* TOPBAR */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:26px;
+}
+
+.search-box{
+    width:320px;
+    height:44px;
+
+    background:#f1ece8;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+
+    gap:10px;
+
+    padding:0 14px;
+}
+
+.search-box span{
+    font-size:18px;
+    color:#998b81;
+}
+
+.search-box input{
+    width:100%;
+
+    border:none;
+    outline:none;
+
+    background:none;
+
+    font-size:13px;
+}
+
+/* HEADER */
+
+.header{
+    margin-bottom:24px;
+}
+
+.header h1{
+    font-family:'Noto Serif',serif;
+    font-size:44px;
+}
+
+.header p{
+    margin-top:8px;
+
+    color:#8f8075;
+
+    font-size:14px;
+}
+
+/* PRODUCT CARD */
+
+.product-card{
+    background:#faf7f5;
+
+    border-radius:24px;
+
+    padding:30px;
+
+    border:1px solid #eee7e1;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:24px;
+}
+
+.product-left{
+    display:flex;
+    align-items:center;
+
+    gap:24px;
+}
+
+.product-left img{
+    width:90px;
+    height:120px;
+
+    object-fit:cover;
+}
+
+.collection{
+    font-size:10px;
+
+    letter-spacing:2px;
+
+    color:#9b8d82;
+
+    margin-bottom:8px;
+}
+
+.product-name{
+    font-family:'Noto Serif',serif;
+    font-size:36px;
+}
+
+/* TABLE */
+
+.table-card{
+    background:#fcfaf8;
+
+    border-radius:24px;
+
+    border:1px solid #eee7e1;
+
+    overflow:hidden;
+}
+
+.table-head,
+.row{
+    display:grid;
+
+    grid-template-columns:
+    80px
+    2fr
+    1fr
+    1fr
+    1fr
+    1fr
+    120px;
+
+    align-items:center;
+}
+
+.table-head{
+    padding:22px 26px;
+
+    border-bottom:1px solid #f0e9e3;
+}
+
+.table-head div{
+    font-size:10px;
+
+    letter-spacing:1px;
+
+    color:#9b8d82;
+
+    font-weight:700;
+}
+
+.row{
+    padding:24px 26px;
+
+    border-bottom:1px solid #f3ede8;
+}
+
+.variant{
+    display:flex;
+    align-items:center;
+
+    gap:14px;
+}
+
+.variant img{
+    width:52px;
+    height:52px;
+
+    border-radius:10px;
+
+    object-fit:cover;
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.12);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:999;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    width:760px;
+
+    background:white;
+
+    border-radius:20px;
+
+    padding:34px;
+
+    position:relative;
+
+    box-shadow:
+    0 25px 70px rgba(0,0,0,.18);
+}
+
+/* CLOSE */
+
+.close{
+    position:absolute;
+
+    top:20px;
+    right:20px;
+
+    font-size:22px;
+
+    color:#84766d;
+
+    cursor:pointer;
+}
+
+/* TITLE */
+
+.modal h2{
+    font-family:'Noto Serif',serif;
+
+    font-size:40px;
+
+    margin-bottom:26px;
+}
+
+/* GALLERY */
+
+.gallery-title{
+    font-size:10px;
+
+    letter-spacing:1px;
+
+    color:#8f8177;
+
+    font-weight:700;
+
+    margin-bottom:12px;
+}
+
+.gallery{
+    display:flex;
+
+    gap:14px;
+
+    margin-bottom:28px;
+}
+.image-box{
+    width:90px;
+    height:90px;
+
+    border:2px dashed #ded2c9;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    overflow:hidden;
+
+    cursor:pointer;
+
+    background:#faf7f5;
+}
+
+.image-box img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.image-box span{
+    font-size:28px;
+    color:#7d7067;
+}
+
+.gallery img{
+    width:90px;
+    height:90px;
+
+    border-radius:12px;
+
+    object-fit:cover;
+
+    border:2px solid transparent;
+
+    cursor:pointer;
+}
+
+.gallery img.active{
+    border-color:#341818;
+}
+
+.add-image{
+    width:90px;
+    height:90px;
+
+    border:2px dashed #ded2c9;
+
+    border-radius:12px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    color:#7d7067;
+
+    cursor:pointer;
+}
+
+.add-image span{
+    font-size:24px;
+}
+
+.add-image small{
+    font-size:10px;
+}
+
+/* FORM */
+
+.form-grid{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:16px;
+
+    margin-bottom:18px;
+}
+
+.two-grid{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:16px;
+
+    margin-bottom:18px;
+}
+
+.form-group label{
+    display:block;
+
+    margin-bottom:8px;
+
+    font-size:10px;
+
+    letter-spacing:1px;
+
+    color:#91837a;
+
+    font-weight:700;
+}
+
+.input,
+.select{
+    width:100%;
+    height:50px;
+
+    border:none;
+
+    background:#f3efec;
+
+    border-radius:10px;
+
+    padding:0 14px;
+
+    font-size:13px;
+
+    outline:none;
+}
+
+.full-width{
+    margin-bottom:24px;
+}
+
+/* STATUS */
+
+.status-box{
+    background:#f3efec;
+
+    height:54px;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 18px;
+
+    margin-bottom:26px;
+}
+
+.status-box small{
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+}
+
+/* SWITCH */
+
+.switch{
+    position:relative;
+
+    display:inline-block;
+
+    width:50px;
+    height:26px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+
+    inset:0;
+
+    background:#d6cbc3;
+
+    border-radius:30px;
+
+    transition:.3s;
+}
+
+.slider::before{
+    content:"";
+
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    left:3px;
+    bottom:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#4a2929;
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(24px);
+}
+
+/* BUTTONS */
+
+.buttons{
+    display:flex;
+    justify-content:flex-end;
+
+    gap:14px;
+}
+
+.discard-btn{
+    height:48px;
+
+    border:none;
+
+    padding:0 24px;
+
+    border-radius:10px;
+
+    background:#efe2d5;
+
+    color:#7c6b61;
+
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+.save-btn{
+    height:48px;
+
+    border:none;
+
+    padding:0 30px;
+
+    border-radius:10px;
+
+    background:#4a2929;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= PAGE WRAPPER ================= -->
+
+<div class="page-wrapper">
+
+    <!-- SIDEBAR -->
+
+    <div class="sidebar">
+
+        <div>
+
+            <div class="logo">
+
+                <h1>WESTRAL<br>FASHION</h1>
+
+                <span>MANAGEMENT SUITE</span>
+
+            </div>
+
+            <div class="menu">
+
+                <a href="#">
+                    <span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+
+                <a href="#">
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    Orders
+                </a>
+
+                <a href="#" class="active">
+                    <span class="material-symbols-outlined">inventory_2</span>
+                    Products
+                </a>
+
+                <a href="#">
+                    <span class="material-symbols-outlined">category</span>
+                    Categories
+                </a>
+
+                <a href="#">
+                    <span class="material-symbols-outlined">confirmation_number</span>
+                    Coupons
+                </a>
+
+                <a href="#">
+                    <span class="material-symbols-outlined">local_offer</span>
+                    Offers
+                </a>
+
+                <a href="#">
+                    <span class="material-symbols-outlined">group</span>
+                    Customers
+                </a>
+
+                <a href="#">
+                    <span class="material-symbols-outlined">reviews</span>
+                    Reviews
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- PROFILE -->
+
+        <div class="profile">
+
+            <div class="profile-box">
+
+                <img src="https://i.pravatar.cc/100?img=5">
+
+                <div>
+
+                    <b>SHIFA MC</b><br>
+
+                    <small>LEAD CURATOR</small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="main">
+
+        <!-- TOPBAR -->
+
+        <div class="topbar">
+
+            <div class="search-box">
+
+                <span class="material-symbols-outlined">
+                    search
+                </span>
+
+                <input
+                type="text"
+                placeholder="Search orders, products...">
+
+            </div>
+
+        </div>
+
+        <!-- HEADER -->
+
+        <div class="header">
+
+            <h1>Variant Management</h1>
+
+            <p>
+                Configure and manage product SKU variations for your atelier collections.
+            </p>
+
+        </div>
+
+        <!-- PRODUCT CARD -->
+
+        <div class="product-card">
+
+            <div class="product-left">
+
+                {% with image=variant.images.first %}
+
+    {% if image and image.image %}
+
+        <img src="{{ image.image.url }}">
+
+    {% else %}
+
+        <img src="{% static 'images/no-image.png' %}">
+
+    {% endif %}
+
+{% endwith %}
+                <div>
+
+                    <div class="collection">
+
+                        PRODUCT COLLECTION
+
+                    </div>
+
+                    <div class="product-name">
+
+                        {{ product.product_name }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-card">
+
+            <div class="table-head">
+
+                <div>DEFAULT</div>
+                <div>VARIANTS</div>
+                <div>SKU</div>
+                <div>PRICE</div>
+                <div>STATUS</div>
+                <div>STOCK</div>
+                <div>ACTIONS</div>
+
+            </div>
+
+            <div class="row">
+
+                <div>
+
+    {% if variant.is_default %}
+
+        <div class="default-radio active"></div>
+
+    {% else %}
+
+        <div class="default-radio"></div>
+
+    {% endif %}
+
+</div>
+
+                <div class="variant">
+
+                    {% with image=variant.images.first %}
+
+    {% if image and image.image %}
+
+        <img src="{{ image.image.url }}">
+
+    {% else %}
+
+        <img src="{% static 'images/no-image.png' %}">
+
+    {% endif %}
+
+{% endwith %}
+
+                    <div>
+
+                        <h4>
+
+    {{ variant.color }} / {{ variant.size }}
+
+</h4>
+
+                        <small>
+
+    SKU :
+    {{ variant.sku }}
+
+</small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+<!-- ================= MODAL ================= -->
+
+<div class="overlay">
+
+    <div class="modal">
+
+        <form
+        method="POST"
+        enctype="multipart/form-data"
+        >
+
+            {% csrf_token %}
+
+            <!-- CLOSE -->
+
+            <span
+            class="material-symbols-outlined close"
+            onclick="window.location.href='{% url 'variant_management' product.id %}'"
+            >
+                close
+            </span>
+
+            <!-- TITLE -->
+
+            <h2>Edit Variant</h2>
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        {% if "variant" in message.tags %}
+
+            <div
+            style="
+            background:#f8ece8;
+            color:#7a4b42;
+            padding:14px 16px;
+            border-radius:10px;
+            margin-bottom:20px;
+            font-size:13px;
+            "
+            >
+
+                {{ message }}
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+            <!-- FILE INPUT -->
+
+            <input type="file" name="image1" id="imageInput0" hidden>
+            <input type="file" name="image2" id="imageInput1" hidden>
+            <input type="file" name="image3" id="imageInput2" hidden>
+
+            <!-- GALLERY -->
+
+            <div class="gallery-title">
+    GALLERY SELECTION
+</div>
+
+<div class="gallery">
+
+    <!-- IMAGE 1 -->
+
+    <div
+    class="image-box"
+    id="box0"
+    >
+
+        {% with image=variant.images.all.0 %}
+
+            {% if image %}
+
+                <img
+                src="{{ image.image.url }}"
+                >
+
+            {% else %}
+
+                <span class="material-symbols-outlined">
+                    add_photo_alternate
+                </span>
+
+            {% endif %}
+
+        {% endwith %}
+
+    </div>
+
+    <!-- IMAGE 2 -->
+
+    <div
+    class="image-box"
+    id="box1"
+    >
+
+        {% with image=variant.images.all.1 %}
+
+            {% if image %}
+
+                <img
+                src="{{ image.image.url }}"
+                >
+
+            {% else %}
+
+                <span class="material-symbols-outlined">
+                    image
+                </span>
+
+            {% endif %}
+
+        {% endwith %}
+
+    </div>
+
+    <!-- IMAGE 3 -->
+
+    <div
+    class="image-box"
+    id="box2"
+    >
+
+        {% with image=variant.images.all.2 %}
+
+            {% if image %}
+
+                <img
+                src="{{ image.image.url }}"
+                >
+
+            {% else %}
+
+                <span class="material-symbols-outlined">
+                    image
+                </span>
+
+            {% endif %}
+
+        {% endwith %}
+
+    </div>
+
+</div>
+            <!-- FORM -->
+
+            <div class="form-grid">
+
+                <!-- COLOR -->
+
+                <div class="form-group">
+
+                    <label>COLOR</label>
+
+                    <input
+                    type="text"
+                    name="color"
+                    class="input"
+                    value="{{ variant.color }}"
+                    >
+
+                </div>
+
+                <!-- WEIGHT -->
+
+                <div class="form-group">
+
+                    <label>WEIGHT</label>
+
+                    <input
+                    type="number"
+                    name="weight"
+                    min="1"
+                    class="input"
+                    value="{{ variant.weight }}"
+                    >
+
+                </div>
+
+                <!-- SIZE -->
+
+                <div class="form-group">
+
+                    <label>SIZE</label>
+
+                    <select
+                    name="size"
+                    class="select"
+                    >
+
+                        <option
+                        value="S"
+                        {% if variant.size == 'S' %}selected{% endif %}
+                        >
+                            S
+                        </option>
+
+                        <option
+                        value="M"
+                        {% if variant.size == 'M' %}selected{% endif %}
+                        >
+                            M
+                        </option>
+
+                        <option
+                        value="L"
+                        {% if variant.size == 'L' %}selected{% endif %}
+                        >
+                            L
+                        </option>
+
+                        <option
+                        value="XL"
+                        {% if variant.size == 'XL' %}selected{% endif %}
+                        >
+                            XL
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- PRICE & STOCK -->
+
+            <div class="two-grid">
+
+                <!-- PRICE -->
+
+                <div class="form-group">
+
+                    <label>PRICE</label>
+
+                    <input
+                    type="number"
+                    step="0.01"
+                    min="1"
+                    name="price"
+                    class="input"
+                    value="{{ variant.price }}"
+                    >
+
+                </div>
+
+                <!-- STOCK -->
+
+                <div class="form-group">
+
+                    <label>STOCK</label>
+
+                    <input
+                    type="number"
+                    min="0"
+                    name="stock"
+                    class="input"
+                    value="{{ variant.stock }}"
+                    >
+
+                </div>
+
+            </div>
+
+            <!-- SKU -->
+
+            <div class="form-group full-width">
+
+                <label>SKU</label>
+
+                <input
+                type="text"
+                name="sku"
+                class="input"
+                value="{{ variant.sku }}"
+                >
+
+            </div>
+
+            <!-- STATUS -->
+                <!-- DEFAULT VARIANT -->
+<!-- ACTIVE STATUS -->
+
+<div class="status-box">
+
+    <small>ACTIVE STATUS</small>
+
+    <label class="switch">
+
+        <input
+        type="checkbox"
+        name="is_active"
+        value="on"
+
+        {% if variant.is_active %}
+        checked
+        {% endif %}
+        >
+
+        <span class="slider"></span>
+
+    </label>
+
+</div>
+
+<!-- DEFAULT VARIANT -->
+
+<div class="status-box">
+
+    <small>DEFAULT VARIANT</small>
+
+    <label class="switch">
+
+        <input
+        type="checkbox"
+        name="is_default"
+        value="on"
+
+        {% if variant.is_default %}
+        checked
+        {% endif %}
+        >
+
+        <span class="slider"></span>
+
+    </label>
+
+</div>
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <!-- DISCARD -->
+
+                <button
+                type="button"
+                class="discard-btn"
+                onclick="window.location.href='{% url 'variant_management' product.id %}'"
+                >
+
+                    Discard
+
+                </button>
+
+                <!-- UPDATE -->
+
+                <button
+                type="submit"
+                class="save-btn"
+                >
+
+                    Update Variant
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+<!-- ================= CROP MODAL ================= -->
+
+<div
+id="cropModal"
+style="
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.7);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:99999;
+"
+>
+
+    <div
+    style="
+    width:520px;
+    background:white;
+    border-radius:20px;
+    padding:24px;
+    "
+    >
+
+        <div
+        style="
+        width:100%;
+        height:420px;
+        overflow:hidden;
+        "
+        >
+
+            <img
+            id="cropImage"
+            style="
+            max-width:100%;
+            display:block;
+            "
+            >
+
+        </div>
+
+        <div
+        style="
+        margin-top:20px;
+        display:flex;
+        justify-content:flex-end;
+        gap:12px;
+        "
+        >
+
+            <button
+            type="button"
+            id="cancelCrop"
+            class="discard-btn"
+            >
+                Cancel
+            </button>
+
+            <button
+            type="button"
+            id="cropBtn"
+            class="save-btn"
+            >
+                Crop Image
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= IMAGE PREVIEW ================= -->
+
+<script>
+
+const imageBoxes =
+document.querySelectorAll(".image-box");
+
+const cropModal =
+document.getElementById("cropModal");
+
+const cropImage =
+document.getElementById("cropImage");
+
+const cropBtn =
+document.getElementById("cropBtn");
+
+const cancelCrop =
+document.getElementById("cancelCrop");
+
+let cropper;
+
+let currentIndex = 0;
+
+let currentFile = null;
+
+/* CLICK IMAGE BOX */
+
+imageBoxes.forEach((box,index)=>{
+
+    box.addEventListener("click",()=>{
+
+        currentIndex = index;
+
+        document
+        .getElementById(`imageInput${index}`)
+        .click();
+
+    });
+
+});
+
+/* FILE CHANGE */
+
+for(let i=0;i<3;i++){
+
+    const input =
+    document.getElementById(`imageInput${i}`);
+
+    input.addEventListener(
+
+        "change",
+
+        function(e){
+
+            const file =
+            e.target.files[0];
+
+            if(!file) return;
+
+            currentFile = file;
+
+            cropModal.style.display = "flex";
+
+            cropImage.src =
+            URL.createObjectURL(file);
+
+            if(cropper){
+                cropper.destroy();
+            }
+
+            cropper = new Cropper(cropImage,{
+
+                aspectRatio:4/5,
+
+                viewMode:1,
+
+                autoCropArea:1,
+
+                responsive:true
+
+            });
+
+        }
+
+    );
+
+}
+
+/* CROP */
+
+cropBtn.onclick = function(){
+
+    const canvas =
+    cropper.getCroppedCanvas({
+
+        width:800,
+        height:1000
+
+    });
+
+    canvas.toBlob(function(blob){
+
+        const croppedFile =
+        new File(
+
+            [blob],
+
+            currentFile.name,
+
+            {
+                type:"image/jpeg"
+            }
+
+        );
+
+        const dt =
+        new DataTransfer();
+
+        dt.items.add(croppedFile);
+
+        document.getElementById(
+            `imageInput${currentIndex}`
+        ).files = dt.files;
+
+        imageBoxes[currentIndex].innerHTML = `
+            <img src="${canvas.toDataURL()}">
+        `;
+
+        cropModal.style.display = "none";
+
+        cropper.destroy();
+
+    },
+
+    "image/jpeg",
+
+    0.9);
+
+};
+
+/* CANCEL */
+
+cancelCrop.onclick = function(){
+
+    cropModal.style.display = "none";
+
+    if(cropper){
+        cropper.destroy();
+    }
+
+};
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+</body>
+</html>

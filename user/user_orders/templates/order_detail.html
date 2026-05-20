@@ -1,0 +1,1381 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Order Details
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* ================= PAGE ================= */
+
+.order-detail-page{
+    padding:45px 60px 80px;
+
+    background:#f8f5f2;
+
+    min-height:100vh;
+}
+
+/* ================= TOP ================= */
+
+.top-header{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    flex-wrap:wrap;
+
+    gap:20px;
+
+    margin-bottom:35px;
+}
+
+.back-link{
+    text-decoration:none;
+
+    color:#8b7c72;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+    font-weight:700;
+}
+
+.view-orders{
+    text-decoration:none;
+
+    color:#4c382c;
+
+    font-size:11px;
+
+    letter-spacing:1px;
+
+    font-weight:800;
+}
+
+.order-title{
+    font-size:42px;
+
+    font-weight:800;
+
+    color:#2f241e;
+
+    margin-top:20px;
+}
+
+.order-date{
+    font-size:12px;
+
+    color:#9b8d83;
+
+    margin-top:10px;
+}
+
+/* ================= GRID ================= */
+
+.detail-grid{
+    display:grid;
+
+    grid-template-columns:1fr 340px;
+
+    gap:35px;
+
+    align-items:start;
+}
+
+/* ================= CARD ================= */
+
+.card{
+    background:white;
+
+    border-radius:14px;
+
+    border:1px solid #eee;
+
+    padding:28px;
+}
+
+/* ================= STATUS TRACKER ================= */
+
+.status-tracker{
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    position:relative;
+
+    margin-bottom:40px;
+}
+
+.status-line{
+    position:absolute;
+
+    top:12px;
+
+    left:55px;
+
+    right:55px;
+
+    height:2px;
+
+    background:#e5ddd6;
+
+    z-index:1;
+}
+
+.status-step{
+    position:relative;
+
+    z-index:2;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+}
+
+.status-dot{
+    width:24px;
+
+    height:24px;
+
+    border-radius:50%;
+
+    background:#6B4F3B;
+
+    border:4px solid white;
+}
+
+.inactive-dot{
+    background:#ddd;
+}
+
+.status-label{
+    margin-top:10px;
+
+    font-size:10px;
+
+    letter-spacing:1px;
+
+    color:#7d6e65;
+
+    font-weight:700;
+
+    text-align:center;
+
+    max-width:80px;
+}
+
+.cancelled-order-banner{
+
+    margin-top:25px;
+
+    padding:16px;
+
+    border-radius:10px;
+
+    background:#fceaea;
+
+    color:#d32f2f;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-align:center;
+}
+
+/* ================= PRODUCT ================= */
+
+.product-box{
+    display:grid;
+
+    grid-template-columns:120px 1fr auto;
+
+    gap:25px;
+
+    align-items:start;
+}
+/* ================= SINGLE ITEM CARD ================= */
+
+.single-product-card{
+
+    border:1px solid #f1ece8;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    margin-bottom:24px;
+
+    background:#fff;
+}
+
+.product-image{
+    width:120px;
+
+    height:150px;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    background:#f3efeb;
+}
+
+.product-image img{
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+.product-name{
+    font-size:20px;
+
+    font-weight:700;
+
+    color:#3f2d22;
+
+    margin-bottom:10px;
+}
+
+.product-meta{
+    font-size:12px;
+
+    line-height:1.9;
+
+    color:#8d7e74;
+
+    text-transform:uppercase;
+}
+
+.qty-box{
+    width:70px;
+
+    height:38px;
+
+    border:1px solid #d9cdc3;
+
+    border-radius:8px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-top:18px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#6B4F3B;
+}
+
+.product-price{
+    font-size:18px;
+
+    font-weight:800;
+
+    color:#2f241e;
+}
+
+/* ================= INFO SECTION ================= */
+
+.info-grid{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:25px;
+
+    margin-top:40px;
+
+    padding-top:35px;
+
+    border-top:1px solid #f1ece8;
+}
+
+.info-title{
+    font-size:11px;
+
+    letter-spacing:2px;
+
+    color:#9b8d83;
+
+    margin-bottom:16px;
+
+    font-weight:800;
+}
+
+.info-text{
+    font-size:13px;
+
+    color:#5f5147;
+
+    line-height:2;
+}
+
+/* ================= SUMMARY ================= */
+
+.summary-title{
+    font-size:12px;
+
+    letter-spacing:2px;
+
+    color:#8e7f74;
+
+    font-weight:800;
+
+    margin-bottom:30px;
+}
+
+.summary-row{
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:18px;
+
+    font-size:14px;
+
+    color:#5f5147;
+}
+
+.total-row{
+    border-top:1px solid #eee;
+
+    margin-top:22px;
+
+    padding-top:22px;
+
+    font-size:22px;
+
+    font-weight:800;
+
+    color:#2f241e;
+}
+
+/* ================= BUTTONS ================= */
+
+.action-buttons{
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+    margin-top:35px;
+}
+
+.action-btn{
+    height:50px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:0.2s;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    text-decoration:none;
+}
+.action-btn:hover{
+    background:#563c2c;
+}
+
+.secondary-btn{
+    background:#ebe4dd;
+
+    color:#6B4F3B;
+}
+
+.secondary-btn:hover{
+    background:#ddd3ca;
+}
+
+/* ================= ITEM ACTIONS ================= */
+
+.item-actions{
+
+    margin-top:20px;
+
+    display:flex;
+
+    justify-content:flex-end;
+}
+
+.item-cancel-btn{
+
+    height:42px;
+
+    padding:0 20px;
+
+    border-radius:10px;
+
+    background:#ebe4dd;
+
+    color:#6B4F3B;
+
+    text-decoration:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    transition:0.2s;
+}
+
+.item-cancel-btn:hover{
+
+    background:#ddd3ca;
+}
+
+ .cancelled-badge{
+
+    height:42px;
+
+    padding:0 18px;
+
+    border-radius:10px;
+
+    background:#fceaea;
+
+    color:#d32f2f;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+}
+
+/* ================= SECURITY BOX ================= */
+
+.security-box{
+    margin-top:22px;
+
+    background:white;
+
+    border-radius:12px;
+
+    border:1px solid #eee;
+
+    padding:18px;
+}
+
+.security-title{
+    font-size:11px;
+
+    font-weight:800;
+
+    color:#4c382c;
+
+    margin-bottom:8px;
+
+    letter-spacing:1px;
+}
+
+.security-text{
+    font-size:11px;
+
+    color:#8d7e74;
+
+    line-height:1.8;
+}
+
+/* ================= HELP ================= */
+
+.help-text{
+    margin-top:45px;
+
+    font-size:11px;
+
+    color:#8e7f74;
+
+    letter-spacing:1px;
+}
+
+.help-text a{
+    color:#4c382c;
+
+    font-weight:700;
+
+    text-decoration:none;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1000px){
+
+    .detail-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:750px){
+
+    .order-detail-page{
+        padding:25px 18px 60px;
+    }
+
+    .product-box{
+        grid-template-columns:1fr;
+
+        text-align:center;
+    }
+
+    .product-image{
+        margin:auto;
+    }
+
+    .info-grid{
+        grid-template-columns:1fr;
+    }
+
+    .order-title{
+        font-size:30px;
+    }
+}
+
+.approved-banner{
+
+    background:#e8f6ed;
+
+    color:#1d7a42;
+}
+
+.rejected-banner{
+
+    background:#fdeaea;
+
+    color:#c0392b;
+}
+.approved-banner{
+
+    background:#e8f6ed;
+
+    color:#1d7a42;
+}
+
+.rejected-banner{
+
+    background:#fdeaea;
+
+    color:#c0392b;
+}
+.disabled-btn{
+
+    pointer-events:none;
+
+    cursor:not-allowed;
+
+    opacity:0.9;
+}
+
+
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="order-detail-page">
+
+    <!-- ================= TOP ================= -->
+
+    <div class="top-header">
+
+        <div>
+
+            <a
+            href="{% url 'my_orders' %}"
+            class="back-link"
+            >
+                ← BACK TO ORDERS
+            </a>
+
+            <div class="order-title">
+
+                ORDER #{{ order.order_id }}
+
+            </div>
+
+            <div class="order-date">
+
+                Placed on
+                {{ order.created_at }}
+
+            </div>
+
+        </div>
+
+        <a
+        href="{% url 'my_orders' %}"
+        class="view-orders"
+        >
+            VIEW ALL ORDERS
+        </a>
+
+    </div>
+
+    <!-- ================= GRID ================= -->
+
+    <div class="detail-grid">
+
+        <!-- ================= LEFT ================= -->
+
+        <div>
+
+            <div class="card">
+
+      <!-- ================= RETURN STATUS CHECK ================= -->
+
+{% with has_returned_item=False %}
+
+    {% for item in order.items.all %}
+
+        {% if item.item_status == "Return Requested" or item.item_status == "Return Approved" or item.item_status == "Return Rejected" %}
+
+            <div class="cancelled-order-banner
+
+                {% if item.item_status == 'Return Approved' %}
+
+                    approved-banner
+
+                {% elif item.item_status == 'Return Rejected' %}
+
+                    rejected-banner
+
+                {% endif %}
+
+            ">
+
+                {% if item.item_status == "Return Requested" %}
+
+                    RETURN REQUEST SUBMITTED
+
+                {% elif item.item_status == "Return Approved" %}
+
+                    RETURN APPROVED
+
+                {% elif item.item_status == "Return Rejected" %}
+
+                    RETURN REJECTED
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endwith %}
+
+{% comment %} {% with has_return=False %}
+
+    {% for item in order.items.all %}
+
+        {% if item.item_status == "Return Requested" or item.item_status == "Return Approved" or item.item_status == "Return Rejected" %}
+
+            {% with has_return=True %}
+
+            {% endwith %}
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endwith %} {% endcomment %}
+
+
+{% comment %} {% if not order.items.all.0.item_status == "Return Requested" and not order.items.all.0.item_status == "Return Approved" and not order.items.all.0.item_status == "Return Rejected" %} {% endcomment %}
+
+<!-- ================= STATUS TRACKER ================= -->
+
+
+{% with first_item=order.items.first %}
+
+    {% if first_item.item_status == "Cancelled" %}
+
+        <div class="cancelled-order-banner">
+
+            PRODUCT CANCELLED
+
+        </div>
+
+    {% endif %}
+
+{% endwith %}
+
+{% if order.order_status != "Cancelled" %}
+<div class="status-tracker">
+
+    <div class="status-line"></div>
+
+    <!-- ORDERED -->
+
+    <div class="status-step">
+
+        <div class="status-dot"></div>
+
+        <div class="status-label">
+
+            ORDERED
+
+        </div>
+
+    </div>
+
+    <!-- PROCESSING -->
+
+    <div class="status-step">
+
+        <div class="status-dot {% if order.order_status == 'Pending' %}inactive-dot{% endif %}"></div>
+
+        <div class="status-label">
+
+            PROCESSING
+
+        </div>
+
+    </div>
+
+    <!-- SHIPPED -->
+
+    <div class="status-step">
+
+        <div class="status-dot {% if order.order_status == 'Pending' %}inactive-dot{% endif %}"></div>
+
+        <div class="status-label">
+
+            SHIPPED
+
+        </div>
+
+    </div>
+
+    <!-- OUT FOR DELIVERY -->
+
+    <div class="status-step">
+
+        <div class="status-dot {% if order.order_status != 'Out For Delivery' and order.order_status != 'Delivered' %}inactive-dot{% endif %}"></div>
+
+        <div class="status-label">
+
+            OUT FOR DELIVERY
+
+        </div>
+
+    </div>
+
+    <!-- DELIVERED -->
+
+    <div class="status-step">
+
+        <div class="status-dot {% if order.order_status != 'Delivered' %}inactive-dot{% endif %}"></div>
+
+        <div class="status-label">
+
+            DELIVERED
+
+        </div>
+
+    </div>
+
+</div>
+{% endif %}
+
+{% comment %} {% endif %} {% endcomment %}
+                <!-- PRODUCTS -->
+
+
+
+               {% for item in order.items.all %}
+
+<div class="single-product-card">
+
+    <div class="product-box">
+
+        <!-- IMAGE -->
+
+        <div class="product-image">
+
+            {% with image=item.variant.images.first %}
+
+                {% if image %}
+
+                <img src="{{ image.image.url }}">
+
+                {% endif %}
+
+            {% endwith %}
+
+        </div>
+
+        <!-- DETAILS -->
+
+        <div>
+
+            <div class="product-name">
+
+                {{ item.variant.product.product_name }}
+
+            </div>
+
+            <div class="product-meta">
+
+                COLOR :
+                {{ item.variant.color }}
+
+                |
+
+                SIZE :
+                {{ item.variant.size }}
+
+            </div>
+
+            <div class="qty-box">
+
+                QTY :
+                {{ item.quantity }}
+
+            </div>
+
+        </div>
+
+        <!-- PRICE -->
+
+        <div class="product-price">
+
+            ₹{{ item.total_price }}
+
+        </div>
+
+    </div>
+
+    <!-- ITEM ACTIONS -->
+
+<div
+class="item-actions"
+id="item-action-{{ item.id }}"
+>
+
+{% if item.item_status == "Return Requested" %}
+
+<div class="cancelled-badge">
+
+    RETURN REQUESTED
+
+</div>
+
+{% elif item.item_status == "Return Approved" %}
+
+<div class="cancelled-badge approved-banner">
+
+    RETURN APPROVED
+
+</div>
+
+{% elif item.item_status == "Return Rejected" %}
+
+<div class="cancelled-badge rejected-banner">
+
+    RETURN REJECTED
+
+</div>
+
+{% elif item.item_status == "Cancelled" %}
+
+<div class="cancelled-badge">
+
+    CANCELLED
+
+</div>
+{% elif order.order_status == "Pending" or order.order_status == "Processing" %}
+
+<button
+class="item-cancel-btn cancel-btn"
+data-id="{{ item.id }}"
+>
+
+    CANCEL ITEM
+
+</button>
+
+{% else %}
+
+<div class="cancelled-badge">
+
+    CANNOT CANCEL
+
+</div>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endfor %}
+
+                <!-- INFO -->
+
+                <div class="info-grid">
+
+                    <!-- ADDRESS -->
+
+                    <div>
+
+                        <div class="info-title">
+
+                            SHIPPING ADDRESS
+
+                        </div>
+
+                        <div class="info-text">
+
+                            {{ order.shipping_address }}
+
+                        </div>
+
+                    </div>
+
+                    <!-- DELIVERY -->
+
+                    <div>
+
+                        <div class="info-title">
+
+                            SHIPPING METHOD
+
+                        </div>
+
+                        <div class="info-text">
+
+                            Westral Express Delivery
+
+                            <br>
+
+                            Estimated within 5-7 days
+
+                            <br>
+
+                            Track shipment available soon
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- HELP -->
+
+            <div class="help-text">
+
+                NEED HELP ?
+
+                <a href="#">
+                    CONTACT CUSTOMER SERVICE
+                </a>
+
+            </div>
+
+        </div>
+
+        <!-- ================= RIGHT ================= -->
+
+        <div>
+
+            <!-- SUMMARY -->
+
+            <div class="card">
+
+                <div class="summary-title">
+
+                    ORDER SUMMARY
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>Subtotal</span>
+
+                    <span>
+                        ₹{{ order.total_amount }}
+                    </span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>Discount</span>
+
+                    <span>
+                        ₹0.00
+                    </span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>Delivery Fee</span>
+
+                    <span>
+                        FREE
+                    </span>
+
+                </div>
+
+                <div class="summary-row">
+
+                    <span>Estimated Tax</span>
+
+                    <span>
+                        Included
+                    </span>
+
+                </div>
+
+                <div class="summary-row total-row">
+
+                    <span>Total Amount</span>
+
+                    <span>
+                        ₹{{ order.total_amount }}
+                    </span>
+
+                </div>
+
+                <div class="action-buttons">
+
+<a
+href="{% url 'invoice_page' order.order_id %}"
+class="action-btn"
+>
+
+    ↓ DOWNLOAD INVOICE
+
+</a>
+
+    <!-- CANCEL BUTTON -->
+
+{% if order.order_status == "Pending" or order.order_status == "Processing" %}
+
+    <a
+    href="{% url 'cancel_order' order.order_id %}"
+    class="action-btn secondary-btn"
+    >
+
+        CANCEL ORDER
+
+    </a>
+
+    {% endif %}
+
+    <!-- RETURN BUTTON -->
+{% if order.order_status == "Delivered" %}
+
+    {% with first_item=order.items.first %}
+
+        {% if first_item.item_status == "Active" %}
+
+            <a
+            href="{% url 'return_order' order.order_id %}"
+            class="action-btn"
+            >
+
+                RETURN ORDER
+
+            </a>
+
+        {% elif first_item.item_status == "Return Requested" %}
+
+            <div class="action-btn disabled-btn">
+
+                RETURN REQUESTED
+
+            </div>
+
+        {% elif first_item.item_status == "Return Approved" %}
+
+            <div class="action-btn disabled-btn approved-banner">
+
+                RETURN APPROVED
+
+            </div>
+
+        {% elif first_item.item_status == "Return Rejected" %}
+
+            <div class="action-btn disabled-btn rejected-banner">
+
+                RETURN REJECTED
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+{% endif %}
+
+</div>
+            </div>
+
+            <!-- SECURITY -->
+
+            <div class="security-box">
+
+                <div class="security-title">
+
+                    AUTHENTICITY GUARANTEED
+
+                </div>
+
+                <div class="security-text">
+
+                    Every item sold is meticulously quality checked
+                    for authenticity and luxury standards.
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+function getCookie(name) {
+
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+
+        const cookies = document.cookie.split(';');
+
+        for (let i = 0; i < cookies.length; i++) {
+
+            const cookie = cookies[i].trim();
+
+            if (
+
+                cookie.substring(0, name.length + 1)
+
+                === (name + '=')
+
+            ) {
+
+                cookieValue = decodeURIComponent(
+
+                    cookie.substring(name.length + 1)
+
+                );
+
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+
+// ================= CANCEL ITEM =================
+
+document.querySelectorAll(".cancel-btn")
+
+.forEach(button => {
+
+    button.addEventListener(
+
+        "click",
+
+        async function(){
+
+            const itemId = this.dataset.id;
+
+            this.disabled = true;
+
+            try{
+
+                const response = await fetch(
+
+                    `/orders/cancel-order-item/${itemId}/`,
+
+                    {
+
+                        method:"POST",
+
+                        headers:{
+
+                            "X-CSRFToken": csrftoken,
+
+                            "Content-Type":"application/json"
+
+                        }
+
+                    }
+
+                );
+
+                const data = await response.json();
+
+            if(data.success){
+
+                // ================= UPDATE ITEM BUTTON =================
+
+                document.getElementById(
+
+                    `item-action-${itemId}`
+
+                ).innerHTML = `
+
+                    <div class="cancelled-badge">
+
+                        CANCELLED
+
+                    </div>
+
+                `;
+
+                // ================= HIDE TRACKER =================
+
+                const tracker = document.querySelector(
+
+                    ".status-tracker"
+
+                );
+
+                if(tracker){
+
+                    tracker.style.display = "none";
+                }
+
+                // ================= CREATE CANCEL MESSAGE =================
+
+                if(
+
+                    !document.querySelector(
+
+                        ".cancelled-order-banner"
+
+                    )
+
+                ){
+
+                    const banner = document.createElement(
+
+                        "div"
+
+                    );
+
+                    banner.className = "cancelled-order-banner";
+
+                    banner.innerHTML = `
+
+                        PRODUCT CANCELLED
+
+                    `;
+
+                    const card = document.querySelector(
+
+                        ".card"
+                    );
+
+                    card.insertBefore(
+
+                        banner,
+
+                        card.firstChild
+
+                    );
+                }
+
+                // ================= FULL ORDER CANCELLED =================
+
+                if(data.order_cancelled){
+
+                    location.reload();
+                }
+            }
+                else{
+
+                    alert(
+
+                        data.message || "Unable to cancel item"
+
+                    );
+
+                    this.disabled = false;
+                }
+
+            }
+
+            catch(error){
+
+                console.log(error);
+
+                this.disabled = false;
+            }
+
+        }
+
+    );
+
+});
+
+</script>
+
+{% endblock %}

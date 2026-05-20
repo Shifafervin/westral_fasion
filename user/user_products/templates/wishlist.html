@@ -1,0 +1,710 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+Wishlist
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+
+/* ================= CONTENT ================= */
+
+.content-header{
+    margin-bottom:40px;
+}
+
+.content-header h1{
+    font-family:'Noto Serif',serif;
+
+    font-size:46px;
+
+    margin-bottom:12px;
+}
+
+.content-header p{
+    color:#8b7d74;
+
+    width:540px;
+
+    line-height:1.8;
+
+    font-size:14px;
+}
+
+/* ================= GRID ================= */
+
+/* ================= WISHLIST ITEMS ================= */
+
+.wishlist-items{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(3,1fr);
+
+    gap:28px;
+}
+/* ================= CARD ================= */
+
+.wishlist-card{
+
+    background:white;
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    border:1px solid #ebe2dc;
+
+    transition:.3s;
+
+    position:relative;
+}
+
+.wishlist-card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+}
+/* ================= IMAGE ================= */
+
+.wishlist-image{
+    width:100%;
+    height:340px;
+
+    border-radius:18px;
+
+    overflow:hidden;
+
+    background:#f3efeb;
+}
+
+.wishlist-image img{
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+}
+
+/* ================= CONTENT ================= */
+
+.wishlist-info{
+    padding:20px;
+}
+
+/* ================= TOP ================= */
+
+.wishlist-top{
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.wishlist-name{
+    font-size:22px;
+    font-weight:800;
+
+    line-height:1.5;
+
+    margin-bottom:10px;
+}
+
+.wishlist-price{
+    font-size:26px;
+    font-weight:800;
+}
+
+/* ================= STOCK ================= */
+
+.stock{
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:max-content;
+
+    padding:7px 14px;
+
+    border-radius:30px;
+
+    font-size:11px;
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    margin-top:10px;
+}
+
+.in-stock{
+    background:#edf7ed;
+    color:#2d6b36;
+}
+
+.out-stock{
+    background:#fdeaea;
+    color:#a04242;
+}
+
+/* ================= ACTIONS ================= */
+
+.wishlist-actions{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    margin-top:30px;
+}
+
+/* ================= MOVE BUTTON ================= */
+
+.move-btn{
+    width:220px;
+    height:50px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    font-weight:800;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    transition:.25s;
+}
+
+.move-btn:hover{
+    background:#341818;
+}
+
+/* ================= REMOVE ================= */
+
+
+.remove-btn{
+
+    position:absolute;
+
+    top:16px;
+    right:16px;
+
+    width:42px;
+    height:42px;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.95);
+
+    backdrop-filter:blur(8px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+
+    color:#7d6e65;
+
+    z-index:10;
+
+    transition:.25s;
+
+    box-shadow:
+    0 4px 16px rgba(0,0,0,.08);
+}
+
+.remove-btn:hover{
+
+    background:#341818;
+
+    color:white;
+
+    transform:scale(1.08);
+}
+
+/* ================= EMPTY ================= */
+
+.empty{
+    background:white;
+
+    border-radius:24px;
+
+    padding:90px 40px;
+
+    text-align:center;
+
+    border:1px solid #ece2db;
+}
+
+.empty h2{
+    font-family:'Noto Serif',serif;
+
+    font-size:38px;
+
+    margin-bottom:16px;
+}
+
+.empty p{
+    color:#8d7d73;
+
+    margin-bottom:30px;
+}
+
+.shop-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+
+    width:220px;
+    height:52px;
+
+    border-radius:12px;
+
+    background:#341818;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:700;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1100px){
+
+    .wishlist-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:850px){
+
+    .wrapper{
+        grid-template-columns:1fr;
+    }
+
+    .content-header p{
+        width:100%;
+    }
+}
+
+@media(max-width:650px){
+
+    .wishlist-grid{
+        grid-template-columns:1fr;
+    }
+
+    .wrapper{
+        padding:20px;
+    }
+
+    .content-header h1{
+        font-size:36px;
+    }
+}
+
+</style>
+
+</head>
+
+{% endblock %}
+
+{% block content %}
+<!-- ================= WRAPPER ================= -->
+
+<div class="wrapper">
+
+    <!-- ================= CONTENT ================= -->
+
+    <div>
+
+        <div class="content-header">
+
+            <h1>My Wishlist</h1>
+
+            <p>
+
+                Manage your saved items and move them directly to your shopping bag.
+
+            </p>
+
+        </div>
+
+     {% if wishlist_items %}
+
+<div class="wishlist-items">
+
+    {% for item in wishlist_items %}
+
+    <div
+
+    class="wishlist-card"
+
+    id="wishlist-card-{{ item.variant.id }}"
+
+    >
+        <!-- REMOVE -->
+
+    <a
+    href="{% url 'remove_wishlist_item' item.id %}"
+    class="remove-btn"
+    >
+
+        <span class="material-symbols-outlined">
+            close
+        </span>
+
+    </a>
+
+        <!-- IMAGE -->
+
+        <a
+        href="{% url 'product_details' item.variant.product.id %}"
+        >
+
+            <div class="wishlist-image">
+
+                {% with image=item.variant.images.first %}
+
+                    {% if image and image.image %}
+
+                    <img src="{{ image.image.url }}">
+
+                    {% else %}
+
+                    <img src="{% static 'images/no-image.png' %}">
+
+                    {% endif %}
+
+                {% endwith %}
+
+            </div>
+
+        </a>
+
+        <!-- INFO -->
+
+        <div class="wishlist-info">
+
+            <div>
+
+                <div class="wishlist-top">
+
+                    <div>
+
+                        <div class="wishlist-name">
+
+                            {{ item.variant.product.product_name }}
+
+                        </div>
+
+                        <div class="wishlist-price">
+
+                            ₹{{ item.variant.price }}
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+                {% if item.variant.stock > 0 %}
+
+                <div class="stock in-stock">
+
+                    IN STOCK
+
+                </div>
+
+                {% else %}
+
+                <div class="stock out-stock">
+
+                    OUT OF STOCK
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- ACTIONS -->
+
+            <div class="wishlist-actions">
+
+                {% if item.variant.stock > 0 %}
+
+            <button
+
+            class="move-btn add-cart-btn"
+
+            data-variant="{{ item.variant.id }}"
+
+            >
+
+                MOVE TO BAG
+
+            </button>
+
+                {% else %}
+
+                <button
+                class="move-btn"
+                disabled
+                >
+
+                    OUT OF STOCK
+
+                </button>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+</div>
+
+{% else %}
+
+<!-- EMPTY -->
+
+<div class="empty">
+
+    <h2>Your Wishlist Is Empty</h2>
+
+    <p>
+
+        Save your favorite products and revisit them anytime.
+
+    </p>
+
+    <a
+    href="{% url 'shop' %}"
+    class="shop-btn"
+    >
+
+        CONTINUE SHOPPING
+
+    </a>
+
+</div>
+
+{% endif %}
+<script>
+
+function getCookie(name){
+
+    let cookieValue = null;
+
+    if(document.cookie && document.cookie !== ''){
+
+        const cookies = document.cookie.split(';');
+
+        for(let i = 0; i < cookies.length; i++){
+
+            const cookie = cookies[i].trim();
+
+            if(
+
+                cookie.substring(0, name.length + 1)
+
+                === (name + '=')
+
+            ){
+
+                cookieValue = decodeURIComponent(
+
+                    cookie.substring(name.length + 1)
+
+                );
+
+                break;
+
+            }
+
+        }
+
+    }
+
+    return cookieValue;
+
+}
+
+const csrftoken = getCookie(
+
+    "csrftoken"
+
+);
+
+document.querySelectorAll(
+
+    ".add-cart-btn"
+
+).forEach(button => {
+
+    button.addEventListener(
+
+        "click",
+
+        async function(){
+
+            const variantId = this.dataset.variant;
+
+            try{
+
+                const response = await fetch(
+
+                    `/products/add-to-cart/${variantId}/`,
+
+                    {
+
+                        method:"POST",
+
+                        headers:{
+
+                            "X-CSRFToken": csrftoken,
+
+                            "Content-Type":"application/json"
+
+                        }
+
+                    }
+
+                );
+
+                const data = await response.json();
+
+                // ================= TOAST =================
+
+                showToast(
+
+                    data.message,
+
+                    "success"
+
+                );
+
+                // ================= BUTTON =================
+
+                this.innerText =
+
+                    "ADDED TO BAG";
+
+                this.disabled = true;
+
+                // ================= NAVBAR COUNT =================
+
+                const cartBadge = document.getElementById(
+
+                    "cart-count"
+
+                );
+
+                if(data.cart_count > 0){
+
+                    if(cartBadge){
+
+                        cartBadge.innerText =
+
+                            data.cart_count;
+
+                    }
+
+                    else{
+
+                        const cartIcon = document.querySelector(
+
+                            ".cart-icon-wrap"
+
+                        );
+
+                        cartIcon.insertAdjacentHTML(
+
+                            "beforeend",
+
+                            `
+
+                            <span
+                            class="cart-badge"
+                            id="cart-count"
+                            >
+
+                                ${data.cart_count}
+
+                            </span>
+
+                            `
+
+                        );
+
+                    }
+
+                }
+
+                // ================= REMOVE CARD =================
+
+                const wishlistCard = document.getElementById(
+
+                    `wishlist-card-${variantId}`
+
+                );
+
+                if(wishlistCard){
+
+                    wishlistCard.remove();
+
+                }
+
+                // ================= EMPTY WISHLIST =================
+
+                const remainingCards = document.querySelectorAll(
+
+                    ".wishlist-card"
+
+                );
+
+                if(remainingCards.length === 0){
+
+                    location.reload();
+
+                }
+
+            }
+
+            catch(error){
+
+                console.log(
+
+                    error
+
+                );
+
+            }
+
+        }
+
+    );
+
+});
+
+</script>
+{% endblock %}

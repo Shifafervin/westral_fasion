@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,11 +85,7 @@ label {
     margin-top: 15px;
 }
 
-/* INPUT */
-.input-box {
-    position: relative;
-}
-
+/* 🔥 FIXED INPUT STYLE (IMPORTANT) */
 input {
     width: 100%;
     padding: 14px;
@@ -96,6 +93,7 @@ input {
     background: #eaeaea;
     border-radius: 6px;
     margin-top: 5px;
+    outline: none;
 }
 
 /* PASSWORD ROW */
@@ -112,17 +110,60 @@ input {
 }
 
 /* EYE ICON */
+.input-box {
+    position: relative;
+}
+
 .eye {
     position: absolute;
     right: 12px;
-    top: 42px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
 }
 
-/* CHECKBOX */
+/* REMEMBER */
 .remember {
     margin: 15px 0;
-    font-size: 13px;
+}
+
+.remember-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #444;
+}
+
+.remember-label input {
+    display: none;
+}
+
+.custom-box {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    background: white;
+    position: relative;
+}
+
+.remember-label input:checked + .custom-box {
+    background: #5a3b2e;
+    border-color: #5a3b2e;
+}
+
+.remember-label input:checked + .custom-box::after {
+    content: "✔";
+    color: white;
+    font-size: 11px;
+    position: absolute;
+    top: 0;
+    left: 3px;
+}
+
+.remember-text {
+    font-size: 14px;
 }
 
 /* BUTTON */
@@ -144,20 +185,30 @@ input {
     font-size: 12px;
     color: gray;
 }
-
-/* GOOGLE BUTTON */
 .google-btn {
     width: 100%;
-    padding: 12px;
-    border-radius: 25px;
+    height: 48px;
+
+    border-radius: 50px; /* 🔥 pill shape */
     border: 1px solid #ddd;
-    background: white;
+
+    background: #f8f8f8; /* light grey like image */
+
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 10px;
+
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+
+    text-decoration: none;
     cursor: pointer;
+
+    transition: all 0.2s ease;
 }
+
 
 /* FOOTER */
 .footer {
@@ -172,6 +223,23 @@ input {
     text-decoration: none;
 }
 
+/* ALERTS */
+.alert {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.alert.error {
+    background: #ffe5e5;
+    color: #cc0000;
+}
+
+.alert.success {
+    background: #e6ffe6;
+    color: #007a00;
+}
 </style>
 </head>
 
@@ -181,8 +249,7 @@ input {
 
 <!-- LEFT -->
 <div class="left">
-    <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDE5pdZBI2btoeDj6jW0jEyILtiQvwwmaBO-SLksOhignzEGZ3VqO_l9BU05roTzfnARrDwtXyoj9RpflSj7u76gaM11sUzMiz3Qi5C8egbiZaxckvstUYxFLMFGDZBRFovNF6F8GcsFpKcJgvhCOFSoWIGD7mF5yfpIhensjG1KnCl1QUm2IO7_CjOZHNLETCDvnMhpQddZQni7N7cipw96nBqLMAwQU3aoelSjn7rVJis_KswpYji58rLfZ0EGJXhatfB0ktz7Os">
-    
+   <img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqbR0pW5JCAlbeDK3UdqqMKClpBkRxmneGk1giayYjIpTE-v-gIHkCCiAT0G6kUNhnjh5eVQVJ21PN4TqaEOQCJWNKOp8uMpTJncgPTX7DECAs9Z2bNRTaKIDZsuBjEi-Y7cpNdLWAjxluLBE-HOpj7qxy6HSqhu46rITDhx2VeLFcpsVImPxmOcYfGExKNzNGcqK3RO6nlTRcQFdofQXoitPgyOkY-6xtPv6d5xZgBBAanE9kVWMe70L2r5r40X_qeAU6rrOhnRs">
     <div class="brand">WESTRAL FASHION</div>
 
     <div class="bottom-text">
@@ -195,51 +262,65 @@ input {
 <div class="right">
 <div class="form-box">
 
-    <div class="title">OWN YOUR STYLE</div>
-    <div class="subtitle">Enter your details to access your account</div>
+{% if messages %}
 
-    <form method="POST">
-        {% csrf_token %}
+    {% for message in messages %}
 
-        <label>EMAIL ADDRESS</label>
-        <input type="email" name="email" placeholder="name@example.com">
+        {% if 'login' in message.tags %}
 
-        <div class="row">
-            <label>PASSWORD</label>
-            <a href="#" class="forgot">FORGOT PASSWORD?</a>
-        </div>
+            <div class="alert {{ message.tags }}">
+                {{ message }}
+            </div>
 
-        <!-- PASSWORD WITH EYE ICON -->
-        <div class="input-box">
-            <input type="password" id="password" placeholder="••••••••">
-            <span class="eye" onclick="togglePassword()">
-                👁
-            </span>
-        </div>
+        {% endif %}
 
-        <div class="remember">
-            <input type="checkbox"> Remember me
-        </div>
+    {% endfor %}
 
-        <button class="login-btn">LOGIN</button>
-    </form>
+{% endif %}
 
-    <div class="divider">OR CONTINUE WITH</div>
+<div class="title">OWN YOUR STYLE</div>
+<div class="subtitle">Enter your details to access your account</div>
 
-    <!-- GOOGLE BUTTON -->
-    <button class="google-btn">
-        <svg width="18" height="18" viewBox="0 0 48 48">
-            <path fill="#EA4335" d="M24 9.5c3.4 0 6.4 1.2 8.7 3.1l6.5-6.5C35.4 2.5 30.1 0 24 0 14.7 0 6.6 5.4 2.7 13.3l7.6 5.9C12.3 13.2 17.7 9.5 24 9.5z"/>
-            <path fill="#34A853" d="M46.5 24.5c0-1.7-.1-3.3-.4-4.9H24v9.3h12.7c-.5 2.9-2.1 5.4-4.4 7.1l6.8 5.3c4-3.7 6.4-9.2 6.4-16.8z"/>
-            <path fill="#FBBC05" d="M10.3 28.9c-.6-1.8-1-3.6-1-5.4s.4-3.7 1-5.4l-7.6-5.9C1 15.5 0 19.6 0 23.5s1 8 2.7 11.3l7.6-5.9z"/>
-            <path fill="#4285F4" d="M24 48c6.5 0 12-2.1 16-5.7l-6.8-5.3c-2 1.3-4.5 2-9.2 2-6.3 0-11.7-4.2-13.6-9.8l-7.6 5.9C6.6 42.6 14.7 48 24 48z"/>
-        </svg>
-        Google
-    </button>
+<form method="POST">
+    {% csrf_token %}
 
-    <div class="footer">
-        Not a member? <a href="#">Join us</a>
+    <label>EMAIL ADDRESS</label>
+    <input type="email" name="email">
+
+    <div class="row">
+        <label>PASSWORD</label>
+        <a href="{% url "forgot_password" %}" class="forgot">FORGOT PASSWORD?</a>
     </div>
+
+    <div class="input-box">
+        <input type="password" name="password" id="password" placeholder="••••••••">
+        
+        <span class="eye" onclick="togglePassword()">
+            👁
+        </span>
+    </div>
+
+    <div class="remember">
+        <label class="remember-label">
+            <input type="checkbox" name="remember">
+            <span class="custom-box"></span>
+            <span class="remember-text">Remember me</span>
+        </label>
+    </div>
+
+    <button class="login-btn">LOGIN</button>
+</form>
+
+<div class="divider">OR CONTINUE WITH</div>
+
+<a href="/accounts/google/login/" class="google-btn">
+    <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" width="18">
+    Continue with Google
+</a>
+
+<div class="footer">
+    Not a member? <a href="{% url "signup" %}">Join us</a>
+</div>
 
 </div>
 </div>
@@ -248,10 +329,23 @@ input {
 
 <script>
 function togglePassword() {
-    let pass = document.getElementById("password");
-    pass.type = pass.type === "password" ? "text" : "password";
+    const pass = document.getElementById("password");
+
+    if (pass.type === "password") {
+        pass.type = "text";
+    } else {
+        pass.type = "password";
+    }
 }
 </script>
+
+<!-- 🔥 ADD THIS BELOW -->
+<script>
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+</script>
+
 
 </body>
 </html>

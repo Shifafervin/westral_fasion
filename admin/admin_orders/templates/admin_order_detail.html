@@ -1,0 +1,1057 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Category</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f7f4f1;
+    color:#2f241e;
+}
+
+/* ================= LAYOUT ================= */
+
+.page-wrapper{
+    display:flex;
+    min-height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+    width:250px;
+    background:#fbf8f5;
+    border-right:1px solid #ebe3dc;
+    padding:35px 22px;
+}
+
+.logo{
+    font-size:24px;
+    font-weight:800;
+    line-height:1.3;
+    letter-spacing:4px;
+    margin-bottom:55px;
+}
+
+.sidebar-menu{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.sidebar-menu a{
+    text-decoration:none;
+    color:#8a7d74;
+    font-size:13px;
+    font-weight:700;
+    transition:0.2s;
+}
+
+.sidebar-menu a:hover{
+    color:#2f241e;
+}
+
+.sidebar-menu .active{
+    color:#2f241e;
+    background:#efe3d7;
+    padding:12px;
+    border-radius:10px;
+}
+
+/* ================= CONTENT ================= */
+
+.content{
+    flex:1;
+    padding:35px;
+}
+
+/* ================= HEADER ================= */
+
+.top-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:35px;
+    gap:20px;
+}
+
+.order-path{
+    font-size:12px;
+    color:#8f8178;
+    margin-bottom:12px;
+}
+
+.order-id{
+    font-size:52px;
+    font-weight:900;
+    margin-bottom:14px;
+}
+
+.order-status{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:10px 18px;
+    border-radius:30px;
+    background:#f3e6d6;
+    color:#a56d2f;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+/* ================= ACTIONS ================= */
+
+.top-actions{
+    display:flex;
+    gap:14px;
+}
+
+.top-btn{
+    height:46px;
+    padding:0 22px;
+    border:none;
+    border-radius:12px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.light-btn{
+    background:white;
+    border:1px solid #e7ddd4;
+    color:#2f241e;
+}
+
+.dark-btn{
+    background:#2f241e;
+    color:white;
+}
+
+.light-btn:hover{
+    background:#f7f3ef;
+}
+
+.dark-btn:hover{
+    background:#1f1712;
+}
+
+/* ================= GRID ================= */
+
+.main-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:28px;
+}
+
+/* ================= CARD ================= */
+
+.card{
+    background:white;
+    border-radius:20px;
+    border:1px solid #eee4dc;
+    padding:30px;
+    margin-bottom:28px;
+}
+
+/* ================= CARD TITLE ================= */
+
+.card-title{
+    font-size:28px;
+    font-weight:800;
+    margin-bottom:28px;
+}
+
+/* ================= ORDER TABLE ================= */
+
+.order-table{
+    width:100%;
+}
+
+.table-header,
+.product-row{
+    display:grid;
+    grid-template-columns:2.5fr 1fr 1fr 1fr 1fr;
+    align-items:center;
+    gap:18px;
+}
+
+.table-header{
+    padding-bottom:20px;
+    border-bottom:1px solid #f1ece8;
+    margin-bottom:25px;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#9a8d84;
+    font-weight:700;
+}
+
+.product-row{
+    padding:22px 0;
+    border-bottom:1px solid #f5f1ed;
+}
+
+/* ================= PRODUCT ================= */
+
+.product-box{
+    display:flex;
+    gap:16px;
+}
+
+.product-image{
+    width:85px;
+    height:110px;
+    border-radius:14px;
+    object-fit:cover;
+}
+
+.product-name{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.product-meta{
+    font-size:12px;
+    color:#8f8178;
+    line-height:1.9;
+}
+
+/* ================= PRICE SUMMARY ================= */
+
+.summary-card{
+    background:#3d2418;
+    color:white;
+}
+
+.summary-title{
+    font-size:34px;
+    font-weight:800;
+    margin-bottom:28px;
+}
+
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:18px;
+    font-size:14px;
+}
+
+.summary-divider{
+    height:1px;
+    background:rgba(255,255,255,0.12);
+    margin:25px 0;
+}
+
+.grand-total{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+}
+
+.total-label{
+    font-size:12px;
+    letter-spacing:2px;
+    opacity:0.7;
+}
+
+.total-value{
+    font-size:42px;
+    font-weight:900;
+}
+
+/* ================= TIMELINE ================= */
+
+.timeline{
+    position:relative;
+    padding-left:34px;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:8px;
+    top:0;
+    width:2px;
+    height:100%;
+    background:#efe5dc;
+}
+
+.timeline-item{
+    position:relative;
+    margin-bottom:35px;
+}
+
+.timeline-dot{
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    background:#3d2418;
+    position:absolute;
+    left:-33px;
+    top:3px;
+}
+
+.timeline-title{
+    font-size:15px;
+    font-weight:800;
+    margin-bottom:8px;
+}
+
+.timeline-date{
+    font-size:12px;
+    color:#9a8d84;
+    margin-bottom:8px;
+}
+
+.timeline-text{
+    font-size:13px;
+    color:#7e7067;
+    line-height:1.8;
+}
+
+/* ================= SIDEBAR INFO ================= */
+
+.info-title{
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:20px;
+}
+
+.info-block{
+    margin-bottom:28px;
+}
+
+.info-label{
+    font-size:11px;
+    letter-spacing:2px;
+    color:#9a8d84;
+    margin-bottom:12px;
+}
+
+.info-text{
+    font-size:14px;
+    line-height:1.9;
+    color:#4e4037;
+}
+
+/* ================= PAYMENT STATUS ================= */
+
+.paid-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 14px;
+    border-radius:30px;
+    background:#e8f6ed;
+    color:#2e8b57;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+/* ================= NOTES ================= */
+
+.note-box{
+    background:#fff8ea;
+    border-radius:16px;
+    padding:22px;
+}
+
+.note-text{
+    font-size:13px;
+    line-height:2;
+    color:#8d6e4e;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1200px){
+
+    .main-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:950px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .content{
+        padding:20px;
+    }
+}
+
+@media(max-width:750px){
+
+    .table-header{
+        display:none;
+    }
+
+    .product-row{
+        grid-template-columns:1fr;
+        gap:16px;
+    }
+
+    .top-header{
+        flex-direction:column;
+    }
+
+    .top-actions{
+        width:100%;
+        flex-wrap:wrap;
+    }
+
+    .top-btn{
+        flex:1;
+    }
+}
+.status-select{
+
+    height:46px;
+
+    padding:0 18px;
+
+    border-radius:12px;
+
+    border:1px solid #ddd2c8;
+
+    background:white;
+
+    outline:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#2f241e;
+
+    cursor:pointer;
+}
+a{
+    text-decoration:none;
+    color: #2f241e;
+}
+a:hover{
+    color: #797775;
+}
+/* ================= TOAST MESSAGE ================= */
+
+.toast-container{
+
+    position:fixed;
+
+    top:30px;
+
+    right:30px;
+
+    z-index:9999;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+}
+
+.toast-message{
+
+    min-width:320px;
+
+    max-width:420px;
+
+    padding:18px 22px;
+
+    border-radius:14px;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+
+    animation:slideIn .35s ease,
+              fadeOut .4s ease 3.6s forwards;
+}
+
+/* SUCCESS */
+
+.toast-message.success{
+
+    background:#1d7a42;
+}
+
+/* ERROR */
+
+.toast-message.error{
+
+    background:#c0392b;
+}
+
+/* WARNING */
+
+.toast-message.warning{
+
+    background:#c58b11;
+}
+
+/* ================= ANIMATION ================= */
+
+@keyframes slideIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateX(60px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateX(0);
+    }
+}
+
+@keyframes fadeOut{
+
+    to{
+
+        opacity:0;
+
+        transform:translateX(50px);
+
+        visibility:hidden;
+    }
+}
+</style>
+
+
+<div class="page-wrapper">
+
+    
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+        <!-- HEADER -->
+
+        <div class="top-header">
+
+            <div>
+
+                <a href= "{% url "order_management" %}"><div class="order-path">
+
+                    Orders ></a>
+
+                    {{ order.order_id }}
+
+                </div>
+
+                <div class="order-id">
+
+                    #{{ order.order_id }}
+
+                </div>
+
+                <div class="order-status">
+
+                    {{ order.order_status }}
+
+                </div>
+
+            </div>
+
+            <div class="top-actions">
+                <form
+                method="POST"
+                action="{% url 'update_order_status' order.order_id %}"
+                >
+
+                    {% csrf_token %}
+
+<select
+name="order_status"
+class="status-select"
+onchange="this.form.submit()"
+>
+
+    <option selected disabled>
+
+        {{ order.order_status }}
+
+    </option>
+
+    {% if order.order_status == "Pending" %}
+
+        <option value="Shipped">
+
+            Shipped
+
+        </option>
+
+        <option value="Cancelled">
+
+            Cancelled
+
+        </option>
+
+    {% elif order.order_status == "Shipped" %}
+
+        <option value="Out For Delivery">
+
+            Out For Delivery
+
+        </option>
+
+    {% elif order.order_status == "Out For Delivery" %}
+
+        <option value="Delivered">
+
+            Delivered
+
+        </option>
+
+    {% endif %}
+
+</select>
+
+                </form>
+
+                <a href="#" class="top-btn light-btn">
+
+                    Print Invoice
+
+                </a>
+
+                <a href="#" class="top-btn dark-btn">
+
+                    Refund Order
+
+                </a>
+
+            </div>
+
+        </div>
+{% if messages %}
+
+<div class="toast-container">
+
+    {% for message in messages %}
+
+        <div class="toast-message {{ message.tags }}">
+
+            {{ message }}
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
+        <!-- GRID -->
+
+        <div class="main-grid">
+
+            <!-- LEFT -->
+
+            <div>
+
+                <!-- ORDER ITEMS -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        Order Items
+
+                    </div>
+
+                    <div class="order-table">
+
+                        <div class="table-header">
+
+                            <div>
+                                PRODUCT DETAILS
+                            </div>
+
+                            <div>
+                                SKU
+                            </div>
+
+                            <div>
+                                UNIT PRICE
+                            </div>
+
+                            <div>
+                                QTY
+                            </div>
+
+                            <div>
+                                TOTAL
+                            </div>
+
+                        </div>
+
+                        {% for item in order.items.all %}
+
+                        <div class="product-row">
+
+                            <div class="product-box">
+
+                                {% with image=item.variant.images.first %}
+
+                                {% if image %}
+
+                                <img
+                                src="{{ image.image.url }}"
+                                class="product-image"
+                                >
+
+                                {% endif %}
+
+                                {% endwith %}
+
+                                <div>
+
+                                    <div class="product-name">
+
+                                        {{ item.variant.product.product_name }}
+
+                                    </div>
+
+                                    <div class="product-meta">
+
+                                        Color :
+                                        {{ item.variant.color }}
+
+                                        <br>
+
+                                        Size :
+                                        {{ item.variant.size }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div>
+
+                                {{ item.variant.sku }}
+
+                            </div>
+
+                            <div>
+
+                                ₹{{ item.price_at_purchase }}
+
+                            </div>
+
+                            <div>
+
+                                {{ item.quantity }}
+
+                            </div>
+
+                            <div>
+
+                                ₹{{ item.total_price }}
+
+                            </div>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+                <!-- TIMELINE -->
+
+                <div class="card">
+
+                    <div class="card-title">
+
+                        Order History & Progress
+
+                    </div>
+
+                    <div class="timeline">
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-title">
+
+                                Order Placed
+
+                            </div>
+
+                            <div class="timeline-date">
+
+                                {{ order.created_at }}
+
+                            </div>
+
+                            <div class="timeline-text">
+
+                                Customer successfully placed the order.
+
+                            </div>
+
+                        </div>
+
+                        <div class="timeline-item">
+
+                            <div class="timeline-dot"></div>
+
+                            <div class="timeline-title">
+
+                                Current Status :
+                                {{ order.order_status }}
+
+                            </div>
+
+                            <div class="timeline-text">
+
+                                Order currently in
+                                {{ order.order_status }}
+                                stage.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div>
+
+                <!-- SUMMARY -->
+
+                <div class="card summary-card">
+
+                    <div class="summary-title">
+
+                        Price Summary
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            SUBTOTAL
+                        </span>
+
+                        <span>
+                            ₹{{ order.total_amount }}
+                        </span>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            SHIPPING
+                        </span>
+
+                        <span>
+                            FREE
+                        </span>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            DISCOUNT
+                        </span>
+
+                        <span>
+                            ₹0
+                        </span>
+
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="grand-total">
+
+                        <div class="total-label">
+
+                            GRAND TOTAL
+
+                        </div>
+
+                        <div class="total-value">
+
+                            ₹{{ order.total_amount }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CUSTOMER -->
+
+                <div class="card">
+
+                    <div class="info-title">
+
+                        Customer Details
+
+                    </div>
+
+                    <div class="info-block">
+
+                        <div class="info-label">
+
+                            CONTACT INFORMATION
+
+                        </div>
+
+                        <div class="info-text">
+
+                            {{ order.user.username }}
+
+                            <br>
+
+                            {{ order.user.email }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="info-block">
+
+                        <div class="info-label">
+
+                            SHIPPING ADDRESS
+
+                        </div>
+
+                        <div class="info-text">
+
+                            {{ order.shipping_address }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- PAYMENT -->
+
+                <div class="card">
+
+                    <div class="info-title">
+
+                        Payment
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            Method
+                        </span>
+
+                        <span>
+                            {{ order.payment_method }}
+                        </span>
+
+                    </div>
+
+                    <div class="summary-row">
+
+                        <span>
+                            Status
+                        </span>
+
+                        <span class="paid-badge">
+
+                            {{ order.payment_status }}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- NOTES -->
+
+                <div class="card note-box">
+
+                    <div class="info-title">
+
+                        Internal Notes
+
+                    </div>
+
+                    <div class="note-text">
+
+                        Customer requested premium
+                        packaging for this order.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+history.pushState(null, null, location.href);
+
+window.onpopstate = function () {
+
+    window.location.href = "{% url 'order_management' %}";
+
+};
+
+</script>
+</body>
+</html>

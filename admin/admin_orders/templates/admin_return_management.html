@@ -1,0 +1,1096 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block title %}
+Return Management
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+/* ================= CONTENT ================= */
+
+.content{
+    flex:1;
+    padding:45px;
+}
+
+/* ================= HEADER ================= */
+
+.top-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    margin-bottom:38px;
+}
+
+.page-title{
+    font-size:52px;
+    font-weight:900;
+    margin-bottom:12px;
+}
+
+.page-subtitle{
+    color:#8f8178;
+    font-size:14px;
+}
+
+.export-btn{
+    height:50px;
+    padding:0 24px;
+    border:none;
+    border-radius:12px;
+    background:#2f1410;
+    color:white;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.export-btn:hover{
+    background:#1d0c09;
+}
+
+/* ================= STATS ================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    margin-bottom:35px;
+}
+
+.stat-card{
+    background:white;
+    border-radius:18px;
+    padding:28px;
+    border:1px solid #eee4dc;
+}
+
+.stat-label{
+    font-size:11px;
+    letter-spacing:2px;
+    color:#9a8d84;
+    margin-bottom:16px;
+}
+
+.stat-value{
+    font-size:42px;
+    font-weight:900;
+    margin-bottom:18px;
+}
+
+.stat-line{
+    width:100%;
+    height:4px;
+    background:#efe7e1;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.stat-line span{
+    display:block;
+    height:100%;
+    width:60%;
+    background:#4a231d;
+}
+
+/* ================= TABLE CARD ================= */
+
+.table-card{
+    background:white;
+    border-radius:22px;
+    padding:30px;
+    border:1px solid #eee4dc;
+}
+
+/* ================= TOP BAR ================= */
+
+.table-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    gap:20px;
+}
+
+/* ================= FILTERS ================= */
+
+.filters{
+    display:flex;
+    gap:14px;
+}
+
+.filter-btn{
+    height:38px;
+    padding:0 18px;
+    border:none;
+    border-radius:30px;
+    background:none;
+    color:#8f8178;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.filter-btn.active{
+    background:#2f1410;
+    color:white;
+}
+
+/* ================= SEARCH ================= */
+
+.search-box{
+    width:320px;
+    height:46px;
+    border:1px solid #ebe3dc;
+    border-radius:12px;
+    padding:0 18px;
+    outline:none;
+    background:#faf8f6;
+}
+
+/* ================= TABLE ================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead th{
+    text-align:left;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#9a8d84;
+    padding-bottom:20px;
+}
+
+tbody tr{
+    border-top:1px solid #f3ede8;
+}
+
+tbody td{
+    padding:24px 0;
+    vertical-align:middle;
+}
+
+/* ================= CUSTOMER ================= */
+
+.customer-box{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.customer-image{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.customer-name{
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:4px;
+}
+
+.customer-email{
+    font-size:12px;
+    color:#9a8d84;
+}
+
+/* ================= STATUS ================= */
+
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 16px;
+    border-radius:30px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.pending{
+    background:#f5e7d7;
+    color:#b06f2c;
+}
+
+.approved{
+    background:#2f1410;
+    color:white;
+}
+
+.refunded{
+    background:#efefef;
+    color:#777;
+}
+
+/* ================= ACTIONS ================= */
+
+.actions{
+    display:flex;
+    gap:14px;
+    align-items:center;
+}
+
+.action-link{
+    text-decoration:none;
+    font-size:12px;
+    font-weight:800;
+    color:#2f241e;
+    transition:0.2s;
+}
+
+.action-link:hover{
+    opacity:0.7;
+}
+
+/* ================= PAGINATION ================= */
+
+.pagination{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:30px;
+}
+
+.page-btn{
+    width:38px;
+    height:38px;
+    border-radius:8px;
+    border:1px solid #e5ddd5;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
+    color:#2f241e;
+    font-size:13px;
+    font-weight:700;
+}
+
+.page-btn.active{
+    background:#2f1410;
+    color:white;
+}
+
+/* ================= NOTE ================= */
+
+.note-card{
+    background:#fff9ec;
+    border-radius:18px;
+    padding:24px;
+    margin-top:28px;
+    border:1px solid #f2e7c9;
+}
+
+.note-title{
+    font-size:14px;
+    font-weight:800;
+    margin-bottom:12px;
+}
+
+.note-text{
+    font-size:13px;
+    line-height:1.8;
+    color:#8d7a66;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1200px){
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:950px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .content{
+        padding:22px;
+    }
+
+    .table-card{
+        overflow-x:auto;
+    }
+}
+
+@media(max-width:700px){
+
+    .table-top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+    }
+
+    .top-header{
+        flex-direction:column;
+        gap:20px;
+    }
+}
+/* ================= DROPDOWN ================= */
+
+.action-dropdown{
+
+    position:relative;
+}
+
+.action-toggle{
+
+    width:38px;
+
+    height:38px;
+
+    border:none;
+
+    background:none;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    color:#2f241e;
+}
+
+.dropdown-menu{
+
+    position:absolute;
+
+    top:45px;
+
+    right:0;
+
+    width:180px;
+
+    background:white;
+
+    border-radius:12px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,0.08);
+
+    border:1px solid #eee4dc;
+
+    overflow:hidden;
+
+    display:none;
+
+    z-index:999;
+}
+
+.dropdown-item{
+
+    display:block;
+
+    padding:14px 18px;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#2f241e;
+
+    transition:0.2s;
+}
+
+.dropdown-item:hover{
+
+    background:#f8f5f2;
+}
+
+.approve-item{
+
+    color:#1d7a42;
+}
+
+.reject-item{
+
+    color:#c0392b;
+}
+.rejected{
+
+    background:#fdeaea;
+
+    color:#c0392b;
+}
+/* ================= TABLE TOP ================= */
+
+.table-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+}
+
+/* ================= FILTERS ================= */
+
+.filters{
+
+    display:flex;
+
+    gap:12px;
+
+    flex-wrap:wrap;
+}
+
+.filter-btn{
+
+    height:40px;
+
+    padding:0 20px;
+
+    border-radius:30px;
+
+    background:#f5f1ed;
+
+    color:#7d6f66;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    text-decoration:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:0.25s;
+
+    border:1px solid transparent;
+}
+
+.filter-btn:hover{
+
+    background:#ebe3dc;
+
+    color:#2f241e;
+}
+
+.filter-btn.active{
+
+    background:#2f1410;
+
+    color:white;
+
+    border-color:#2f1410;
+}
+
+/* ================= SEARCH FORM ================= */
+
+.search-form{
+
+    display:flex;
+
+    align-items:center;
+}
+
+/* ================= SEARCH BOX ================= */
+
+.search-box{
+
+    width:320px;
+
+    height:46px;
+
+    border:1px solid #ebe3dc;
+
+    border-radius:12px;
+
+    padding:0 18px;
+
+    outline:none;
+
+    background:#faf8f6;
+
+    font-size:13px;
+
+    color:#2f241e;
+
+    transition:0.2s;
+}
+
+.search-box:focus{
+
+    border-color:#2f1410;
+
+    background:white;
+}
+
+.search-box::placeholder{
+
+    color:#a09187;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:700px){
+
+    .table-top{
+
+        flex-direction:column;
+
+        align-items:stretch;
+    }
+
+    .filters{
+
+        width:100%;
+
+        overflow-x:auto;
+
+        padding-bottom:5px;
+    }
+
+    .search-form{
+
+        width:100%;
+    }
+
+    .search-box{
+
+        width:100%;
+    }
+}
+.locked-item{
+
+    color:#999;
+
+    cursor:not-allowed;
+
+    background:#f5f5f5;
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+
+<div class="main-wrapper">
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+        <!-- HEADER -->
+
+        <div class="top-header">
+
+            <div>
+
+                <div class="page-title">
+
+                    Order Returns
+
+                </div>
+
+                <div class="page-subtitle">
+
+                    Manage customer return requests and refund approvals.
+
+                </div>
+
+            </div>
+
+            <button class="export-btn">
+
+                Export Reports
+
+            </button>
+
+        </div>
+
+        <!-- STATS -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+
+                    PENDING REQUESTS
+
+                </div>
+
+                <div class="stat-value">
+
+                    {{ page_obj.paginator.count }}
+
+                </div>
+
+                <div class="stat-line">
+                    <span></span>
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+
+                    APPROVAL RATE
+
+                </div>
+
+                <div class="stat-value">
+
+                    89.4%
+
+                </div>
+
+                <div class="stat-line">
+                    <span style="width:89%"></span>
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+
+                    REFUNDED THIS MONTH
+
+                </div>
+
+                <div class="stat-value">
+
+                    ₹24,280
+
+                </div>
+
+                <div class="stat-line">
+                    <span style="width:62%"></span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-card">
+
+            <div class="table-top">
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <a
+        href="?status=all"
+        class="filter-btn {% if status_filter == 'all' %}active{% endif %}"
+        >
+
+            ALL RETURNS
+
+        </a>
+
+        <a
+        href="?status=Pending"
+        class="filter-btn {% if status_filter == 'Pending' %}active{% endif %}"
+        >
+
+            PENDING
+
+        </a>
+
+        <a
+        href="?status=Approved"
+        class="filter-btn {% if status_filter == 'Approved' %}active{% endif %}"
+        >
+
+            APPROVED
+
+        </a>
+
+        <a
+        href="?status=Rejected"
+        class="filter-btn {% if status_filter == 'Rejected' %}active{% endif %}"
+        >
+
+            REJECTED
+
+        </a>
+
+    </div>
+
+    <!-- SEARCH -->
+
+    <form method="GET">
+
+        <input
+        type="hidden"
+        name="status"
+        value="{{ status_filter }}"
+        >
+
+        <input
+        type="text"
+        name="search"
+        class="search-box"
+        placeholder="Search by Order ID or Name..."
+        value="{{ search_query }}"
+        >
+
+    </form>
+
+</div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ORDER ID
+                        </th>
+
+                        <th>
+                            CUSTOMER NAME
+                        </th>
+
+                        <th>
+                            RETURN DATE
+                        </th>
+
+                        <th>
+                            REASON
+                        </th>
+
+                        <th>
+                            STATUS
+                        </th>
+
+                        <th>
+                            ACTIONS
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for return_request in return_requests %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+
+                                #{{ return_request.order.order_id }}
+
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            <div class="customer-box">
+
+                                <img
+                                src="{% static 'images/default-user.png' %}"
+                                class="customer-image"
+                                >
+
+                                <div>
+
+                                    <div class="customer-name">
+
+                                        {{ return_request.user.username }}
+
+                                    </div>
+
+                                    <div class="customer-email">
+
+                                        {{ return_request.user.email }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            {{ return_request.requested_at|date:"M d, Y" }}
+
+                        </td>
+
+                        <td>
+
+                            {{ return_request.reason }}
+
+                        </td>
+
+  <td>
+
+    <span class="status-badge
+
+        {% if return_request.status == 'Pending' %}
+
+            pending
+
+        {% elif return_request.status == 'Approved' %}
+
+            approved
+
+        {% elif return_request.status == 'Rejected' %}
+
+            rejected
+
+        {% elif return_request.status == 'Refunded' %}
+
+            refunded
+
+        {% endif %}
+
+    ">
+
+        {{ return_request.status }}
+
+    </span>
+
+</td>
+
+                        <td>
+
+<div class="action-dropdown">
+
+    <button
+    class="action-toggle"
+    onclick="toggleDropdown('{{ return_request.id }}')"
+    >
+
+        ⋮
+
+    </button>
+
+<div
+class="dropdown-menu"
+id="dropdown-{{ return_request.id }}"
+>
+
+{% if return_request.status == "Pending" %}
+
+    <a
+    href="{% url 'approve_return' return_request.id %}"
+    class="dropdown-item approve-item"
+    >
+
+        Approve Return
+
+    </a>
+
+    <a
+    href="{% url 'reject_return' return_request.id %}"
+    class="dropdown-item reject-item"
+    >
+
+        Reject Return
+
+    </a>
+
+{% else %}
+
+    <div class="dropdown-item locked-item">
+
+        Action Locked
+
+    </div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <!-- PAGINATION -->
+
+<!-- PAGINATION -->
+
+<div class="pagination">
+
+    {% if page_obj.has_previous %}
+
+        <a
+        href="?page={{ page_obj.previous_page_number }}"
+        class="page-btn"
+        >
+            ‹
+        </a>
+
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+
+        {% if page_obj.number == num %}
+
+            <a
+            href="?page={{ num }}&status={{ status_filter }}&search={{ search_query }}"
+            class="page-btn active"
+            >
+                {{ num }}
+            </a>
+
+        {% else %}
+
+            <a
+            href="?page={{ num }}&status={{ status_filter }}&search={{ search_query }}"
+            class="page-btn"
+            >
+                {{ num }}
+            </a>
+
+        {% endif %}
+
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+
+        <a
+        href="?page={{ page_obj.next_page_number }}"
+        class="page-btn"
+        >
+            ›
+        </a>
+
+    {% endif %}
+
+</div>
+
+        <!-- NOTE -->
+
+        <div class="note-card">
+
+            <div class="note-title">
+
+                RETURN POLICY UPDATE
+
+            </div>
+
+            <div class="note-text">
+
+                Starting next quarter, all returns
+                must be initiated within 14 days
+                of delivery. Please ensure the
+                automated notification system is
+                updated to reflect these changes
+                in the customer portal.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+function toggleDropdown(id){
+
+    const dropdown = document.getElementById(
+
+        `dropdown-${id}`
+
+    );
+
+    const allDropdowns = document.querySelectorAll(
+
+        ".dropdown-menu"
+
+    );
+
+    allDropdowns.forEach(menu => {
+
+        if(menu !== dropdown){
+
+            menu.style.display = "none";
+
+        }
+
+    });
+
+    if(
+
+        dropdown.style.display === "block"
+
+    ){
+
+        dropdown.style.display = "none";
+
+    }else{
+
+        dropdown.style.display = "block";
+
+    }
+}
+
+window.onclick = function(event){
+
+    if(
+
+        !event.target.matches(".action-toggle")
+
+    ){
+
+        const dropdowns = document.querySelectorAll(
+
+            ".dropdown-menu"
+
+        );
+
+        dropdowns.forEach(menu => {
+
+            menu.style.display = "none";
+
+        });
+
+    }
+}
+
+</script>
+{% endblock %}

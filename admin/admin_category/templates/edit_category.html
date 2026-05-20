@@ -1,0 +1,582 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Edit Category</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ================= BACKGROUND ================= */
+
+.bg{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:1;
+}
+
+.bg-inner{
+    width:100%;
+    height:100%;
+
+    filter:blur(4px);
+
+    transform:scale(1.02);
+}
+
+.bg::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:rgba(0,0,0,.18);
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:5;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    width:440px;
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    position:relative;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+
+    font-family:'Manrope',sans-serif;
+}
+
+/* CLOSE */
+
+.close-btn{
+    position:absolute;
+    top:16px;
+    right:18px;
+
+    text-decoration:none;
+
+    border:none;
+    background:none;
+
+    font-size:22px;
+
+    color:#76685d;
+
+    cursor:pointer;
+}
+
+/* TITLE */
+
+.modal h2{
+    font-family:'Noto Serif',serif;
+
+    font-size:34px;
+    font-weight:600;
+
+    color:#341818;
+}
+
+/* LINE */
+
+.line{
+    width:58px;
+    height:3px;
+
+    background:#341818;
+
+    margin:10px 0 14px;
+}
+
+/* SUB */
+
+.sub{
+    font-size:12px;
+
+    color:#8f847c;
+
+    margin-bottom:18px;
+
+    line-height:1.6;
+}
+
+/* FIELD */
+
+.field{
+    margin-bottom:16px;
+}
+
+.field label{
+    display:block;
+
+    margin-bottom:10px;
+
+    font-size:10px;
+    letter-spacing:1.5px;
+
+    color:#7f7267;
+
+    font-weight:700;
+}
+
+/* IMAGE */
+
+.image-row{
+    display:flex;
+    gap:12px;
+}
+
+.preview-img{
+    width:90px;
+    height:90px;
+
+    border-radius:12px;
+
+    object-fit:cover;
+}
+
+.upload-box{
+    width:90px;
+    height:90px;
+
+    border:1.5px dashed #d7cdc5;
+
+    border-radius:12px;
+
+    background:#faf8f6;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    text-align:center;
+
+    cursor:pointer;
+}
+
+.upload-box span{
+    font-size:22px;
+
+    color:#8f8176;
+
+    margin-bottom:6px;
+}
+
+.upload-box small{
+    width:65px;
+
+    font-size:8px;
+    line-height:1.4;
+
+    color:#8f8176;
+}
+
+/* INPUT */
+
+.field input{
+    width:100%;
+    height:46px;
+
+    border:none;
+
+    background:#f8f6f3;
+
+    border-radius:10px;
+
+    padding:0 14px;
+
+    outline:none;
+
+    font-size:13px;
+}
+
+/* TEXTAREA */
+
+.field textarea{
+    width:100%;
+
+    height:80px;
+
+    border:none;
+
+    background:#f8f6f3;
+
+    border-radius:10px;
+
+    padding:14px;
+
+    outline:none;
+
+    resize:none;
+
+    font-size:13px;
+
+    font-family:'Manrope',sans-serif;
+}
+
+/* STATUS */
+
+.status-card{
+    background:#faf7f4;
+
+    border-radius:14px;
+
+    padding:14px;
+
+    margin-bottom:18px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.status-card h4{
+    font-size:13px;
+    margin-bottom:3px;
+}
+
+.status-card small{
+    font-size:10px;
+    color:#8d8177;
+}
+
+/* SWITCH */
+
+.switch{
+    position:relative;
+    width:38px;
+    height:20px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    inset:0;
+
+    background:#ddd7d1;
+
+    border-radius:30px;
+}
+
+.slider::before{
+    content:'';
+
+    position:absolute;
+
+    width:14px;
+    height:14px;
+
+    border-radius:50%;
+
+    background:white;
+
+    top:3px;
+    left:3px;
+
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#341818;
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(18px);
+}
+
+/* BUTTONS */
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+.update-btn{
+    flex:1;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#4a2727;
+    color:white;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    cursor:pointer;
+}
+
+.cancel-btn{
+    width:120px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#f2dfcc;
+
+    color:#6d5649;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- CATEGORY PAGE BACKGROUND -->
+
+<div class="bg">
+
+    <div class="bg-inner">
+
+        {% include "category_management.html" %}
+
+    </div>
+
+</div>
+
+<!-- MODAL -->
+
+<div class="overlay">
+
+    <div class="modal">
+
+        <!-- CLOSE -->
+
+        <a href="{% url 'admincategory_view' %}" class="close-btn">
+            ×
+        </a>
+
+        <!-- TITLE -->
+
+        <h2>Edit Category</h2>
+
+        <div class="line"></div>
+
+        <p class="sub">
+            Update your category details and storefront visibility.
+        </p>
+
+        <!-- FORM -->
+         {% if messages %}
+
+    {% for message in messages %}
+
+        {% if 'category' in message.tags %}
+
+            <div style="
+                background:#fde8e8;
+                color:#b42318;
+                padding:12px;
+                border-radius:10px;
+                margin-bottom:16px;
+                font-size:13px;
+            ">
+
+                {{ message }}
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+        <form
+    method="POST"
+    enctype="multipart/form-data"
+    action="{% url 'edit_category' category.id %}">
+
+            {% csrf_token %}
+
+            <!-- IMAGE -->
+
+            <div class="field">
+
+                <label>CATEGORY IMAGE</label>
+
+                <div class="image-row">
+
+                    {% if category.category_image %}
+
+<img
+    src="{{ category.category_image.url }}"
+    class="preview-img"
+>
+
+{% else %}
+
+<div class="preview-img"
+     style="
+        background:#f3f0ec;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        color:#999;
+     ">
+
+    No Image
+
+</div>
+
+{% endif %}
+
+                    <label class="upload-box">
+
+                        <input
+                            type="file"
+                            name="category_image"
+                            hidden
+                        >
+
+                        <span class="material-symbols-outlined">
+                            upload
+                        </span>
+
+                        <small>
+                            CHANGE IMAGE
+                        </small>
+
+                    </label>
+
+                </div>
+
+            </div>
+
+            <!-- NAME -->
+
+            <div class="field">
+
+                <label>CATEGORY NAME</label>
+
+                <input
+                    type="text"
+                    name="category_name"
+                    value="{{ category.category_name }}"
+                    required
+                >
+
+            </div>
+
+            <!-- DESCRIPTION -->
+
+            <div class="field">
+
+                <label>CATEGORY DESCRIPTION</label>
+
+                <textarea
+                    name="category_description"
+                    required>{{ category.category_description }}</textarea>
+
+            </div>
+
+            <!-- STATUS -->
+
+            <div class="status-card">
+
+                <div>
+
+                    <h4>Active Status</h4>
+
+                    <small>
+                        Category visible in storefront
+                    </small>
+
+                </div>
+
+                <label class="switch">
+
+                    <input
+                        type="checkbox"
+                        name="is_active"
+
+                        {% if category.is_active %}
+                            checked
+                        {% endif %}
+                    >
+
+                    <span class="slider"></span>
+
+                </label>
+
+            </div>
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <button
+                    type="submit"
+                    class="update-btn">
+
+                    Update Category
+
+                </button>
+
+                <a href="{% url 'admincategory_view' %}"
+                   class="cancel-btn">
+
+                    Cancel
+
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

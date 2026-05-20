@@ -1,0 +1,498 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Address{% endblock %}
+
+{% block extra_css %}
+
+<style>
+.container{
+
+    max-width:1200px;
+
+    margin:auto;
+
+    padding:40px 20px 80px;
+}
+
+.content{
+
+    width:100%;
+}
+/* ================= PAGE HEADER ================= */
+
+.page-header{
+
+    margin-bottom:38px;
+}
+
+.title{
+
+    font-size:46px;
+
+    font-weight:800;
+
+    color:#2f241e;
+
+    line-height:1.1;
+
+    letter-spacing:-1px;
+
+    margin-bottom:12px;
+}
+
+.subtitle{
+
+    font-size:15px;
+
+    color:#8d7e74;
+
+    line-height:1.7;
+
+    max-width:620px;
+}
+/* ACTIONS CONTAINER */
+.actions{
+    margin-top:15px;
+    display:flex;
+    gap:12px;
+}
+
+/* COMMON BUTTON STYLE */
+.actions a{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 12px;
+    font-size:13px;
+    border-radius:6px;
+    text-decoration:none;
+    transition:0.2s ease;
+}
+
+/* EDIT BUTTON */
+.edit-btn{
+    background:#f3efe9;
+    color:#6B4F3B;
+}
+
+.edit-btn:hover{
+    background:#e7dfd6;
+}
+
+/* DELETE BUTTON */
+.delete-btn{
+    background:#fdeaea;
+    color:#d9534f;
+}
+
+.delete-btn:hover{
+    background:#f8d7d7;
+}
+.content{
+    flex:1;
+    padding:40px 60px;
+}
+.title{
+    font-size:28px;
+    font-weight:600;
+}
+.subtitle{
+    color:gray;
+    margin-bottom:25px;
+}
+/* ================= ADD BUTTON ================= */
+
+.add-btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    height:54px;
+
+    padding:0 28px;
+
+    border-radius:16px;
+
+    background:linear-gradient(
+        135deg,
+        #6B4F3B,
+        #8a654b
+    );
+
+    color:white;
+
+    text-decoration:none;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    letter-spacing:.5px;
+
+    transition:.25s;
+
+    box-shadow:
+    0 10px 24px rgba(107,79,59,.18);
+
+    margin-bottom:35px;
+}
+
+.add-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 16px 32px rgba(107,79,59,.25);
+}
+/* ================= GRID ================= */
+
+.grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(340px,1fr));
+
+    gap:24px;
+}
+
+/* ================= CARD ================= */
+
+.card{
+
+    background:white;
+
+    border-radius:28px;
+
+    padding:28px;
+
+    border:1px solid #eee;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.04);
+
+    transition:.25s;
+}
+
+.card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:
+    0 18px 38px rgba(0,0,0,.07);
+}
+
+/* ================= TAGS ================= */
+
+.tag{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    height:28px;
+
+    padding:0 12px;
+
+    border-radius:999px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    letter-spacing:.6px;
+}
+
+.light-tag{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    height:28px;
+
+    padding:0 12px;
+
+    border-radius:999px;
+
+    background:#f8f5f2;
+
+    color:#6B4F3B;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    margin-left:8px;
+}
+
+/* ================= CARD CONTENT ================= */
+
+.card h3{
+
+    font-size:22px;
+
+    color:#2f241e;
+
+    margin:18px 0 12px;
+}
+
+.card p{
+
+    font-size:14px;
+
+    color:#7b6d63;
+
+    line-height:1.8;
+
+    margin-bottom:8px;
+}
+/* ================= ACTIONS ================= */
+
+.actions{
+
+    display:flex;
+
+    gap:14px;
+
+    margin-top:24px;
+}
+
+.actions a{
+
+    height:42px;
+
+    padding:0 18px;
+
+    border-radius:12px;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    text-decoration:none;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    transition:.2s;
+}
+
+/* EDIT */
+
+.edit-btn{
+
+    background:#f8f5f2;
+
+    color:#6B4F3B;
+}
+
+.edit-btn:hover{
+
+    background:#efe8e2;
+}
+
+/* DELETE */
+
+.delete-btn{
+
+    background:#fff3f2;
+
+    color:#d9534f;
+}
+
+.delete-btn:hover{
+
+    background:#ffe3e1;
+}
+/* ================= EMPTY BOX ================= */
+
+.add-box{
+
+    margin-top:40px;
+
+    border:2px dashed #e7ddd5;
+
+    border-radius:28px;
+
+    background:#faf8f6;
+
+    padding:60px 30px;
+
+    text-align:center;
+}
+
+.add-box i{
+
+    font-size:34px;
+
+    color:#6B4F3B;
+
+    margin-bottom:18px;
+}
+
+.add-box h4{
+
+    font-size:24px;
+
+    color:#2f241e;
+
+    margin-bottom:10px;
+}
+
+.add-box p{
+
+    color:#8d7e74;
+
+    font-size:14px;
+}
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+    .title{
+
+        font-size:36px;
+    }
+
+    .grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .actions{
+
+        flex-direction:column;
+    }
+
+    .actions a{
+
+        width:100%;
+
+        justify-content:center;
+    }
+
+    .add-btn{
+
+        width:100%;
+    }
+}   
+.footer{
+    margin-top:40px;
+    padding:20px;
+    text-align:center;
+    font-size:12px;
+    color:#888;
+}
+.footer-columns{
+    display:flex;
+    justify-content:space-between;}
+</style>
+
+</head>
+
+{% endblock %}
+
+
+{% block content %}
+
+<body>
+
+
+<div class="container">
+
+
+<!-- CONTENT -->
+<div class="content">
+
+<div class="page-header">
+
+    <div class="title">
+
+        My Addresses
+
+    </div>
+
+    <div class="subtitle">
+
+        Add or manage your delivery locations for a faster checkout.
+
+    </div>
+
+</div>
+
+    <a href="{% url 'address_details:add_address' %}" class="add-btn">
+        + Add New Address
+    </a>
+
+    <!-- 🔥 DYNAMIC GRID -->
+    <div class="grid">
+
+    {% for addr in addresses %}
+
+        <div class="card">
+
+            {% if addr.is_default %}
+                <span class="tag">DEFAULT ADDRESS</span>
+            {% endif %}
+
+            <span class="light-tag">{{ addr.address_type|upper }}</span>
+
+            <h3>{{ addr.full_name }}</h3>
+
+            <p>
+                {{ addr.address_line }},
+                {{ addr.city }},
+                {{ addr.state }} - {{ addr.pincode }}
+            </p>
+
+            <p>{{ addr.phone }}</p>
+
+            <div class="actions">
+    <a href="{% url 'address_details:edit_address' addr.id %}" class="edit-btn">
+        <i class="fa fa-pen"></i> Edit
+    </a>
+
+    <a href="{% url 'address_details:delete_address' addr.id %}" class="delete-btn">
+        <i class="fa fa-trash"></i> Delete
+    </a>
+</div>
+
+        </div>
+
+    {% empty %}
+        <p>No address added yet</p>
+    {% endfor %}
+
+    </div>
+
+    <!-- ADD BOX -->
+    <div class="add-box">
+        <a href="{% url 'address_details:add_address' %}"><i class="fa fa-location-dot"></i>
+        <h4>Add New Address</h4>
+        <p style="color:gray;">Save a new delivery point</p></a>
+    </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<!-- FOOTER -->
+<div class="footer">
+    © 2024 WESTRAL FASHION. ALL RIGHTS RESERVED.
+</div>
+
+{% endblock %}
+</body>
+</html>

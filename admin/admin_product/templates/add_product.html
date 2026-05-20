@@ -1,0 +1,684 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Add Product</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+
+/* ================= RESET ================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#f7f5f2;
+    font-family:'Manrope',sans-serif;
+    color:#1d1b19;
+
+    overflow-x:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+
+.bg{
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:1;
+
+    pointer-events:none;
+}
+.bg-inner{
+    width:100%;
+    height:100vh;
+
+    overflow:hidden;
+
+    filter:blur(5px);
+}
+
+body::-webkit-scrollbar{
+    width:8px;
+}
+
+body::-webkit-scrollbar-track{
+    background:#f1ece7;
+}
+
+body::-webkit-scrollbar-thumb{
+    background:#b9aca1;
+    border-radius:20px;
+}
+
+.bg::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:rgba(0,0,0,.20);
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    position:relative;
+
+    z-index:5;
+
+    padding:30px;
+}
+
+/* ================= MAIN ================= */
+
+.main{
+    width:1120px;
+
+    margin:0 auto;
+
+    background:#f7f5f2;
+
+    border-radius:28px;
+
+    padding:28px 34px;
+
+    min-height:auto;
+
+    box-shadow:
+    0 30px 80px rgba(0,0,0,.18);
+}
+
+/* ================= TOPBAR ================= */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:24px;
+}
+
+.search-box{
+    width:280px;
+    height:40px;
+
+    background:white;
+
+    border-radius:10px;
+
+    display:flex;
+    align-items:center;
+
+    padding:0 14px;
+
+    gap:10px;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.03);
+}
+
+.search-box span{
+    font-size:18px;
+    color:#a79b91;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    width:100%;
+
+    background:none;
+
+    font-size:13px;
+}
+
+.top-icons span{
+    color:#7f7268;
+    cursor:pointer;
+}
+
+/* ================= BREADCRUMB ================= */
+
+.breadcrumb{
+    font-size:10px;
+    color:#a3958b;
+
+    letter-spacing:1px;
+
+    margin-bottom:12px;
+}
+
+.breadcrumb b{
+    color:#54463d;
+}
+
+/* ================= TITLE ================= */
+
+.title{
+    font-family:'Noto Serif',serif;
+    font-size:40px;
+
+    margin-bottom:24px;
+}
+
+/* ================= CARD ================= */
+
+.card{
+    background:white;
+
+    border-radius:18px;
+
+    padding:24px;
+
+    margin-bottom:18px;
+
+    box-shadow:0 4px 20px rgba(0,0,0,.03);
+}
+
+/* ================= CARD HEAD ================= */
+
+.card-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:22px;
+}
+
+.card-head h3{
+    font-size:16px;
+    font-weight:600;
+}
+
+.card-head small{
+    font-size:10px;
+    letter-spacing:1px;
+    color:#a19389;
+}
+
+/* ================= GRID ================= */
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 220px;
+    gap:18px;
+}
+
+/* ================= FIELD ================= */
+
+.field{
+    margin-bottom:16px;
+}
+
+.field label{
+    display:block;
+
+    font-size:10px;
+    font-weight:700;
+
+    color:#9b8f84;
+
+    letter-spacing:1px;
+
+    margin-bottom:8px;
+}
+
+/* ================= INPUT ================= */
+
+.field input,
+.field textarea,
+.field select{
+    width:100%;
+
+    border:none;
+
+    background:#f8f5f2;
+
+    border-radius:10px;
+
+    padding:14px;
+
+    outline:none;
+
+    font-size:13px;
+
+    font-family:'Manrope',sans-serif;
+}
+
+.field textarea{
+    resize:none;
+    height:90px;
+}
+
+
+
+/* ================= FOOTER ================= */
+
+.footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-top:26px;
+}
+
+.footer small{
+    font-size:10px;
+    letter-spacing:1px;
+    color:#a19389;
+}
+
+/* ================= BUTTONS ================= */
+
+.footer-actions{
+    display:flex;
+    gap:12px;
+}
+
+.discard-btn{
+    border:none;
+
+    background:none;
+
+    color:#8d8176;
+
+    font-size:11px;
+
+    cursor:pointer;
+}
+
+.save-btn{
+    border:none;
+
+    background:#341818;
+    color:white;
+
+    padding:12px 22px;
+
+    border-radius:10px;
+
+    font-size:11px;
+    font-weight:600;
+
+    cursor:pointer;
+}
+
+.save-btn:hover{
+    background:#241111;
+}
+/* ================= STATUS ================= */
+
+.status-box{
+    width:260px;
+
+    background:#f8f5f2;
+
+    height:54px;
+
+    border-radius:12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    padding:0 18px;
+}
+
+.status-box small{
+    font-size:11px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    color:#7f7268;
+}
+
+/* SWITCH */
+
+.switch{
+    position:relative;
+
+    display:inline-block;
+
+    width:50px;
+    height:26px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+
+    inset:0;
+
+    background:#d6cbc3;
+
+    border-radius:30px;
+
+    transition:.3s;
+}
+
+.slider::before{
+    content:"";
+
+    position:absolute;
+
+    width:20px;
+    height:20px;
+
+    left:3px;
+    bottom:3px;
+
+    background:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#341818;
+}
+
+.switch input:checked + .slider::before{
+    transform:translateX(24px);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= BLUR BACKGROUND ================= -->
+
+<div class="bg">
+
+    <div class="bg-inner">
+
+        {% include "product_management.html" %}
+
+    </div>
+
+</div>
+
+<!-- ================= OVERLAY ================= -->
+
+<div class="overlay">
+
+<div class="main">
+
+<form
+method="POST"
+enctype="multipart/form-data">
+
+{% csrf_token %}
+
+<!-- ================= TOPBAR ================= -->
+
+<div class="topbar">
+
+    <div class="search-box">
+
+        <span class="material-symbols-outlined">
+            search
+        </span>
+
+        <input
+        type="text"
+        placeholder="Search orders, products...">
+
+    </div>
+
+    <div class="top-icons">
+
+        <span class="material-symbols-outlined">
+            notifications
+        </span>
+
+    </div>
+
+</div>
+
+<!-- ================= BREADCRUMB ================= -->
+
+<div class="breadcrumb">
+
+    PRODUCT MANAGEMENT /
+
+    <b>ADDING PRODUCT VARIATION</b>
+
+</div>
+
+<!-- ================= TITLE ================= -->
+
+<div class="title">
+
+    Create New Product
+
+</div>
+{% if messages %}
+
+    {% for message in messages %}
+
+        {% if "product" in message.tags %}
+
+            <div
+            style="
+            background:#f8ece8;
+            color:#7a4b42;
+            padding:14px 16px;
+            border-radius:10px;
+            margin-bottom:18px;
+            font-size:13px;
+            "
+            >
+
+                {{ message }}
+
+            </div>
+
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+
+<!-- ================= GENERAL CARD ================= -->
+
+<div class="card">
+
+    <div class="card-head">
+
+        <h3>General Information</h3>
+
+        <small>BASIC ATTRIBUTES</small>
+
+    </div>
+
+    <div class="grid">
+
+        <!-- LEFT -->
+
+        <div>
+
+            <!-- PRODUCT NAME -->
+
+            <div class="field">
+
+                <label>PRODUCT NAME</label>
+
+                <input
+                type="text"
+                name="product_name"
+                value="{{ request.POST.product_name }}"
+                required>
+
+            </div>
+
+            <!-- MATERIALS -->
+
+            <div class="field">
+
+                <label>FABRIC / MATERIAL COMPOSITION</label>
+
+                <input
+                type="text"
+                name="materials"
+                value="{{ request.POST.materials }}"
+                required>
+
+            </div>
+
+            <!-- FIT TYPE -->
+
+            <div class="field">
+
+                <label>FIT TYPE</label>
+
+                <input
+                type="text"
+                name="fit_type"
+                value="{{ request.POST.fit_type }}">
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+
+        <div>
+
+            <!-- CATEGORY -->
+
+            <div class="field">
+
+                <label>CATEGORY</label>
+
+                <select
+                name="category"
+                required>
+
+                    {% for category in categories %}
+
+                    <option
+                    value="{{ category.id }}"
+
+                    {% if request.POST.category == category.id|stringformat:"s" %}
+                    selected
+                    {% endif %}
+                    >
+
+                        {{ category.category_name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+
+    <div class="field">
+
+        <label>DESCRIPTION & DETAILS</label>
+
+        <textarea
+        name="description"
+        required>{{ request.POST.description }}</textarea>
+
+    </div>
+
+</div>
+<!-- ================= STATUS ================= -->
+
+<div class="card">
+
+    <div class="status-box">
+
+        <small>ACTIVE PRODUCT</small>
+
+        <label class="switch">
+
+            <input
+            type="checkbox"
+            name="is_active"
+            value="on"
+            checked>
+
+            <span class="slider"></span>
+
+        </label>
+
+    </div>
+
+</div>
+
+<!-- ================= FOOTER ================= -->
+
+<div class="footer">
+
+    <small>
+
+        ● ALL PROGRESS SYNCED TO CLOUD
+
+    </small>
+
+    <div class="footer-actions">
+
+        <!-- DISCARD -->
+
+        <button
+        type="button"
+        class="discard-btn"
+        onclick="window.history.back()">
+
+            DISCARD CHANGES
+
+        </button>
+
+        <!-- SAVE -->
+
+        <button
+        type="submit"
+        class="save-btn">
+
+            SAVE PRODUCT
+
+        </button>
+
+    </div>
+
+</div>
+</form>
+
+</div>
+
+</div>
+
+</body>
+</html>

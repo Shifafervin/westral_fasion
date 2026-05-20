@@ -1,0 +1,283 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Order Cancelled
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* ================= OVERLAY ================= */
+
+.cancel-success-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,0.45);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+    padding:20px;
+
+    backdrop-filter:blur(4px);
+}
+
+/* ================= MODAL ================= */
+
+.cancel-success-modal{
+
+    width:100%;
+
+    max-width:520px;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:55px 45px;
+
+    text-align:center;
+
+    box-shadow:0 20px 60px rgba(0,0,0,0.15);
+
+    animation:popup 0.25s ease;
+}
+
+@keyframes popup{
+
+    from{
+        transform:scale(0.92);
+        opacity:0;
+    }
+
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+/* ================= ICON ================= */
+
+.success-icon-wrapper{
+
+    width:78px;
+
+    height:78px;
+
+    border-radius:50%;
+
+    background:#ede4dc;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:0 auto 28px;
+}
+
+.success-icon{
+
+    width:54px;
+
+    height:54px;
+
+    border-radius:50%;
+
+    background:#6B4F3B;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-size:24px;
+
+    font-weight:800;
+}
+
+/* ================= TITLE ================= */
+
+.success-title{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:#2f241e;
+
+    margin-bottom:16px;
+}
+
+/* ================= TEXT ================= */
+
+.success-text{
+
+    font-size:14px;
+
+    line-height:2;
+
+    color:#8d7e74;
+
+    margin-bottom:38px;
+}
+
+/* ================= BUTTONS ================= */
+
+.button-group{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+}
+
+.success-btn{
+
+    width:100%;
+
+    height:54px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    text-decoration:none;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    transition:0.2s;
+
+    cursor:pointer;
+}
+
+.success-btn:hover{
+
+    background:#563c2c;
+}
+
+/* SECONDARY */
+
+.secondary-btn{
+
+    background:transparent;
+
+    color:#8d7e74;
+}
+
+.secondary-btn:hover{
+
+    background:#f5f1ed;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:600px){
+
+    .cancel-success-modal{
+
+        padding:40px 24px;
+    }
+
+    .success-title{
+
+        font-size:28px;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="cancel-success-overlay">
+
+    <div class="cancel-success-modal">
+
+        <!-- ICON -->
+
+        <div class="success-icon-wrapper">
+
+            <div class="success-icon">
+
+                ✓
+
+            </div>
+
+        </div>
+
+        <!-- TITLE -->
+
+        <div class="success-title">
+
+            Order cancelled successfully
+
+        </div>
+
+        <!-- TEXT -->
+
+        <div class="success-text">
+
+            Your cancellation request has been processed successfully.
+
+        </div>
+
+        <!-- BUTTONS -->
+
+        <div class="button-group">
+
+            <a
+            href="#"
+            class="success-btn"
+            >
+
+                GO TO WALLET
+
+            </a>
+
+            <a
+            href="{% url 'home' %}"
+            class="success-btn secondary-btn"
+            >
+
+                BACK TO SHOPPING
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

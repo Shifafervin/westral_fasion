@@ -1,0 +1,636 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ================= MAIN ================= */
+
+.container{
+
+    max-width:1100px;
+
+    margin:auto;
+
+    padding:40px 20px 80px;
+}
+
+.content{
+
+    width:100%;
+}
+
+/* ================= HEADER ================= */
+
+.page-header{
+
+    margin-bottom:38px;
+}
+
+.breadcrumb{
+
+    font-size:13px;
+
+    margin-bottom:18px;
+}
+
+.breadcrumb a{
+
+    text-decoration:none;
+
+    color:#6B4F3B;
+
+    font-weight:700;
+}
+
+.breadcrumb span{
+
+    color:#9b8d83;
+}
+
+.title{
+
+    font-size:46px;
+
+    font-weight:800;
+
+    color:#2f241e;
+
+    line-height:1.1;
+
+    letter-spacing:-1px;
+
+    margin-bottom:12px;
+}
+
+.subtitle{
+
+    font-size:15px;
+
+    color:#8d7e74;
+
+    line-height:1.7;
+
+    max-width:620px;
+}
+
+/* ================= FORM WRAPPER ================= */
+
+.form-wrapper{
+
+    background:white;
+
+    border-radius:32px;
+
+    padding:45px;
+
+    border:1px solid #eee;
+
+    box-shadow:
+    0 10px 40px rgba(0,0,0,.05);
+}
+
+
+/* ================= GRID ================= */
+
+.row{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:24px;
+
+    margin-bottom:24px;
+}
+
+/* ================= INPUTS ================= */
+
+.input-box label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    color:#9b8d83;
+}
+
+.input-box input,
+.input-box textarea{
+
+    width:100%;
+
+    border:1px solid #f1ece8;
+
+    background:#f8f5f2;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    font-size:14px;
+
+    color:#3f2d22;
+
+    outline:none;
+
+    transition:.25s;
+}
+
+.input-box input{
+
+    height:58px;
+}
+
+.input-box textarea{
+
+    min-height:140px;
+
+    resize:none;
+}
+
+.input-box input:focus,
+.input-box textarea:focus{
+
+    border-color:#6B4F3B;
+
+    background:white;
+}
+/* ================= ADDRESS TYPE ================= */
+
+.address-type{
+
+    margin-top:10px;
+}
+
+.address-type label{
+
+    display:block;
+
+    margin-bottom:14px;
+
+    font-size:11px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    color:#9b8d83;
+}
+
+.type-options{
+
+    display:flex;
+
+    gap:14px;
+
+    flex-wrap:wrap;
+}
+
+.type-btn{
+
+    height:48px;
+
+    padding:0 22px;
+
+    border-radius:14px;
+
+    background:#f8f5f2;
+
+    border:1px solid #eee;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    color:#6B4F3B;
+}
+
+input[type="radio"]:checked + .type-btn{
+
+    background:#6B4F3B;
+
+    color:white;
+
+    border-color:#6B4F3B;
+}
+/* ================= DEFAULT SWITCH ================= */
+
+.default-switch{
+
+    margin-top:28px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:14px;
+
+    color:#6d5c52;
+
+    font-size:14px;
+}
+
+.switch{
+
+    width:48px;
+
+    height:26px;
+
+    background:#ddd;
+
+    border-radius:999px;
+
+    position:relative;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.slider{
+
+    width:20px;
+
+    height:20px;
+
+    background:white;
+
+    border-radius:50%;
+
+    position:absolute;
+
+    top:3px;
+
+    left:3px;
+
+    transition:.25s;
+}
+
+#default:checked + .switch{
+
+    background:#6B4F3B;
+}
+
+#default:checked + .switch .slider{
+
+    transform:translateX(22px);
+}
+
+/* ================= ACTIONS ================= */
+
+.actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:18px;
+
+    margin-top:40px;
+}
+
+.cancel{
+
+    height:52px;
+
+    padding:0 28px;
+
+    border-radius:14px;
+
+    border:1px solid #e5d8ce;
+
+    background:white;
+
+    color:#6B4F3B;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+}
+
+.cancel:hover{
+
+    background:#faf7f4;
+}
+
+.save{
+
+    height:52px;
+
+    padding:0 28px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:linear-gradient(
+        135deg,
+        #6B4F3B,
+        #8a654b
+    );
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:
+    0 10px 24px rgba(107,79,59,.18);
+}
+
+.save:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 16px 32px rgba(107,79,59,.25);
+}
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:768px){
+
+    .form-wrapper{
+
+        padding:28px;
+    }
+
+    .title{
+
+        font-size:36px;
+    }
+
+    .row{
+
+        grid-template-columns:1fr;
+    }
+
+    .actions{
+
+        flex-direction:column;
+    }
+
+    .cancel,
+    .save{
+
+        width:100%;
+    }
+}
+
+/* FOOTER */
+.footer{
+    margin-top:40px;
+    padding:20px;
+    text-align:center;
+    font-size:12px;
+    color:#888;
+}
+/* ADDRESS TYPE BUTTONS */
+.type-options {
+    display:flex;
+    gap:10px;
+    margin-top:10px;
+}
+
+.type-btn {
+    padding:10px 20px;
+    border:1px solid #ddd;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    color:#555;
+    transition:0.2s;
+}
+
+/* ACTIVE BUTTON */
+input[type="radio"]:checked + .type-btn {
+    background:#6B4F3B;
+    color:white;
+    border:none;
+}
+
+/* SWITCH */
+.default-switch {
+    margin-top:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.switch {
+    width:40px;
+    height:22px;
+    background:#ddd;
+    border-radius:20px;
+    position:relative;
+    cursor:pointer;
+}
+
+.slider {
+    width:18px;
+    height:18px;
+    background:white;
+    border-radius:50%;
+    position:absolute;
+    top:2px;
+    left:2px;
+    transition:0.3s;
+}
+
+/* SWITCH ACTIVE */
+#default:checked + .switch {
+    background:#6B4F3B;
+}
+
+#default:checked + .switch .slider {
+    transform:translateX(18px);
+}
+
+</style>
+</head>
+
+<body>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+
+
+<!-- CONTENT -->
+<div class="content">
+
+<div class="page-header">
+
+    <div class="breadcrumb">
+
+        <a href="{% url 'address_details:address_view' %}">
+
+            MY ADDRESS
+
+        </a>
+
+        <span>
+
+            / EDIT ADDRESS
+
+        </span>
+
+    </div>
+
+    <div class="title">
+
+        Edit Address
+
+    </div>
+
+    <div class="subtitle">
+
+        Update your delivery details and address preferences.
+
+    </div>
+
+</div>
+<div class="form-wrapper">
+<form method="POST">
+{% csrf_token %}
+
+<div class="row">
+    <div class="input-box">
+        <label>FULL NAME</label>
+        <input type="text" name="full_name" value="{{ address.full_name }}">
+    </div>
+
+    <div class="input-box">
+        <label>MOBILE NUMBER</label>
+        <input type="text" name="phone" value="{{ address.phone }}">
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-box">
+        <label>CITY</label>
+        <input type="text" name="city" value="{{ address.city }}">
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-box">
+        <label>PINCODE</label>
+        <input type="text" name="pincode" value="{{ address.pincode }}">
+    </div>
+
+    <div class="input-box">
+        <label>STATE</label>
+        <input type="text" name="state" value="{{ address.state }}">
+    </div>
+
+    <div class="input-box">
+        <label>COUNTRY</label>
+        <input type="text" name="country" value="{{ address.country }}">
+    </div>
+</div>
+
+<div class="row">
+    <div class="input-box">
+        <label>ADDRESS</label>
+        <textarea name="address_line">{{ address.address_line }}</textarea>
+    </div>
+</div>
+
+<div class="address-type">
+
+    <label>ADDRESS TYPE</label>
+
+    <div class="type-options">
+
+    <input type="radio" id="home" name="address_type" value="HOME"
+    {% if address.address_type == "HOME" %}checked{% endif %} hidden>
+    <label for="home" class="type-btn">HOME</label>
+
+    <input type="radio" id="work" name="address_type" value="WORK"
+    {% if address.address_type == "WORK" %}checked{% endif %} hidden>
+    <label for="work" class="type-btn">WORK</label>
+
+    <input type="radio" id="other" name="address_type" value="OTHER"
+    {% if address.address_type == "OTHER" %}checked{% endif %} hidden>
+    <label for="other" class="type-btn">OTHER</label>
+
+</div>
+
+</div>
+
+<!-- DEFAULT SWITCH -->
+<div class="default-switch">
+
+    <input type="checkbox" id="default" name="is_default"
+{% if address.is_default %}checked{% endif %} hidden>
+
+    <label for="default" class="switch">
+        <span class="slider"></span>
+    </label>
+
+    <span>Set as default address</span>
+
+</div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+            <span class="cancel"
+            onclick="window.location.href='{% url 'address_details:address_view' %}'">
+            CANCEL
+            </span>
+
+            <button type="submit" class="save">SAVE ADDRESS</button>
+        </div>
+
+        </form>
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+    © 2024 WESTRAL FASHION. ALL RIGHTS RESERVED.
+</div>
+
+</body>
+{% endblock %}
+</html>

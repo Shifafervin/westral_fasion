@@ -1,0 +1,247 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Verify OTP</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* LEFT */
+.left {
+    width: 50%;
+    position: relative;
+}
+
+.left img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 🔥 overlay for better look */
+.left::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.25);
+}
+
+.brand {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.bottom-text {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    z-index: 2;
+}
+
+.bottom-text h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+/* RIGHT */
+.right {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.card {
+    width: 360px;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+/* TEXT */
+.title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: gray;
+    margin: 10px 0 20px;
+}
+
+/* OTP */
+.otp-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.otp-container input {
+    width: 40px;
+    height: 45px;
+    text-align: center;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+/* BUTTON */
+.btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    border: none;
+    background: #5a3b2e;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* RESEND */
+.resend {
+    margin-top: 15px;
+    font-size: 13px;
+}
+
+.resend a {
+    color: #5a3b2e;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* TIMER */
+.timer {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 5px 12px;
+    background: #f3e1d6;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* BACK */
+.back {
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+.back a {
+    text-decoration: none;
+    color: #333;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- LEFT IMAGE -->
+<div class="left">
+    <img src="{{ otp_image }}">
+    
+    <div class="brand">WESTRAL FASHION</div>
+
+    <div class="bottom-text">
+        <h1>STEP INTO YOUR STYLE</h1>
+        <p>Enter the verification code to continue</p>
+    </div>
+</div>
+
+<!-- RIGHT -->
+<div class="right">
+<div class="card">
+    
+    <div class="title">Verify OTP</div>
+    <div class="subtitle">
+        We sent a 6-digit code to your email. Enter it below.
+    </div>
+
+    <form method="POST" action="{% url 'signup_verify' %}">
+        {% csrf_token %}
+
+        <div class="otp-container">
+    <input type="text" name="otp1" maxlength="1">
+    <input type="text" name="otp2" maxlength="1">
+    <input type="text" name="otp3" maxlength="1">
+    <input type="text" name="otp4" maxlength="1">
+    <input type="text" name="otp5" maxlength="1">
+    <input type="text" name="otp6" maxlength="1">
+</div>
+
+        <button type="submit" class="btn">VERIFY & PROCEED</button>
+    </form>
+
+    <div class="resend">
+        Didn't receive the code? 
+        <a href="{% url 'resend_otp' %}">Resend</a>
+    </div>
+
+    <div class="timer" id="timer">02:00</div>
+
+    <div class="back">
+        <a href="{% url 'login' %}">← Back to login</a>
+    </div>
+
+</div>
+</div>
+
+</div>
+
+<script>
+/* OTP AUTO FOCUS */
+const inputs = document.querySelectorAll(".otp-container input");
+
+inputs.forEach((input, index) => {
+    input.addEventListener("input", () => {
+        if (input.value.length === 1 && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+        }
+    });
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
+});
+
+/* TIMER */
+let time = 120;
+let timerEl = document.getElementById("timer");
+
+setInterval(() => {
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+    timerEl.textContent = 
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
+    if (time > 0) time--;
+}, 1000);
+</script>
+
+</body>
+</html>

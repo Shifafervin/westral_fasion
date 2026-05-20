@@ -1,0 +1,545 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block extra_css %}
+<style>
+
+/* ================= MAIN ================= */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    min-height:100vh;
+    padding:28px;
+}
+
+/* HEADER */
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.title{
+    font-family:'Noto Serif',serif;
+    font-size:30px;
+}
+
+.sub{
+    color:#8b8179;
+    margin-top:6px;
+}
+
+.top-actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.top-actions span{
+    font-size:22px;
+    color:#6f6155;
+    cursor:pointer;
+}
+
+.report-btn{
+    border:none;
+    background:#341818;
+    color:white;
+    padding:11px 18px;
+    border-radius:10px;
+    font-size:12px;
+    cursor:pointer;
+}
+
+/* ================= CARDS ================= */
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:28px;
+}
+
+.card{
+    background:white;
+    border-radius:18px;
+    padding:20px;
+    box-shadow:0 4px 20px rgba(0,0,0,.03);
+}
+
+.card-top{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:18px;
+}
+
+.card-top small{
+    font-size:10px;
+    letter-spacing:1px;
+    color:#8c7e73;
+}
+
+.percent{
+    color:#6f5646;
+    font-size:12px;
+}
+
+.card-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+}
+
+.card-bottom h2{
+    font-size:30px;
+    font-weight:700;
+}
+
+/* CHART BARS */
+
+.bars{
+    display:flex;
+    align-items:end;
+    gap:4px;
+}
+
+.bars div{
+    width:4px;
+    border-radius:10px;
+}
+
+.bar1{
+    height:12px;
+    background:#ddd5cf;
+}
+
+.bar2{
+    height:18px;
+    background:#c0b4ad;
+}
+
+.bar3{
+    height:14px;
+    background:#937f7b;
+}
+
+.bar4{
+    height:24px;
+    background:#341818;
+}
+
+/* ================= CHART ================= */
+
+.chart-card{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:28px;
+    box-shadow:0 4px 20px rgba(0,0,0,.03);
+}
+
+.chart-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.chart-header h3{
+    font-size:18px;
+}
+
+.toggle{
+    display:flex;
+    background:#f3f0ec;
+    padding:4px;
+    border-radius:10px;
+}
+
+.toggle button{
+    border:none;
+    background:transparent;
+    padding:7px 14px;
+    border-radius:8px;
+    font-size:11px;
+    cursor:pointer;
+}
+
+.toggle .active{
+    background:white;
+}
+
+/* GRAPH */
+
+.graph{
+    position:relative;
+    height:220px;
+}
+
+.lines{
+    position:absolute;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.lines span{
+    height:1px;
+    background:#f1ece7;
+}
+
+.graph svg{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+.days{
+    position:absolute;
+    bottom:-20px;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    font-size:10px;
+    color:#aaa;
+}
+
+/* ================= TABLE ================= */
+
+.table-card{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    box-shadow:0 4px 20px rgba(0,0,0,.03);
+}
+
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.table-header h3{
+    font-size:18px;
+}
+
+.table-header span{
+    font-size:11px;
+    color:#9c9187;
+}
+
+.table-head{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    padding-bottom:12px;
+    border-bottom:1px solid #f1ece7;
+}
+
+.table-head span{
+    font-size:10px;
+    letter-spacing:1px;
+    color:#8d8075;
+}
+
+.table-row{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    align-items:center;
+    padding:18px 0;
+    border-bottom:1px solid #f4efea;
+}
+
+.product{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.product img{
+    width:56px;
+    height:72px;
+    object-fit:cover;
+    border-radius:8px;
+}
+
+.product-info{
+    display:flex;
+    flex-direction:column;
+}
+
+.product-name{
+    font-size:14px;
+    font-weight:600;
+}
+
+.product-code{
+    margin-top:4px;
+    font-size:11px;
+    color:#9d9188;
+}
+
+.price{
+    font-weight:700;
+}
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<body>
+
+<!-- ================= MAIN ================= -->
+
+    <div class="header">
+
+        <div>
+
+            <div class="title">
+                Performance
+            </div>
+
+            <div class="sub">
+                Overview of your fashion metrics
+            </div>
+
+        </div>
+
+        <div class="top-actions">
+
+            <span class="material-symbols-outlined">
+                search
+            </span>
+
+            <span class="material-symbols-outlined">
+                notifications
+            </span>
+
+            <button class="report-btn">
+                VIEW SALES REPORT
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-top">
+
+                <small>TOTAL REVENUE</small>
+
+                <span class="percent">
+                    +12.4%
+                </span>
+
+            </div>
+
+            <div class="card-bottom">
+
+                <h2>$142,850</h2>
+
+                <div class="bars">
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                    <div class="bar4"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-top">
+                <small>TOTAL ORDERS</small>
+                <span class="percent">+8.2%</span>
+            </div>
+
+            <div class="card-bottom">
+                <h2>1,240</h2>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-top">
+                <small>PENDING</small>
+                <span class="percent">+3.1%</span>
+            </div>
+
+            <div class="card-bottom">
+                <h2>48</h2>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <div class="card-top">
+                <small>CUSTOMERS</small>
+                <span class="percent">+24%</span>
+            </div>
+
+            <div class="card-bottom">
+                <h2>8.4k</h2>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- CHART -->
+
+    <div class="chart-card">
+
+        <div class="chart-header">
+
+            <h3>Revenue Overview</h3>
+
+            <div class="toggle">
+                <button class="active">WEEKLY</button>
+                <button>MONTHLY</button>
+            </div>
+
+        </div>
+
+        <div class="graph">
+
+            <div class="lines">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
+            <svg viewBox="0 0 100 60">
+
+                <path
+                    d="M0,45 C20,30 40,50 60,25 S80,20 100,10"
+                    fill="none"
+                    stroke="#341818"
+                    stroke-width="2.5"
+                />
+
+            </svg>
+
+            <div class="days">
+
+                <span>MON</span>
+                <span>TUE</span>
+                <span>WED</span>
+                <span>THU</span>
+                <span>FRI</span>
+                <span>SAT</span>
+                <span>SUN</span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <h3>Trending Pieces</h3>
+
+            <span>FULL INVENTORY</span>
+
+        </div>
+
+        <div class="table-head">
+
+            <span>PRODUCT</span>
+            <span>CATEGORY</span>
+            <span>SALES</span>
+            <span>REVENUE</span>
+
+        </div>
+
+        <!-- ROW -->
+
+        <div class="table-row">
+
+            <div class="product">
+
+                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=300">
+
+                <div class="product-info">
+
+                    <span class="product-name">
+                        Midnight Velvet Gown
+                    </span>
+
+                    <span class="product-code">
+                        AW24-082
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div>Western Wear</div>
+
+            <div>482</div>
+
+            <div class="price">
+                Rs.28,920
+            </div>
+
+        </div>
+
+        <!-- ROW -->
+
+        <div class="table-row">
+
+            <div class="product">
+
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=300">
+
+                <div class="product-info">
+
+                    <span class="product-name">
+                        Artisanal Wool Coat
+                    </span>
+
+                    <span class="product-code">
+                        AW24-015
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div>Winter Edition</div>
+
+            <div>315</div>
+
+            <div class="price">
+                Rs.44,100
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

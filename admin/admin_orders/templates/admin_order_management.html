@@ -1,0 +1,728 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block title %}
+Order Management
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* ================= CONTENT ================= */
+
+.content{
+    flex:1;
+    padding:45px;
+}
+
+/* ================= PAGE HEADER ================= */
+
+.page-title{
+    font-size:48px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.page-subtitle{
+    color:#8b7d74;
+    margin-bottom:40px;
+}
+
+/* ================= STATS ================= */
+
+.stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+    margin-bottom:35px;
+}
+
+.stat-card{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    border:1px solid #efe7e1;
+}
+
+.stat-title{
+    font-size:11px;
+    letter-spacing:2px;
+    color:#9a8d84;
+    margin-bottom:16px;
+}
+
+.stat-value{
+    font-size:40px;
+    font-weight:800;
+    margin-bottom:10px;
+}
+
+.stat-text{
+    font-size:13px;
+    color:#8f8178;
+}
+
+/* ================= TABLE CARD ================= */
+
+.table-card{
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    border:1px solid #efe7e1;
+}
+
+/* ================= TOP BAR ================= */
+
+.table-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+    gap:20px;
+}
+
+.search-box{
+    width:320px;
+    height:48px;
+    border:1px solid #ebe3dc;
+    border-radius:12px;
+    padding:0 18px;
+    outline:none;
+    background:#faf8f6;
+}
+
+.table-actions{
+    display:flex;
+    gap:18px;
+}
+
+.action-btn{
+    border:none;
+    background:none;
+    cursor:pointer;
+    font-size:13px;
+    color:#7b6d64;
+    font-weight:700;
+}
+
+/* ================= TABLE ================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead th{
+    text-align:left;
+    font-size:11px;
+    color:#9a8d84;
+    letter-spacing:2px;
+    padding-bottom:18px;
+}
+
+tbody tr{
+    border-top:1px solid #f1ece8;
+}
+
+tbody td{
+    padding:24px 0;
+    vertical-align:middle;
+}
+
+/* ================= USER ================= */
+
+.user-box{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.user-avatar{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    object-fit:cover;
+}
+
+.user-name{
+    font-size:14px;
+    font-weight:700;
+}
+
+.user-email{
+    font-size:12px;
+    color:#9a8d84;
+    margin-top:4px;
+}
+
+/* ================= STATUS ================= */
+
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 14px;
+    border-radius:30px;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.pending{
+    background:#f7efe4;
+    color:#c28b2c;
+}
+
+.delivered{
+    background:#e8f6ed;
+    color:#2e8b57;
+}
+
+.shipped{
+    background:#edf3ff;
+    color:#2d5be3;
+}
+
+.cancelled{
+    background:#fdeaea;
+    color:#d32f2f;
+}
+
+/* ================= VIEW BUTTON ================= */
+
+.view-btn{
+    width:90px;
+    height:42px;
+    border:1px solid #e2d7ce;
+    border-radius:10px;
+    background:white;
+    color:#2f241e;
+    text-decoration:none;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:12px;
+    font-weight:800;
+    transition:0.2s;
+}
+
+.view-btn:hover{
+    background:#f7f3ef;
+}
+
+/* ================= PAGINATION ================= */
+
+.pagination{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    margin-top:30px;
+}
+
+.page-btn{
+    width:38px;
+    height:38px;
+    border-radius:8px;
+    border:1px solid #e7ddd4;
+    background:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-decoration:none;
+    color:#2f241e;
+    font-size:13px;
+    font-weight:700;
+}
+
+.page-btn.active{
+    background:#2f241e;
+    color:white;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1200px){
+
+    .stats-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+@media(max-width:950px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .content{
+        padding:25px;
+    }
+
+    .table-card{
+        overflow-x:auto;
+    }
+}
+
+@media(max-width:700px){
+
+    .stats-grid{
+        grid-template-columns:1fr;
+    }
+
+    .table-top{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .search-box{
+        width:100%;
+    }
+}
+
+.filter-select{
+
+    height:46px;
+
+    border:1px solid #e5ddd5;
+
+    border-radius:10px;
+
+    padding:0 16px;
+
+    background:white;
+
+    outline:none;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#2f241e;
+
+    cursor:pointer;
+}
+
+
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="main-wrapper">
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+        <!-- HEADER -->
+
+        <div class="page-title">
+
+            Orders
+
+        </div>
+
+        <div class="page-subtitle">
+
+            Review and manage atelier transactions.
+
+        </div>
+
+        <!-- STATS -->
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    TOTAL REVENUE
+                </div>
+
+                <div class="stat-value">
+                    ₹1,28,430
+                </div>
+
+                <div class="stat-text">
+                    +12% from last month
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    ORDERS
+                </div>
+
+                <div class="stat-value">
+                    1,240
+                </div>
+
+                <div class="stat-text">
+                    Total completed orders
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    PENDING
+                </div>
+
+                <div class="stat-value">
+                    42
+                </div>
+
+                <div class="stat-text">
+                    Action required
+                </div>
+
+            </div>
+
+            <div class="stat-card">
+
+                <div class="stat-title">
+                    RETURNS
+                </div>
+
+                <div class="stat-value">
+                    18
+                </div>
+
+                <div class="stat-text">
+                    2.4% return rate
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <div class="table-card">
+
+            <div class="table-top">
+
+                <form method="GET">
+
+    <input
+    type="text"
+    name="search"
+    value="{{ search }}"
+    class="search-box"
+    placeholder="Search orders..."
+    >
+
+</form>
+
+                <div class="table-actions">
+
+                    <form method="GET">
+
+    <select
+    name="status"
+    class="filter-select"
+    onchange="this.form.submit()"
+    >
+
+        <option value="">
+            All Status
+        </option>
+
+        <option
+        value="Pending"
+        {% if status == "Pending" %}
+        selected
+        {% endif %}
+        >
+            Pending
+        </option>
+
+        <option
+        value="Shipped"
+        {% if status == "Shipped" %}
+        selected
+        {% endif %}
+        >
+            Shipped
+        </option>
+
+        <option
+        value="Out For Delivery"
+        {% if status == "Out For Delivery" %}
+        selected
+        {% endif %}
+        >
+            Out For Delivery
+        </option>
+
+        <option
+        value="Delivered"
+        {% if status == "Delivered" %}
+        selected
+        {% endif %}
+        >
+            Delivered
+        </option>
+
+        <option
+        value="Cancelled"
+        {% if status == "Cancelled" %}
+        selected
+        {% endif %}
+        >
+            Cancelled
+        </option>
+
+    </select>
+
+</form>
+
+                    <form method="GET">
+
+    <select
+    name="sort"
+    class="filter-select"
+    onchange="this.form.submit()"
+    >
+
+        <option
+        value="latest"
+        {% if sort == "latest" %}
+        selected
+        {% endif %}
+        >
+            Latest
+        </option>
+
+        <option
+        value="oldest"
+        {% if sort == "oldest" %}
+        selected
+        {% endif %}
+        >
+            Oldest
+        </option>
+
+        <option
+        value="high"
+        {% if sort == "high" %}
+        selected
+        {% endif %}
+        >
+            Amount High-Low
+        </option>
+
+        <option
+        value="low"
+        {% if sort == "low" %}
+        selected
+        {% endif %}
+        >
+            Amount Low-High
+        </option>
+
+    </select>
+
+</form>
+
+                </div>
+
+            </div>
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ORDER ID
+                        </th>
+
+                        <th>
+                            USER
+                        </th>
+
+                        <th>
+                            DATE
+                        </th>
+
+                        <th>
+                            PAYMENT
+                        </th>
+
+                        <th>
+                            STATUS
+                        </th>
+
+                        <th>
+                            AMOUNT
+                        </th>
+
+                        <th>
+                            ACTION
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for order in page_obj %}
+
+                    <tr>
+
+                        <td>
+
+                            <strong>
+                                #{{ order.order_id }}
+                            </strong>
+
+                        </td>
+
+                        <td>
+
+                            <div class="user-box">
+
+                                <img
+                                src="{% static 'images/default-user.png' %}"
+                                class="user-avatar"
+                                >
+
+                                <div>
+
+                                    <div class="user-name">
+
+                                        {{ order.user.username }}
+
+                                    </div>
+
+                                    <div class="user-email">
+
+                                        {{ order.user.email }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                        <td>
+
+                            {{ order.created_at|date:"M d, Y" }}
+
+                        </td>
+
+                        <td>
+
+                            {{ order.payment_method }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="status-badge
+
+                            {% if order.order_status == 'Pending' %}
+                            pending
+                            {% elif order.order_status == 'Delivered' %}
+                            delivered
+                            {% elif order.order_status == 'Shipped' %}
+                            shipped
+                            {% elif order.order_status == 'Cancelled' %}
+                            cancelled
+                            {% endif %}
+                            ">
+
+                                {{ order.order_status }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            ₹{{ order.total_amount }}
+
+                        </td>
+
+                        <td>
+
+                            <a
+                            href="{% url 'admin_order_detail' order.order_id %}"
+                            class="view-btn"
+                            >
+
+                                VIEW
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <!-- PAGINATION -->
+
+            <div class="pagination">
+
+                {% if page_obj.has_previous %}
+
+                <a
+                href="?page={{ page_obj.previous_page_number }}"
+                class="page-btn"
+                >
+
+                    ‹
+
+                </a>
+
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+
+                    <a
+                    href="?page={{ num }}"
+                    class="page-btn {% if page_obj.number == num %}active{% endif %}"
+                    >
+
+                        {{ num }}
+
+                    </a>
+
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+
+                <a
+                href="?page={{ page_obj.next_page_number }}"
+                class="page-btn"
+                >
+
+                    ›
+
+                </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

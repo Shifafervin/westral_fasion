@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Delete Category</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ================= BACKGROUND ================= */
+
+.bg{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    z-index:1;
+}
+
+.bg-inner{
+    width:100%;
+    height:100%;
+
+    filter:blur(3px);
+
+    transform:scale(1.02);
+}
+
+.bg::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:rgba(0,0,0,.18);
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:5;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    width:430px;
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:34px 30px 26px;
+
+    text-align:center;
+
+    position:relative;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.12);
+
+    font-family:'Manrope',sans-serif;
+}
+
+/* ICON */
+
+.icon{
+    width:52px;
+    height:52px;
+
+    margin:0 auto 18px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:50%;
+
+    background:#f8f3ef;
+}
+
+.icon svg{
+    width:24px;
+    height:24px;
+
+    stroke:#4a2b2b;
+}
+
+/* TITLE */
+
+.modal h2{
+    font-family:'Cormorant Garamond',serif;
+
+    font-size:42px;
+    font-weight:600;
+
+    color:#3b2222;
+
+    margin-bottom:14px;
+}
+
+/* TEXT */
+
+.modal p{
+    font-size:15px;
+    line-height:1.8;
+
+    color:#8d8178;
+
+    margin-bottom:28px;
+}
+
+/* BUTTONS */
+
+.buttons{
+    display:flex;
+    gap:12px;
+}
+
+/* CANCEL */
+
+.cancel-btn{
+    flex:1;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#f3dfcb;
+
+    color:#7a6557;
+
+    font-size:11px;
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    cursor:pointer;
+}
+
+/* DELETE */
+
+.delete-btn{
+    flex:1;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#4a2b2b;
+
+    color:white;
+
+    font-size:11px;
+    font-weight:700;
+
+    letter-spacing:2px;
+
+    cursor:pointer;
+}
+
+/* FOOTER */
+
+.footer{
+    margin-top:24px;
+
+    font-size:8px;
+    letter-spacing:4px;
+
+    color:#e5ddd6;
+
+    line-height:1.8;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= CATEGORY PAGE BACKGROUND ================= -->
+
+<div class="bg">
+
+    <div class="bg-inner">
+
+        {% include "category_management.html" %}
+
+    </div>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+
+<!-- ================= MODAL ================= -->
+
+<div class="overlay">
+
+    <div class="modal">
+
+        <!-- ICON -->
+
+        <div class="icon">
+
+            <svg
+                fill="none"
+                stroke-width="2"
+                stroke="currentColor"
+                viewBox="0 0 24 24">
+
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 7h12M9 7V4h6v3m-7 4v6m4-6v6m4-6v6M5 7l1 13h12l1-13"/>
+
+            </svg>
+
+        </div>
+
+        <!-- TITLE -->
+
+        <h2>Delete Category?</h2>
+
+        <!-- TEXT -->
+
+        <p>
+
+            Are you sure you want to delete
+            <strong>
+                "{{ category.category_name }}"
+            </strong> ?
+
+            <br><br>
+
+            This action cannot be undone.
+            All products associated with this category
+            will become uncategorized.
+
+        </p>
+
+        <!-- FORM -->
+
+        <form
+            method="POST"
+            action="{% url 'delete_category' category.id %}">
+
+            {% csrf_token %}
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <a href="{% url 'admincategory_view' %}"
+                   class="cancel-btn"
+                   style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        text-decoration:none;
+                   ">
+
+                    CANCEL
+
+                </a>
+
+                <button
+                    type="submit"
+                    class="delete-btn">
+
+                    DELETE
+
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+            WESTRAL HERITAGE<br>
+            MANAGEMENT
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,293 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Delete Product</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:wght@500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<style>
+
+/* ================= RESET ================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Manrope',sans-serif;
+    overflow:hidden;
+}
+
+/* ================= BACKGROUND ================= */
+
+.bg{
+    position:fixed;
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:1;
+}
+
+.bg-inner{
+    width:100%;
+    height:100%;
+
+    filter:blur(4px);
+
+    transform:scale(1.02);
+}
+
+.bg::after{
+    content:"";
+
+    position:absolute;
+    inset:0;
+
+    background:rgba(0,0,0,.18);
+}
+
+/* ================= OVERLAY ================= */
+
+.overlay{
+    position:fixed;
+    inset:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    z-index:5;
+}
+
+/* ================= MODAL ================= */
+
+.modal{
+    width:430px;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:34px 30px 28px;
+
+    text-align:center;
+
+    position:relative;
+
+    box-shadow:0 25px 60px rgba(0,0,0,.12);
+}
+
+/* ICON */
+
+.icon{
+    width:58px;
+    height:58px;
+
+    margin:0 auto 18px;
+
+    border-radius:50%;
+
+    background:#f6efeb;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.icon span{
+    color:#5a3838;
+    font-size:24px;
+}
+
+/* TITLE */
+
+.modal h2{
+    font-family:'Noto Serif',serif;
+
+    font-size:38px;
+    font-weight:600;
+
+    color:#3a2323;
+
+    margin-bottom:14px;
+}
+
+/* TEXT */
+
+.modal p{
+    color:#8f8177;
+
+    font-size:13px;
+
+    line-height:1.8;
+
+    margin-bottom:28px;
+}
+
+/* BUTTON AREA */
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+/* CANCEL */
+
+.cancel-btn{
+    flex:1;
+
+    height:48px;
+
+    border:1px solid #e6ddd7;
+
+    background:white;
+
+    border-radius:10px;
+
+    color:#85766c;
+
+    font-size:11px;
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* DELETE */
+
+.delete-btn{
+    flex:1;
+
+    height:48px;
+
+    border:none;
+
+    background:#4a2b2b;
+
+    color:white;
+
+    border-radius:10px;
+
+    font-size:11px;
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+}
+
+/* HOVER */
+
+.cancel-btn:hover{
+    background:#f8f5f2;
+}
+
+.delete-btn:hover{
+    background:#341818;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- ================= BLUR BACKGROUND ================= -->
+
+<div class="bg">
+
+    <div class="bg-inner">
+
+        {% include "product_management.html" %}
+
+    </div>
+
+</div>
+
+<!-- ================= MODAL ================= -->
+
+<div class="overlay">
+
+    <div class="modal">
+
+        <!-- ICON -->
+
+        <div class="icon">
+
+            <span class="material-symbols-outlined">
+                delete
+            </span>
+
+        </div>
+
+        <!-- TITLE -->
+
+        <h2>Delete Product?</h2>
+
+        <!-- TEXT -->
+
+        <p>
+
+            This action cannot be undone.
+            The product will be permanently removed
+            from your store.
+
+        </p>
+
+        <!-- FORM -->
+
+        <form
+            method="POST"
+            action="{% url 'delete_product' product.id %}">
+
+            {% csrf_token %}
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <!-- CANCEL -->
+
+                <a
+                    href="{% url 'product_management' %}"
+                    class="cancel-btn">
+
+                    CANCEL
+
+                </a>
+
+                <!-- DELETE -->
+
+                <button
+                    type="submit"
+                    class="delete-btn">
+
+                    DELETE
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

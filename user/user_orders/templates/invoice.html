@@ -1,0 +1,798 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Invoice
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+body{
+
+    background:#f7f4f1;
+}
+
+/* ================= PAGE ================= */
+
+.invoice-page{
+
+    max-width:1200px;
+
+    margin:40px auto 80px;
+
+    padding:0 20px;
+}
+
+/* ================= TOP BAR ================= */
+
+.invoice-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:30px;
+}
+
+.brand-logo{
+
+    font-size:20px;
+
+    font-weight:800;
+
+    color:#4c382c;
+
+    letter-spacing:1px;
+}
+
+.top-actions{
+
+    display:flex;
+
+    gap:12px;
+}
+
+.top-btn{
+
+    height:42px;
+
+    padding:0 18px;
+
+    border-radius:8px;
+
+    border:none;
+
+    background:#6B4F3B;
+
+    color:#fff;
+
+    text-decoration:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    transition:0.2s;
+}
+
+.top-btn:hover{
+
+    background:#563c2c;
+}
+
+.secondary-top-btn{
+
+    background:#ece5de;
+
+    color:#6B4F3B;
+}
+
+.secondary-top-btn:hover{
+
+    background:#ddd3ca;
+}
+
+/* ================= INVOICE CARD ================= */
+
+.invoice-card{
+
+    background:#fff;
+
+    border-radius:18px;
+
+    padding:55px;
+
+    border:1px solid #eee;
+}
+
+/* ================= HEADER ================= */
+
+.invoice-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:30px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:50px;
+}
+
+.company-name{
+
+    font-size:36px;
+
+    font-weight:800;
+
+    color:#3a2c23;
+
+    margin-bottom:15px;
+}
+
+.company-info{
+
+    font-size:14px;
+
+    color:#7e7168;
+
+    line-height:2;
+}
+
+.invoice-title{
+
+    font-size:52px;
+
+    font-weight:800;
+
+    color:#4c382c;
+
+    text-align:right;
+}
+
+.invoice-meta{
+
+    margin-top:18px;
+
+    font-size:14px;
+
+    color:#6f6258;
+
+    line-height:2;
+}
+
+.invoice-meta strong{
+
+    color:#2e221b;
+}
+
+/* ================= ADDRESS ================= */
+
+.address-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:50px;
+
+    padding:35px 0;
+
+    border-top:1px solid #eee;
+
+    border-bottom:1px solid #eee;
+
+    margin-bottom:40px;
+}
+
+.section-title{
+
+    font-size:12px;
+
+    letter-spacing:2px;
+
+    color:#8f8177;
+
+    font-weight:800;
+
+    margin-bottom:20px;
+}
+
+.section-content{
+
+    font-size:14px;
+
+    line-height:2;
+
+    color:#5e5147;
+}
+
+/* ================= TABLE ================= */
+
+.invoice-table{
+
+    width:100%;
+
+    border-collapse:collapse;
+}
+
+.invoice-table thead th{
+
+    padding-bottom:20px;
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+    color:#8d8076;
+
+    text-align:left;
+
+    border-bottom:1px solid #eee;
+}
+
+.invoice-table tbody td{
+
+    padding:28px 0;
+
+    border-bottom:1px solid #f3efeb;
+
+    vertical-align:middle;
+
+    font-size:14px;
+
+    color:#5f5147;
+}
+
+.product-cell{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+}
+
+.product-image{
+
+    width:70px;
+
+    height:90px;
+
+    border-radius:10px;
+
+    overflow:hidden;
+
+    background:#f3efeb;
+}
+
+.product-image img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+}
+
+.product-name{
+
+    font-size:16px;
+
+    font-weight:700;
+
+    color:#352820;
+
+    margin-bottom:8px;
+}
+
+.product-meta{
+
+    font-size:12px;
+
+    color:#8c7f75;
+}
+
+/* ================= TOTAL ================= */
+
+.total-section{
+
+    margin-top:40px;
+
+    margin-left:auto;
+
+    width:350px;
+}
+
+.total-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:18px;
+
+    font-size:14px;
+
+    color:#5f5147;
+}
+
+.grand-total{
+
+    margin-top:25px;
+
+    padding-top:25px;
+
+    border-top:1px solid #eee;
+
+    font-size:28px;
+
+    font-weight:800;
+
+    color:#2f241e;
+}
+
+/* ================= FOOTER ================= */
+
+.invoice-footer{
+
+    margin-top:70px;
+
+    padding-top:35px;
+
+    border-top:1px solid #eee;
+
+    text-align:center;
+}
+
+.footer-text{
+
+    font-size:15px;
+
+    color:#4c382c;
+
+    font-weight:600;
+
+    margin-bottom:20px;
+}
+
+.footer-links{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:25px;
+
+    flex-wrap:wrap;
+
+    font-size:12px;
+
+    color:#8d8076;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .invoice-card{
+
+        padding:30px;
+    }
+
+    .invoice-header{
+
+        flex-direction:column;
+    }
+
+    .invoice-title{
+
+        text-align:left;
+    }
+
+    .address-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .total-section{
+
+        width:100%;
+    }
+
+    .invoice-table{
+
+        display:block;
+
+        overflow-x:auto;
+    }
+}
+
+@media(max-width:600px){
+
+    .top-actions{
+
+        flex-direction:column;
+    }
+
+    .company-name{
+
+        font-size:28px;
+    }
+
+    .invoice-title{
+
+        font-size:38px;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="invoice-page">
+
+    <!-- ================= TOP ================= -->
+
+    <div class="invoice-top">
+
+        <div class="brand-logo">
+
+            WESTRAL FASHION
+
+        </div>
+
+        <div class="top-actions">
+
+            <a
+            href="{% url 'my_orders' %}"
+            class="top-btn secondary-top-btn"
+            >
+
+                ← Go To Orders
+
+            </a>
+
+<a
+href="{% url 'download_invoice' order.order_id %}"
+class="top-btn"
+>
+
+    ↓ Download Invoice
+
+</a>
+
+        </div>
+
+    </div>
+
+    <!-- ================= CARD ================= -->
+
+    <div class="invoice-card">
+
+        <!-- HEADER -->
+
+        <div class="invoice-header">
+
+            <div>
+
+                <div class="company-name">
+
+                    WESTRAL FASHION
+
+                </div>
+
+                <div class="company-info">
+
+                    128 High Street, Fashion District
+                    <br>
+
+                    Greater London, SE1 0NY
+                    <br>
+
+                    United Kingdom
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="invoice-title">
+
+                    INVOICE
+
+                </div>
+
+                <div class="invoice-meta">
+
+                    Invoice Number :
+                    <strong>
+
+                        INV-{{ order.order_id }}
+
+                    </strong>
+
+                    <br>
+
+                    Order ID :
+                    <strong>
+
+                        #{{ order.order_id }}
+
+                    </strong>
+
+                    <br>
+
+                    Date :
+                    <strong>
+
+                        {{ order.created_at|date:"M d, Y" }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ADDRESS -->
+
+        <div class="address-grid">
+
+            <div>
+
+                <div class="section-title">
+
+                    SHIPPING TO
+
+                </div>
+
+                <div class="section-content">
+
+                    {{ order.user.first_name }}
+                    {{ order.user.last_name }}
+
+                    <br>
+
+                    {{ order.shipping_address|linebreaksbr }}
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="section-title">
+
+                    PAYMENT DETAILS
+
+                </div>
+
+                <div class="section-content">
+
+                    Method :
+                    <strong>
+
+                        {{ order.payment_method }}
+
+                    </strong>
+
+                    <br>
+
+                    Status :
+                    <strong>
+
+                        {{ order.payment_status }}
+
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <table class="invoice-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>ITEM</th>
+
+                    <th>PRODUCT NAME</th>
+
+                    <th>DETAILS</th>
+
+                    <th>QTY</th>
+
+                    <th>PRICE</th>
+
+                    <th>TOTAL</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for item in order.items.all %}
+
+                <tr>
+
+                    <td>
+
+                        <div class="product-image">
+
+                            {% with image=item.variant.images.first %}
+
+                                {% if image %}
+
+                                <img src="{{ image.image.url }}">
+
+                                {% endif %}
+
+                            {% endwith %}
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <div class="product-name">
+
+                            {{ item.variant.product.product_name }}
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <div class="product-meta">
+
+                            Size :
+                            {{ item.variant.size }}
+
+                            |
+
+                            Color :
+                            {{ item.variant.color }}
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        {{ item.quantity }}
+
+                    </td>
+
+                    <td>
+
+                        ₹{{ item.price_at_purchase }}
+
+                    </td>
+
+                    <td>
+
+                        ₹{{ item.total_price }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <!-- TOTAL -->
+
+        <div class="total-section">
+
+            <div class="total-row">
+
+                <span>Subtotal</span>
+
+                <span>
+
+                    ₹{{ order.total_amount }}
+
+                </span>
+
+            </div>
+
+            <div class="total-row">
+
+                <span>Shipping</span>
+
+                <span>
+
+                    FREE
+
+                </span>
+
+            </div>
+
+            <div class="total-row">
+
+                <span>Estimated Tax</span>
+
+                <span>
+
+                    Included
+
+                </span>
+
+            </div>
+
+            <div class="total-row grand-total">
+
+                <span>GRAND TOTAL</span>
+
+                <span>
+
+                    ₹{{ order.total_amount }}
+
+                </span>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+
+        <div class="invoice-footer">
+
+            <div class="footer-text">
+
+                Thank you for shopping with us.
+
+            </div>
+
+            <div class="footer-links">
+
+                <span>
+
+                    support@westralfashion.com
+
+                </span>
+
+                <span>
+
+                    www.westralfashion.com
+
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
