@@ -587,30 +587,35 @@ tbody td{
 
                         <td>
 
-                            <div class="user-box">
+<div class="user-box">
 
-                                <img
-                                src="{% static 'images/default-user.png' %}"
-                                class="user-avatar"
-                                >
+    {% if order.user.profile_image %}
+        <img
+        src="{{ order.user.profile_image.url }}"
+        class="user-avatar"
+        alt="User"
+        >
+    {% else %}
+        <img
+        src="{% static 'images/default.png' %}"
+        class="user-avatar"
+        alt="Default User"
+        >
+    {% endif %}
 
-                                <div>
+    <div>
 
-                                    <div class="user-name">
+        <div class="user-name">
+            {{ order.user.username }}
+        </div>
 
-                                        {{ order.user.username }}
+        <div class="user-email">
+            {{ order.user.email }}
+        </div>
 
-                                    </div>
+    </div>
 
-                                    <div class="user-email">
-
-                                        {{ order.user.email }}
-
-                                    </div>
-
-                                </div>
-
-                            </div>
+</div>
 
                         </td>
 

@@ -13,4 +13,9 @@ urlpatterns = [
     path('resend-otp/',      views.resend_otp,     name='resend_otp'),
     path('reset-password/',  views.reset_password, name='reset_password'), 
     path("search/",         views.navbar_search,name="navbar_search"), 
+    path(
+    "referral/",
+    views.referral_page,
+    name="referral_page"
+),
 ]

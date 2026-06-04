@@ -19,6 +19,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.shortcuts import render
 from django.db.models import Sum
+from admin.admin_offers.utils import calculate_discounted_price
 
 
 
@@ -171,21 +172,20 @@ def shop(request):
             default_variant
 
         )
+        offer_data = calculate_discounted_price(
+            default_variant
+        )
 
         # ================= APPEND DATA =================
 
         product_data.append({
 
             "product": product,
-
             "variant": default_variant,
-
             "image": primary_image,
-
             "in_wishlist": in_wishlist,
-
-
-            "available_stock": available_stock
+            "available_stock": available_stock,
+            "offer_data": offer_data,
 
         })
 
@@ -320,6 +320,8 @@ def shop(request):
         context
 
     )
+
+
 @user_required
 def toggle_wishlist(request, variant_id):
 
@@ -379,19 +381,21 @@ def toggle_wishlist(request, variant_id):
 
 def product_details(request, product_id):
 
-    product = get_object_or_404(
-
-        Product,
-
+    
+    product = Product.objects.filter(
         id=product_id,
-
         is_deleted=False,
         is_active=True,
-
         category__is_deleted=False,
         category__is_active=True
+    ).first()
 
-    )
+    if not product:
+        messages.warning(
+            request,
+            "This product is currently unavailable."
+        )
+        return redirect("shop")
 
     variants = product.variants.filter(
 
@@ -493,6 +497,12 @@ def product_details(request, product_id):
 
     )
 
+    offer_data = calculate_discounted_price(
+
+        selected_variant
+
+    )
+
     context = {
 
     "product": product,
@@ -507,7 +517,9 @@ def product_details(request, product_id):
 
     "wishlist_count": wishlist_count,
 
-    "available_stock": available_stock
+    "available_stock": available_stock,
+
+    "offer_data": offer_data
 
 }
 
@@ -667,6 +679,8 @@ def cart_page(request):
 
     subtotal = 0
 
+    total_discount = 0
+
     checkout_disabled = False
 
     stock_error = None
@@ -674,14 +688,56 @@ def cart_page(request):
 
     if cart:
 
-        cart_items = CartItem.objects.filter(
+        invalid_items = CartItem.objects.filter(
 
             cart=cart
+
+        ).filter(
+
+            Q(variant__is_active=False) |
+
+            Q(variant__is_deleted=True) |
+
+            Q(variant__product__is_active=False) |
+
+            Q(variant__product__is_deleted=True) |
+
+            Q(variant__product__category__is_active=False)
+
+        )
+
+        # ================= REMOVE INVALID ITEMS =================
+
+        CartItem.objects.filter(
+        cart=cart
+        ).update(is_available=True)
+
+        CartItem.objects.filter(
+            cart=cart
+        ).filter(
+            Q(variant__is_active=False) |
+            Q(variant__is_deleted=True) |
+            Q(variant__product__is_active=False) |
+            Q(variant__product__is_deleted=True) |
+            Q(variant__product__category__is_active=False)
+        ).update(is_available=False)
+
+        # ================= FETCH VALID ITEMS =================
+
+        cart_items = CartItem.objects.filter(
+
+            cart=cart,
+            variant__is_active=True,
+            variant__is_deleted=False,
+            variant__product__is_active=True,
+            variant__product__is_deleted=False,
+            variant__product__category__is_active=True
 
         ).select_related(
 
             "variant",
-            "variant__product"
+            "variant__product",
+            "variant__product__category"
 
         ).prefetch_related(
 
@@ -691,13 +747,33 @@ def cart_page(request):
 
         for item in cart_items:
 
+            item.offer_data = calculate_discounted_price(
+
+                item.variant
+
+            )
+
             item.subtotal = (
 
-                item.variant.price * item.quantity
+                item.offer_data["final_price"]
+
+                *
+
+                item.quantity
 
             )
 
             subtotal += item.subtotal
+
+            total_discount += (
+
+                item.offer_data["discount_amount"]
+
+                *
+
+                item.quantity
+
+            )
 
             if item.quantity > item.variant.stock:
 
@@ -761,6 +837,9 @@ def cart_page(request):
     "stock_error": stock_error,
 
     "related_products": related_products,
+
+    "total_discount": total_discount,
+    
     }
     return render(
 
@@ -771,6 +850,7 @@ def cart_page(request):
         context
 
     )
+
 
 def get_cart_data(user):
 
@@ -784,17 +864,30 @@ def get_cart_data(user):
 
     )
 
-    total = sum(
+    total = 0
 
-        item.quantity * item.variant.price
+    for item in cart_items:
 
-        for item in cart_items
+        offer_data = calculate_discounted_price(
 
-    )
+            item.variant
+
+        )
+
+        total += (
+
+            offer_data["final_price"]
+
+            *
+
+            item.quantity
+
+        )
 
     cart_count = cart_items.count()
 
     return total, cart_count
+
 
 @user_required
 @require_POST
@@ -835,11 +928,17 @@ def increment_cart_item(request, item_id):
     cart_item.quantity += 1
     cart_item.save()
 
+    offer_data = calculate_discounted_price(
+
+        cart_item.variant
+
+    )
+
     subtotal = (
 
         cart_item.quantity *
 
-        cart_item.variant.price
+        offer_data["final_price"]
 
     )
 
@@ -848,6 +947,43 @@ def increment_cart_item(request, item_id):
         request.user
 
     )
+    cart_items = CartItem.objects.filter(
+
+        cart__user=request.user
+
+    )
+
+    summary_subtotal = 0
+
+    total_discount = 0
+
+    for item in cart_items:
+
+        offer_data = calculate_discounted_price(
+
+            item.variant
+
+        )
+
+        summary_subtotal += (
+
+            offer_data["final_price"]
+
+            *
+
+            item.quantity
+
+        )
+
+        total_discount += (
+
+            offer_data["discount_amount"]
+
+            *
+
+            item.quantity
+
+        )
 
     return JsonResponse({
 
@@ -863,7 +999,11 @@ def increment_cart_item(request, item_id):
 
         "cart_count": cart_count,
 
-        "stock": cart_item.variant.stock
+        "stock": cart_item.variant.stock,
+
+        "summary_subtotal": summary_subtotal,
+
+        "total_discount": total_discount,
 
     })
 
@@ -890,6 +1030,42 @@ def decrement_cart_item(request, item_id):
             request.user
 
         )
+        cart_items = CartItem.objects.filter(
+
+            cart__user=request.user
+
+        )
+
+        summary_subtotal = 0
+
+        total_discount = 0
+
+        for item in cart_items:
+
+            offer_data = calculate_discounted_price(
+                item.variant
+            )
+
+            summary_subtotal += (
+
+                offer_data["final_price"]
+
+                *
+
+                item.quantity
+
+            )
+
+            total_discount += (
+
+                offer_data["discount_amount"]
+
+                *
+
+                item.quantity
+
+            )
+        
 
         return JsonResponse({
 
@@ -903,18 +1079,30 @@ def decrement_cart_item(request, item_id):
 
             "total": total,
 
-            "cart_count": cart_count
+            "cart_count": cart_count,
+
+            "stock": cart_item.variant.stock,
+
+            "summary_subtotal": summary_subtotal,
+
+            "total_discount": total_discount,
 
         })
 
     cart_item.quantity -= 1
     cart_item.save()
 
+    offer_data = calculate_discounted_price(
+
+        cart_item.variant
+
+    )
+
     subtotal = (
 
         cart_item.quantity *
 
-        cart_item.variant.price
+        offer_data["final_price"]
 
     )
 
@@ -923,6 +1111,29 @@ def decrement_cart_item(request, item_id):
         request.user
 
     )
+    cart_items = CartItem.objects.filter(
+        cart__user=request.user
+    )
+
+    summary_subtotal = 0
+
+    total_discount = 0
+
+    for item in cart_items:
+
+        offer_data = calculate_discounted_price(
+            item.variant
+        )
+
+        summary_subtotal += (
+            offer_data["final_price"] *
+            item.quantity
+        )
+
+        total_discount += (
+            offer_data["discount_amount"] *
+            item.quantity
+        )
 
     return JsonResponse({
 
@@ -938,7 +1149,11 @@ def decrement_cart_item(request, item_id):
 
         "cart_count": cart_count,
 
-        "stock": cart_item.variant.stock
+        "stock": cart_item.variant.stock,
+
+        "summary_subtotal": summary_subtotal,
+
+        "total_discount": total_discount,
 
     })
 
@@ -1017,6 +1232,7 @@ def wishlist_page(request):
         variant__is_active=True,
 
         variant__product__is_deleted=False,
+        variant__product__is_active=True,
 
         variant__product__category__is_deleted=False,
         variant__product__category__is_active=True
@@ -1032,11 +1248,34 @@ def wishlist_page(request):
 
     )
 
+    unavailable_items = WishlistItem.objects.filter(
+
+        wishlist__user=request.user
+
+    ).filter(
+
+        Q(variant__is_deleted=True) |
+        Q(variant__is_active=False) |
+
+        Q(variant__product__is_deleted=True) |
+        Q(variant__product__is_active=False) |
+
+        Q(variant__product__category__is_deleted=True) |
+        Q(variant__product__category__is_active=False)
+
+    )
+    for item in wishlist_items:
+
+        item.offer_data = calculate_discounted_price(
+            item.variant
+        )
+
 
     context = {
 
         "wishlist_items": wishlist_items,
 
+        "unavailable_items": unavailable_items,
     }
 
     return render(

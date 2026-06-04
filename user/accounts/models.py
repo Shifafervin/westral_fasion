@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 
+
 class UserManager(BaseUserManager):
     def create_user(self, email, full_name, password=None, **extra_fields):
         if not email:
@@ -28,9 +29,9 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
 
-    email = models.EmailField(unique=True)
-
-    # 🔥 FIX CLASH HERE
+    email = models.EmailField(
+        unique=True
+    )
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='custom_user_set',
@@ -42,6 +43,8 @@ class User(AbstractUser):
         related_name='custom_user_permissions_set',
         blank=True
     )
+
+
 
 
 class OTP(models.Model):

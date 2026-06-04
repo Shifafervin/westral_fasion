@@ -1,0 +1,327 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Wallet Payment Failed
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+.wallet-failed-page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:#f8f5f2;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:40px 20px;
+}
+
+.wallet-failed-card{
+
+    width:100%;
+
+    max-width:430px;
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:42px 34px;
+
+    text-align:center;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+
+    position:relative;
+
+    animation:failedAnimation .25s ease;
+}
+
+@keyframes failedAnimation{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+    }
+}
+
+/* ================= CLOSE ================= */
+
+.wallet-failed-close{
+
+    position:absolute;
+
+    top:18px;
+
+    right:18px;
+
+    width:34px;
+
+    height:34px;
+
+    border:none;
+
+    background:none;
+
+    font-size:24px;
+
+    color:#8c8c8c;
+
+    cursor:pointer;
+}
+
+/* ================= ICON ================= */
+
+.wallet-failed-icon-wrapper{
+
+    width:76px;
+
+    height:76px;
+
+    border-radius:50%;
+
+    background:#fdeaea;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:auto;
+
+    margin-bottom:24px;
+}
+
+.wallet-failed-icon{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:#d53c3c;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+    font-weight:900;
+}
+
+/* ================= TITLE ================= */
+
+.wallet-failed-title{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    color:#24160f;
+
+    margin-bottom:16px;
+}
+
+/* ================= TEXT ================= */
+
+.wallet-failed-text{
+
+    font-size:14px;
+
+    line-height:1.9;
+
+    color:#7d7067;
+
+    margin-bottom:32px;
+}
+
+/* ================= BUTTONS ================= */
+
+.wallet-failed-btn{
+
+    width:100%;
+
+    height:56px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    margin-bottom:14px;
+
+    transition:.2s;
+}
+
+.wallet-failed-btn:hover{
+
+    background:#553c2d;
+}
+
+.wallet-back-btn{
+
+    width:100%;
+
+    height:56px;
+
+    border:1px solid #d8ccc3;
+
+    border-radius:12px;
+
+    background:white;
+
+    color:#2d1e15;
+
+    font-size:13px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.wallet-back-btn:hover{
+
+    background:#f7f3f0;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:500px){
+
+    .wallet-failed-card{
+
+        padding:36px 22px;
+    }
+
+    .wallet-failed-title{
+
+        font-size:28px;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wallet-failed-page">
+
+    <div class="wallet-failed-card">
+
+        <!-- ================= CLOSE ================= -->
+
+        <a href="{% url 'wallet_page' %}">
+
+            <button class="wallet-failed-close">
+
+                ×
+
+            </button>
+
+        </a>
+
+        <!-- ================= ICON ================= -->
+
+        <div class="wallet-failed-icon-wrapper">
+
+            <div class="wallet-failed-icon">
+
+                !
+
+            </div>
+
+        </div>
+
+        <!-- ================= TITLE ================= -->
+
+        <div class="wallet-failed-title">
+
+            Payment Failed
+
+        </div>
+
+        <!-- ================= TEXT ================= -->
+
+        <div class="wallet-failed-text">
+
+            Unable to add money to your wallet.
+            Something went wrong with the transaction.
+            Please try again.
+
+        </div>
+
+        <!-- ================= BUTTONS ================= -->
+
+        <button
+
+        class="wallet-failed-btn"
+
+        onclick="history.back()"
+
+        >
+
+            TRY AGAIN
+
+        </button>
+
+        <a href="{% url 'wallet_page' %}">
+
+            <button class="wallet-back-btn">
+
+                GO BACK
+
+            </button>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

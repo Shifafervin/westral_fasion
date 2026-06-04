@@ -1,5 +1,6 @@
-{% extends 'admin_base.html' %}
 
+{% extends 'admin_base.html' %}
+{% load static %}
 {% block title %}
 User Management
 {% endblock %}
@@ -728,23 +729,25 @@ User Management
     {% for user in users %}
 <div class="row">
 
-    <span>{{ users.start_index|add:forloop.counter0 }}</span>
+<span>{{ users.start_index|add:forloop.counter0 }}</span>
 
-    <div class="user">
-        {% if user.profile_image %}
-    <img src="{{ user.profile_image.url }}">
-{% else %}
-    <img src="https://via.placeholder.com/40">
-{% endif %}
-        <div class="user-info">
-           <b>
-    {% if user.first_name %}
-        {{ user.first_name }} {{ user.last_name }}
+<div class="user">
+
+    {% if user.profile_image %}
+        <img src="{{ user.profile_image.url }}" alt="User">
     {% else %}
-        {{ user.username }}
+        <img src="{% static 'images/default.png' %}" alt="Default User">
     {% endif %}
-</b>
-</br>
+
+    <div class="user-info">
+        <b>
+            {% if user.first_name %}
+                {{ user.first_name }} {{ user.last_name }}
+            {% else %}
+                {{ user.username }}
+            {% endif %}
+        </b>
+        <br>
 <small>{{ user.email }}</small>
         </div>
     </div>

@@ -1,0 +1,521 @@
+{% extends "admin_base.html" %}
+{% block extra_css %}
+<style>
+
+.content{
+    flex:1;
+    padding:40px 50px;
+}
+
+.page-header{
+    margin-bottom:30px;
+}
+
+.page-header h1{
+    font-size:48px;
+    font-weight:700;
+    color:#3b1d1d;
+}
+
+.offer-form{
+    background:#fff;
+    max-width:1000px;
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 2px 15px rgba(0,0,0,.05);
+}
+
+.form-group{
+    margin-bottom:25px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:10px;
+    font-size:13px;
+    font-weight:600;
+    text-transform:uppercase;
+    color:#777;
+    letter-spacing:.5px;
+}
+
+.form-control{
+    width:100%;
+    height:54px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    background:#f8f6f4;
+    padding:0 16px;
+    font-size:15px;
+    outline:none;
+}
+
+.form-control:focus{
+    border-color:#3b1d1d;
+}
+
+.radio-group{
+    display:flex;
+    gap:25px;
+    align-items:center;
+}
+
+.radio-group label{
+    margin:0;
+    text-transform:none;
+    font-size:14px;
+    font-weight:500;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.row-3{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:20px;
+}
+
+.switch-wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:30px 0;
+}
+
+.button-group{
+    display:flex;
+    gap:15px;
+    margin-top:30px;
+}
+
+.btn-save{
+    flex:1;
+    height:56px;
+    border:none;
+    border-radius:10px;
+    background:#5a2c2c;
+    color:#fff;
+    font-weight:700;
+    letter-spacing:1px;
+    cursor:pointer;
+}
+
+.btn-cancel{
+    flex:1;
+    height:56px;
+    border-radius:10px;
+    background:#ead8c6;
+    color:#3b1d1d;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+    font-weight:700;
+    letter-spacing:1px;
+}
+.validation-alert{
+    display:flex;
+    gap:18px;
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:14px;
+    background:#fff8f8;
+    border:1px solid #ffd8d8;
+    border-left:5px solid #c0392b;
+}
+
+.validation-icon{
+    width:46px;
+    height:46px;
+    min-width:46px;
+    border-radius:50%;
+    background:#ffe8e8;
+    color:#c0392b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:700;
+}
+
+.validation-content{
+    flex:1;
+}
+
+.validation-title{
+    font-size:15px;
+    font-weight:700;
+    color:#7a241d;
+    margin-bottom:4px;
+}
+
+.validation-subtitle{
+    font-size:13px;
+    color:#7d6a63;
+    line-height:1.6;
+}
+
+/* Success Message */
+
+.validation-alert:has(.validation-title:contains("Success")){
+    border-left-color:#2e7d32;
+}
+
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+
+    <h1>Add Offer</h1>
+
+</div>
+
+<form
+    method="POST"
+    action="{% url 'add_offer' %}"
+    class="offer-form"
+>
+
+    {% csrf_token %}
+
+    {% if messages %}
+
+    {% for message in messages %}
+
+        <div class="validation-alert">
+
+            <div class="validation-icon">
+
+                ⚠
+
+            </div>
+
+            <div class="validation-content">
+
+                <div class="validation-title">
+
+                    {% if message.tags == "success" %}
+                        Success
+                    {% else %}
+                        Validation Error
+                    {% endif %}
+
+                </div>
+
+                <div class="validation-subtitle">
+
+                    {{ message }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+    <div class="form-group">
+
+    <label>Offer Name</label>
+
+    <input
+    type="text"
+    name="offer_name"
+    class="form-control"
+    required
+    >
+
+</div>
+
+    <div class="form-group">
+
+    <label>Discount Value</label>
+
+    <input
+    type="number"
+    name="discount_value"
+    class="form-control"
+    step="0.01"
+    required
+    >
+
+</div>
+    
+<div class="form-group">
+
+    <label>Discount Type</label>
+
+    <div class="radio-group">
+
+        <label>
+            <input
+            type="radio"
+            name="discount_type"
+            value="PERCENTAGE"
+            checked
+            >
+            Percentage
+        </label>
+
+        <label>
+            <input
+            type="radio"
+            name="discount_type"
+            value="FLAT"
+            >
+            Flat
+        </label>
+
+    </div>
+
+</div>
+
+       <div class="form-group">
+
+    <label>Apply To</label>
+
+    <div class="radio-group">
+
+        <label>
+            <input
+            type="radio"
+            name="offer_type"
+            value="PRODUCT"
+            checked
+            >
+            Product
+        </label>
+
+        <label>
+            <input
+            type="radio"
+            name="offer_type"
+            value="CATEGORY"
+            >
+            Category
+        </label>
+
+    </div>
+
+</div>
+
+    <div
+    id="product-container"
+    class="form-group"
+>
+
+        <label>Select Product</label>
+
+        <select
+        name="product"
+        class="form-control"
+    >
+
+            <option value="">
+                Select Product
+            </option>
+
+            {% for product in products %}
+
+            <option value="{{ product.id }}">
+                {{ product.product_name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div
+    id="category-container"
+    class="form-group"
+    style="display:none;"
+>
+
+        <label>Select Category</label>
+
+        <select
+        name="category"
+        class="form-control"
+    >
+
+            <option value="">
+                Select Category
+            </option>
+
+            {% for category in categories %}
+
+            <option value="{{ category.id }}">
+                {{ category.category_name }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div>
+
+    </div>
+
+    <div class="row">
+
+    <div class="form-group">
+
+        <label>Minimum Purchase</label>
+
+        <input
+type="number"
+name="minimum_purchase_amount"
+class="form-control"
+step="0.01"
+>
+
+    </div>
+
+    <div>
+
+        <label>Maximum Discount</label>
+
+        <input
+type="number"
+name="maximum_discount_amount"
+class="form-control"
+step="0.01"
+>
+
+    </div>
+
+    <div>
+
+        <label>Start Date</label>
+
+        <input
+type="datetime-local"
+name="start_date"
+class="form-control"
+required
+>
+
+    </div>
+
+    <div>
+
+        <label>End Date</label>
+
+       <input
+type="datetime-local"
+name="end_date"
+class="form-control"
+required
+>
+    </div>
+
+    <div class="switch-wrapper">
+
+    <div>
+
+        <strong>Active Status</strong>
+
+        <p
+        style="
+        margin:0;
+        color:#888;
+        font-size:13px;
+        "
+        >
+            Enable this offer immediately
+        </p>
+
+    </div>
+
+    <input
+    type="checkbox"
+    name="is_active"
+    checked
+    >
+
+</div>
+
+   <div class="button-group">
+
+    <button
+        type="submit"
+        class="btn-save"
+    >
+        SAVE OFFER
+    </button>
+
+    <a
+        href="{% url 'offer_list' %}"
+        class="btn-cancel"
+    >
+        CANCEL
+    </a>
+
+</div>
+</form>
+
+<script>
+
+const offerTypeRadios =
+document.querySelectorAll(
+    'input[name="offer_type"]'
+);
+
+offerTypeRadios.forEach(radio => {
+
+    radio.addEventListener(
+
+        "change",
+
+        function(){
+
+            const productBox =
+            document.getElementById(
+                "product-container"
+            );
+
+            const categoryBox =
+            document.getElementById(
+                "category-container"
+            );
+
+            if(this.value === "PRODUCT"){
+
+                productBox.style.display =
+                "block";
+
+                categoryBox.style.display =
+                "none";
+
+            }else{
+
+                productBox.style.display =
+                "none";
+
+                categoryBox.style.display =
+                "block";
+
+            }
+
+        }
+
+    );
+
+});
+
+</script>
+
+{% endblock %}

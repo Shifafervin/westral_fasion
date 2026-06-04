@@ -1,9 +1,9 @@
 from django.db import models
-
 from django.conf import settings
-
 from admin.admin_product.models import Variant
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
+from admin.admin_coupon.models import Coupon
 
 # ================= ORDER MODEL =================
 
@@ -23,24 +23,19 @@ class Order(models.Model):
 
     ]
 
-    PAYMENT_STATUS = [
-
-        ("Pending", "Pending"),
-
-        ("Paid", "Paid"),
-
-        ("Failed", "Failed"),
-
-    ]
+    PAYMENT_STATUS = (
+        ("PENDING", "Pending"),
+        ("SUCCESS", "Success"),
+        ("FAILED", "Failed"),
+        ("REFUNDED", "Refunded"),
+    )
 
 
-    PAYMENT_METHODS = [
-
-        ("COD", "Cash On Delivery"),
-
-        ("ONLINE", "Online Payment"),
-
-    ]
+    PAYMENT_METHODS = (
+        ("COD", "Cash on Delivery"),
+        ("RAZORPAY", "Razorpay"),
+        ("WALLET", "Wallet"),
+    )
 
     RETURN_STATUS = [
 
@@ -78,6 +73,34 @@ class Order(models.Model):
         related_name="orders"
 
     )
+
+    coupon = models.ForeignKey(
+
+        Coupon,
+
+        on_delete=models.SET_NULL,
+
+        null=True,
+
+        blank=True
+
+    )
+
+    coupon_discount = models.DecimalField(
+
+        max_digits=10,
+
+        decimal_places=2,
+
+        default=0
+
+    )
+    offer_discount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
 
     order_id = models.CharField(
 
@@ -125,6 +148,22 @@ class Order(models.Model):
 
         default="Pending"
 
+    )
+    razorpay_order_id = models.CharField(
+    max_length=255,
+    blank=True,
+    null=True
+    )
+
+    razorpay_payment_id = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
+
+    razorpay_signature = models.TextField(
+        blank=True,
+        null=True
     )
 
     shipping_address = models.TextField()
@@ -251,11 +290,22 @@ class OrderItem(models.Model):
 
     )
 
+
     total_price = models.DecimalField(
 
         max_digits=10,
 
         decimal_places=2
+
+    )
+
+    discount_share = models.DecimalField(
+
+        max_digits=10,
+
+        decimal_places=2,
+
+        default=0
 
     )
 
@@ -284,3 +334,84 @@ class OrderItem(models.Model):
             f"{self.variant.sku}"
 
         )
+    
+class Wallet(models.Model):
+
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="wallet"
+    )
+
+    balance = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+class WalletTransaction(models.Model):
+
+    CREDIT = "Credit"
+    DEBIT = "Debit"
+
+    TRANSACTION_TYPES = [
+
+        (CREDIT, "Credit"),
+        (DEBIT, "Debit")
+
+    ]
+
+    PENDING = "Pending"
+    COMPLETED = "Completed"
+    FAILED = "Failed"
+
+    STATUS_CHOICES = [
+
+        (PENDING, "Pending"),
+        (COMPLETED, "Completed"),
+        (FAILED, "Failed")
+
+    ]
+
+    wallet = models.ForeignKey(
+        Wallet,
+        on_delete=models.CASCADE,
+        related_name="transactions"
+    )
+
+    order = models.ForeignKey(
+        Order,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    transaction_type = models.CharField(
+        max_length=10,
+        choices=TRANSACTION_TYPES
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=COMPLETED
+    )
+
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    description = models.TextField()
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )

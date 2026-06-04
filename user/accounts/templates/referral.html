@@ -1,0 +1,799 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Refer & Earn
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+.referral-page{
+    max-width:1200px;
+    margin:40px auto 80px;
+    padding:0 20px;
+}
+
+/* ================= HERO ================= */
+
+.referral-hero{
+    text-align:center;
+    margin-bottom:50px;
+}
+
+.referral-hero h1{
+    font-size:64px;
+    font-weight:900;
+    color:#5a3d2b;
+    margin-bottom:15px;
+}
+
+.referral-hero p{
+    color:#8b7d74;
+    max-width:600px;
+    margin:auto;
+    line-height:1.8;
+}
+
+/* ================= GRID ================= */
+
+.referral-grid{
+    display:grid;
+    grid-template-columns:2fr 1.4fr;
+    gap:24px;
+    margin-bottom:60px;
+}
+
+/* ================= REWARD CARD ================= */
+
+.reward-card{
+    background:#f6f0ea;
+    border-radius:18px;
+    padding:30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.reward-label{
+    font-size:12px;
+    letter-spacing:2px;
+    color:#8c7f75;
+    margin-bottom:15px;
+}
+
+.reward-title{
+    font-size:36px;
+    font-weight:800;
+    color:#3d2a1f;
+    line-height:1.3;
+}
+
+.reward-icon{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    background:#e7ddd5;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.reward-icon span{
+    font-size:34px;
+    color:#6B4F3B;
+}
+
+/* ================= CODE CARD ================= */
+
+.code-card{
+    background:#fff;
+    border:1px solid #ece2db;
+    border-radius:18px;
+    padding:28px;
+    margin-top:24px;
+}
+
+.code-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.label{
+    font-size:11px;
+    letter-spacing:2px;
+    color:#8c7f75;
+    margin-bottom:10px;
+}
+
+.copy-box{
+    display:flex;
+    gap:10px;
+}
+
+.copy-input{
+    flex:1;
+    height:52px;
+    border:none;
+    background:#f6f0ea;
+    border-radius:10px;
+    padding:0 16px;
+    font-weight:700;
+    color:#5a3d2b;
+}
+
+.copy-btn{
+    height:52px;
+    padding:0 24px;
+    border:none;
+    border-radius:10px;
+    background:#6B4F3B;
+    color:#fff;
+    font-weight:700;
+    cursor:pointer;
+}
+
+.link-btn{
+    background:white;
+    border:1px solid #6B4F3B;
+    color:#6B4F3B;
+}
+
+/* ================= HISTORY ================= */
+
+.history-card{
+    background:white;
+    border:1px solid #ece2db;
+    border-radius:18px;
+    overflow:hidden;
+}
+
+.history-header{
+    padding:24px;
+    font-size:22px;
+    font-weight:800;
+    border-bottom:1px solid #eee;
+}
+
+.history-table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+.history-table th,
+.history-table td{
+    padding:16px;
+    text-align:left;
+    font-size:14px;
+}
+
+.history-table th{
+    color:#8b7d74;
+    font-size:11px;
+    letter-spacing:1px;
+}
+
+.joined{
+    color:#1f8b4c;
+    font-weight:700;
+}
+
+.pending{
+    color:#e5a100;
+    font-weight:700;
+}
+
+/* ================= STEPS ================= */
+
+.steps{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:40px;
+    margin-top:80px;
+}
+
+.step-number{
+    font-size:56px;
+    font-weight:900;
+    color:#e9ddd3;
+}
+
+.step-title{
+    font-size:22px;
+    font-weight:800;
+    color:#3d2a1f;
+    margin:10px 0;
+}
+
+.step-text{
+    color:#8b7d74;
+    line-height:1.8;
+}
+
+@media(max-width:900px){
+
+    .referral-grid{
+        grid-template-columns:1fr;
+    }
+
+    .steps{
+        grid-template-columns:1fr;
+    }
+
+    .code-grid{
+        grid-template-columns:1fr;
+    }
+}
+/* ================= REWARD MODAL ================= */
+
+.reward-modal-overlay{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.55);
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:9999;
+
+    padding:20px;
+}
+
+.reward-modal{
+
+    width:100%;
+    max-width:450px;
+
+    background:white;
+
+    border-radius:24px;
+
+    padding:40px 30px;
+
+    text-align:center;
+
+    box-shadow:
+    0 20px 50px rgba(0,0,0,.15);
+
+    animation:rewardPopup .3s ease;
+}
+
+@keyframes rewardPopup{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(20px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+    }
+}
+
+.reward-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+    background:#4a1f1f;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin:0 auto 20px;
+
+    font-size:32px;
+}
+
+.reward-modal h2{
+
+    font-size:34px;
+
+    color:#4a1f1f;
+
+    margin-bottom:12px;
+
+    font-family:'Noto Serif', serif;
+}
+
+.reward-modal p{
+
+    color:#7b6d63;
+
+    line-height:1.8;
+
+    margin-bottom:25px;
+}
+
+.reward-amount{
+
+    background:#f6f0ea;
+
+    border-radius:14px;
+
+    padding:20px;
+
+    margin-bottom:25px;
+}
+
+.reward-amount-label{
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+    color:#8b7d74;
+
+    margin-bottom:10px;
+}
+
+.reward-amount-value{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    color:#4a1f1f;
+}
+
+.reward-wallet-btn{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:100%;
+
+    height:56px;
+
+    background:#4a1f1f;
+
+    color:white;
+
+    text-decoration:none;
+
+    border-radius:12px;
+
+    font-weight:800;
+
+    margin-bottom:12px;
+}
+
+.reward-wallet-btn:hover{
+
+    background:#341818;
+}
+
+.reward-close-btn{
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    width:100%;
+
+    height:54px;
+
+    border:1px solid #d8cfc8;
+
+    border-radius:12px;
+
+    text-decoration:none;
+
+    color:#4a1f1f;
+
+    font-weight:700;
+
+    background:white;
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="referral-page">
+
+    <div class="referral-hero">
+
+        <h1>REFER & EARN</h1>
+
+        <p>
+            Invite your friends and earn wallet rewards when they sign up and start shopping.
+        </p>
+
+    </div>
+
+    <div class="referral-grid">
+
+        <div>
+
+            <div class="reward-card">
+
+                <div>
+
+                    <div class="reward-label">
+                        THE INVITATION REWARD
+                    </div>
+
+                    <div class="reward-title">
+                        Invite friends and earn ₹200 in wallet when they sign up
+                    </div>
+
+                </div>
+
+                <div class="reward-icon">
+
+                    <span class="material-symbols-outlined">
+                        sell
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="code-card">
+
+                <div class="code-grid">
+
+                    <div>
+
+                        <div class="label">
+                            YOUR UNIQUE CODE
+                        </div>
+
+                        <div class="copy-box">
+
+                        <input
+                        type="text"
+                        id="referral-code"
+                        class="copy-input"
+                        value="{{ request.user.referral_code }}"
+                        readonly
+                        >
+
+                            <button
+                                class="copy-btn"
+                                id="copy-code-btn"
+                                >
+
+                                COPY CODE
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <div class="label">
+                            DIRECT LINK
+                        </div>
+
+                        <div class="copy-box">
+
+                            <input
+                            type="text"
+                            id="referral-link"
+                            class="copy-input"
+                            value="{{ referral_link }}"
+                            readonly
+                            >
+
+                            <button
+                            class="copy-btn link-btn"
+                            id="copy-link-btn"
+                            >
+
+                                COPY LINK
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="history-card">
+
+            <div class="history-header">
+
+                REFERRAL HISTORY
+
+            </div>
+
+            <table class="history-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>FRIEND</th>
+
+                        <th>STATUS</th>
+
+                        <th>REWARD</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for referral in referrals %}
+
+                    <tr>
+
+                        <td>
+
+                            {{ referral.email }}
+
+                        </td>
+
+                        <td>
+
+                            <span class="joined">
+
+                                Joined
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            ₹200 Added
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="3">
+
+                            No referrals yet
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <div class="steps">
+
+        <div>
+
+            <div class="step-number">01</div>
+
+            <div class="step-title">
+
+                SHARE YOUR CODE
+
+            </div>
+
+            <div class="step-text">
+
+                Send your referral code to friends through WhatsApp, Email or Social Media.
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="step-number">02</div>
+
+            <div class="step-title">
+
+                FRIEND SIGNS UP
+
+            </div>
+
+            <div class="step-text">
+
+                They create an account using your referral code.
+
+            </div>
+
+        </div>
+
+        <div>
+
+            <div class="step-number">03</div>
+
+            <div class="step-title">
+
+                EARN REWARDS
+
+            </div>
+
+            <div class="step-text">
+
+                ₹200 is credited to your wallet after successful signup.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% if show_reward_modal %}
+
+<div class="reward-modal-overlay">
+
+    <div class="reward-modal">
+
+        <div class="reward-icon">
+
+            🎁
+
+        </div>
+
+        <h2>
+
+            Reward Credited!
+
+        </h2>
+
+        <p>
+
+            Your referral reward has been successfully added to your wallet.
+
+        </p>
+
+        <div class="reward-amount">
+
+            <div class="reward-amount-label">
+
+                REWARD AMOUNT
+
+            </div>
+
+            <div class="reward-amount-value">
+
+                ₹200
+
+            </div>
+
+        </div>
+
+        <a
+        href="{% url 'wallet_page' %}"
+        class="reward-wallet-btn"
+        >
+
+            VIEW WALLET
+
+        </a>
+
+        <a
+        href="{% url 'home' %}"
+        class="reward-close-btn"
+        >
+
+            CONTINUE SHOPPING
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+<script>
+
+document.getElementById(
+
+    "copy-code-btn"
+
+).addEventListener(
+
+    "click",
+
+    function(){
+
+        const code = document.getElementById(
+
+            "referral-code"
+
+        ).value;
+
+        navigator.clipboard.writeText(
+
+            code
+
+        );
+
+        this.innerText = "COPIED";
+
+        setTimeout(() => {
+
+            this.innerText = "COPY CODE";
+
+        }, 2000);
+
+    }
+
+);
+
+document.getElementById(
+
+    "copy-link-btn"
+
+).addEventListener(
+
+    "click",
+
+    function(){
+
+        const link = document.getElementById(
+
+            "referral-link"
+
+        ).value;
+
+        navigator.clipboard.writeText(
+
+            link
+
+        );
+
+        this.innerText = "COPIED";
+
+        setTimeout(() => {
+
+            this.innerText = "COPY LINK";
+
+        }, 2000);
+
+    }
+
+);
+
+</script>
+{% endblock %}

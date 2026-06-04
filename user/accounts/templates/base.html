@@ -664,7 +664,7 @@ class="cart-icon-wrap"
         src="{% if request.user.profile_image %}
                 {{ request.user.profile_image.url }}
              {% else %}
-                {% static 'default.png' %}
+                {% static 'images/default.png' %}
              {% endif %}"
         class="nav-profile-img"
         >
@@ -678,15 +678,14 @@ class="cart-icon-wrap"
 
         <div class="profile-top">
 
-            <img
-            src="{% if request.user.profile_image %}
-                    {{ request.user.profile_image.url }}
-                 {% else %}
-                    {% static 'default.png' %}
-                 {% endif %}"
-            class="dropdown-profile-img"
-            >
-
+<img
+src="{% if request.user.profile_image %}
+        {{ request.user.profile_image.url }}
+     {% else %}
+        {% static 'images/default.png' %}
+     {% endif %}"
+class="nav-profile-img"
+>
             <div>
 
                 <div class="dropdown-name">
@@ -739,6 +738,10 @@ class="cart-icon-wrap"
                 WISHLIST
 
             </a>
+            <a href="{% url 'wallet_page' %}">
+    <i class="fa-solid fa-wallet"></i>
+    WALLET
+</a>
 
             <div class="dropdown-divider"></div>
 

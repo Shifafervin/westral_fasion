@@ -1,0 +1,407 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Order Success
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+.success-wrapper{
+
+    min-height:100vh;
+
+    background:#f8f5f2;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:80px 20px;
+}
+
+.success-icon{
+
+    width:72px;
+
+    height:72px;
+
+    border-radius:50%;
+
+    background:#6B4F3B;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    font-size:32px;
+
+    margin-bottom:28px;
+}
+
+.success-title{
+
+    font-size:52px;
+
+    line-height:1;
+
+    font-weight:900;
+
+    text-align:center;
+
+    color:#5a3f2f;
+
+    margin-bottom:22px;
+}
+
+.success-sub{
+
+    text-align:center;
+
+    color:#7c6b60;
+
+    font-size:15px;
+
+    max-width:600px;
+
+    line-height:1.8;
+
+    margin-bottom:50px;
+}
+
+.success-card{
+
+    width:100%;
+
+    max-width:620px;
+
+    background:white;
+
+    border-radius:14px;
+
+    padding:38px;
+
+    border:1px solid #eee;
+
+    margin-bottom:40px;
+}
+
+.success-grid{
+
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:34px;
+
+    margin-bottom:34px;
+}
+
+.label{
+
+    font-size:10px;
+
+    letter-spacing:2px;
+
+    color:#8c7c73;
+
+    margin-bottom:10px;
+}
+
+.value{
+
+    font-size:16px;
+
+    font-weight:700;
+
+    color:#3b2a1f;
+}
+
+.total-box{
+
+    border-top:1px solid #eee;
+
+    padding-top:28px;
+}
+
+.total-value{
+
+    font-size:38px;
+
+    font-weight:900;
+
+    color:#5a3f2f;
+
+    margin-top:12px;
+}
+
+.success-actions{
+
+    display:flex;
+
+    gap:18px;
+
+    margin-bottom:22px;
+}
+
+.success-btn{
+
+    width:220px;
+
+    height:56px;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:12px;
+
+    letter-spacing:2px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    text-decoration:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    transition:.2s;
+}
+
+.primary-btn{
+
+    background:#6B4F3B;
+
+    color:white;
+}
+
+.primary-btn:hover{
+
+    background:#563c2c;
+}
+
+.secondary-btn{
+
+    background:white;
+
+    border:1px solid #6B4F3B;
+
+    color:#6B4F3B;
+}
+
+.secondary-btn:hover{
+
+    background:#f5efea;
+}
+
+.success-note{
+
+    font-size:12px;
+
+    color:#8c7c73;
+
+    text-align:center;
+}
+
+@media(max-width:700px){
+
+    .success-title{
+
+        font-size:36px;
+    }
+
+    .success-grid{
+
+        grid-template-columns:1fr;
+    }
+
+    .success-actions{
+
+        flex-direction:column;
+    }
+
+    .success-btn{
+
+        width:100%;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="success-wrapper">
+
+    <div class="success-icon">
+        {% if order.payment_method == "RAZORPAY" %}
+
+💳
+
+{% else %}
+
+✓
+
+{% endif %}
+    </div>
+
+    <div class="success-title">
+
+{% if order.payment_method == "RAZORPAY" %}
+
+    PAYMENT SUCCESSFUL <br>
+    ORDER CONFIRMED!
+
+{% else %}
+
+    ORDER PLACED <br>
+    SUCCESSFULLY!
+
+{% endif %}
+
+    </div>
+
+    <div class="success-sub">
+
+        {% if order.payment_method == "RAZORPAY" %}
+
+    Your Razorpay transaction was completed successfully.
+    Your payment has been securely verified and your order is now confirmed.
+
+{% else %}
+
+    Thank you for your purchase.
+    We've received your order and are preparing it for shipment.
+
+{% endif %}
+        We've received your order and are preparing it for shipment.
+
+        A confirmation email has been sent to your registered address.
+
+    </div>
+
+    <div class="success-card">
+
+        <div class="success-grid">
+
+            <div>
+
+                <div class="label">
+                    ORDER IDENTIFIER
+                </div>
+
+                <div class="value">
+                    #{{ order.order_id }}
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="label">
+                    PAYMENT
+                </div>
+
+                <div class="value">
+
+                    {% if order.payment_method == "RAZORPAY" %}
+
+                        Razorpay Secure
+
+                    {% else %}
+
+                        Cash On Delivery
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="label">
+                    PLACED ON
+                </div>
+
+                <div class="value">
+                    {{ order.created_at|date:"F d, Y" }}
+                </div>
+
+            </div>
+
+            <div>
+
+                <div class="label">
+                    ORDER STATUS
+                </div>
+
+                <div class="value">
+                    {{ order.order_status }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="total-box">
+
+            <div class="label">
+                TOTAL TRANSACTION
+            </div>
+
+            <div class="total-value">
+                ₹{{ order.total_amount }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="success-actions">
+
+        <a
+        href="{% url 'order_detail' order.order_id %}"
+        class="success-btn primary-btn"
+        >
+
+            GO TO ORDERS
+
+        </a>
+
+        <a
+        href="{% url 'home' %}"
+        class="success-btn secondary-btn"
+        >
+
+            CONTINUE SHOPPING
+
+        </a>
+
+    </div>
+
+    <div class="success-note">
+
+        A confirmation email has been sent to your registered email address.
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,29 +1,21 @@
 from django.shortcuts import render, redirect,get_object_or_404
-
 from django.core.paginator import Paginator
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from admin.admin_orders.models import Order
 from admin.decorators import admin_required
 from user.user_orders.models import ReturnRequest
-
-from django.db.models import Q
+from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.views.decorators.cache import never_cache
-
+from django.db import transaction
+from admin.admin_orders.models import WalletTransaction,Wallet
+from decimal import Decimal
 
 
 @admin_required
 def order_management(request):
-
-    # ================= BLOCK NORMAL USERS =================
-
-    if not request.user.is_staff:
-
-        return redirect("home")
-
-    # ================= GET VALUES =================
+    
 
     search = request.GET.get(
 
@@ -49,7 +41,7 @@ def order_management(request):
 
     )
 
-    # ================= BASE QUERY =================
+    
 
     orders = Order.objects.select_related(
 
@@ -57,7 +49,7 @@ def order_management(request):
 
     )
 
-    # ================= SEARCH =================
+    
 
     if search:
 
@@ -71,7 +63,7 @@ def order_management(request):
 
         )
 
-    # ================= FILTER =================
+    
 
     if status:
 
@@ -81,7 +73,7 @@ def order_management(request):
 
         )
 
-    # ================= SORT =================
+    
 
     if sort == "latest":
 
@@ -115,7 +107,7 @@ def order_management(request):
 
         )
 
-    # ================= PAGINATION =================
+
 
     paginator = Paginator(
 
@@ -137,7 +129,6 @@ def order_management(request):
 
     )
 
-    # ================= CONTEXT =================
 
     context = {
 
@@ -161,16 +152,9 @@ def order_management(request):
 
     )
 
-# ================= ORDER DETAIL =================
 @never_cache
 @admin_required
 def admin_order_detail(request, order_id):
-
-    # ================= BLOCK NORMAL USERS =================
-
-    if not request.user.is_staff:
-
-        return redirect("home")
 
     order = Order.objects.filter(
 
@@ -213,8 +197,7 @@ def admin_order_detail(request, order_id):
 
     )
 
-
-# ================= UPDATE STATUS =================
+@require_POST
 @admin_required
 def update_order_status(request, order_id):
 
@@ -225,82 +208,81 @@ def update_order_status(request, order_id):
 
     )
 
-    if request.method == "POST":
+    new_status = request.POST.get(
 
-        new_status = request.POST.get(
+        "order_status"
 
-            "order_status"
-        )
+    )
 
-        allowed_transitions = {
+    allowed_transitions = {
 
-            "Pending": [
+        "Pending": [
 
-                "Shipped",
-                "Cancelled"
+            "Shipped",
+            "Cancelled"
 
-            ],
+        ],
 
-            "Shipped": [
+        "Shipped": [
 
-                "Out For Delivery"
-            ],
+            "Out For Delivery"
 
-            "Out For Delivery": [
+        ],
 
-                "Delivered"
-            ],
+        "Out For Delivery": [
 
-            "Delivered": [],
+            "Delivered"
 
-            "Cancelled": []
+        ],
 
-        }
+        "Delivered": [],
 
-        current_status = order.order_status
+        "Cancelled": []
 
-        allowed_next = allowed_transitions.get(
+    }
 
-            current_status,
-            []
-        )
+    current_status = order.order_status
 
-        if new_status in allowed_next:
+    allowed_next = allowed_transitions.get(
+
+        current_status,
+        []
+
+    )
+
+    if new_status in allowed_next:
+
+        with transaction.atomic():
 
             order.order_status = new_status
 
             order.save()
 
-            messages.success(
+        messages.success(
 
-                request,
-                "Order status updated successfully"
-            )
+            request,
+            "Order status updated successfully"
 
-        else:
+        )
 
-            messages.error(
+    else:
 
-                request,
-                "Invalid status transition"
-            )
+        messages.error(
+
+            request,
+            "Invalid status transition"
+
+        )
 
     return redirect(
 
         "admin_order_detail",
         order_id=order.order_id
+
     )
-
-
-
+    
 @admin_required
 def return_management(request):
-
-    if not request.user.is_staff:
-
-        return redirect("home")
-
-    # ================= GET FILTERS =================
 
     status_filter = request.GET.get(
 
@@ -316,7 +298,6 @@ def return_management(request):
 
     )
 
-    # ================= BASE QUERY =================
 
     return_requests = ReturnRequest.objects.select_related(
 
@@ -329,7 +310,6 @@ def return_management(request):
 
     )
 
-    # ================= STATUS FILTER =================
 
     if status_filter != "all":
 
@@ -338,7 +318,6 @@ def return_management(request):
             status=status_filter
         )
 
-    # ================= SEARCH =================
 
     if search_query:
 
@@ -350,7 +329,6 @@ def return_management(request):
 
         )
 
-    # ================= PAGINATION =================
 
     paginator = Paginator(
 
@@ -391,12 +369,9 @@ def return_management(request):
 
     )
 
+@require_POST
 @admin_required
 def approve_return(request, return_id):
-
-    if not request.user.is_staff:
-
-        return redirect("home")
 
     return_request = ReturnRequest.objects.select_related(
 
@@ -412,6 +387,11 @@ def approve_return(request, return_id):
         id=return_id
 
     ).first()
+    if not return_request:
+
+        return redirect("return_management")
+
+
     if return_request.status != "Pending":
 
         messages.error(
@@ -422,65 +402,85 @@ def approve_return(request, return_id):
         )
 
         return redirect("return_management")
+    
 
-    if not return_request:
+    with transaction.atomic():
 
-        return redirect("return_management")
+        wallet, created = Wallet.objects.get_or_create(
+            user=return_request.user
+        )
 
-    # ================= ALREADY APPROVED =================
+        return_request.status = "Approved"
+        return_request.save()
 
-    if return_request.status == "Approved":
+        order = return_request.order
 
-        return redirect("return_management")
+        refund_amount = Decimal("0")
 
-    # ================= UPDATE RETURN REQUEST =================
+        for return_item in return_request.return_items.all():
 
-    return_request.status = "Approved"
+            order_item = return_item.order_item
 
-    return_request.save()
+            item_total = (
+                order_item.price_at_purchase *
+                return_item.quantity
+            )
 
-    # ================= RETURN ITEMS =================
+            discount_per_unit = (
+                order_item.discount_share /
+                order_item.quantity
+            )
 
-    for return_item in return_request.return_items.all():
+            refund_amount += (
+                item_total -
+                (discount_per_unit * return_item.quantity)
+            )
 
-        order_item = return_item.order_item
+            order_item.variant.stock += return_item.quantity
+            order_item.variant.save()
 
-        # ================= STOCK RESTORE =================
+            order_item.item_status = "Return Approved"
+            order_item.save()
 
-        order_item.variant.stock += return_item.quantity
+        if order.payment_method in [
 
-        order_item.variant.save()
+            "RAZORPAY",
+            "WALLET"
 
-        # ================= ITEM STATUS =================
+        ]:
 
-        order_item.item_status = "Return Approved"
+            wallet.balance += refund_amount
 
-        order_item.save()
+            wallet.save()
 
-    order = return_request.order
+            WalletTransaction.objects.create(
 
-    if order.items.exists():
+                wallet=wallet,
 
-        first_item = order.items.first()
+                order=return_request.order,
 
-        if return_request.status == "Approved":
+                transaction_type="Credit",
 
-            first_item.item_status = "Return Approved"
+                status="Completed",
 
-        elif return_request.status == "Rejected":
+                amount=refund_amount,
 
-            first_item.item_status = "Return Rejected"
+                description=f"Refund for order {return_request.order.order_id}"
 
-        first_item.save()
+            )
 
+    messages.success(
+
+    request,
+    "Return approved and refund added to wallet"
+
+)
     return redirect("return_management")
 
+
+@require_POST
 @admin_required
 def reject_return(request, return_id):
-
-    if not request.user.is_staff:
-
-        return redirect("home")
 
     return_request = ReturnRequest.objects.prefetch_related(
 
@@ -496,30 +496,31 @@ def reject_return(request, return_id):
 
         return redirect("return_management")
 
-    # ================= UPDATE RETURN REQUEST =================
+    if return_request.status != "Pending":
 
-    return_request.status = "Rejected"
+        messages.error(
 
-    return_request.save()
+            request,
+            "Return status already finalized"
 
-    # ================= UPDATE ITEMS =================
+        )
 
-    for return_item in return_request.return_items.all():
+        return redirect("return_management")
 
-        order_item = return_item.order_item
+    with transaction.atomic():
 
-        order_item.item_status = "Return Rejected"
+        return_request.status = "Rejected"
 
-        order_item.save()
+        return_request.save()
 
-    order = return_request.order
 
-    if order.items.exists():
+        for return_item in return_request.return_items.all():
 
-        first_item = order.items.first()
+            order_item = return_item.order_item
 
-        first_item.item_status = "Return Rejected"
+            order_item.item_status = "Return Rejected"
 
-        first_item.save()
+            order_item.save()
+
 
     return redirect("return_management")

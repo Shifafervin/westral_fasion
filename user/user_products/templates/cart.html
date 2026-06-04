@@ -108,7 +108,35 @@
 
     white-space:nowrap;
 }
+.original-price{
 
+    font-size:14px;
+
+    color:#999;
+
+    text-decoration:line-through;
+
+    margin-top:4px;
+}
+
+.discount-badge{
+
+    display:inline-block;
+
+    margin-top:6px;
+
+    padding:4px 10px;
+
+    border-radius:20px;
+
+    background:#eef5ee;
+
+    color:#2d6b36;
+
+    font-size:11px;
+
+    font-weight:700;
+}
 /* ================= QUANTITY ================= */
 
 .bottom-row{
@@ -558,8 +586,34 @@
                         </div>
 
                         <div class="price">
-                            ₹{{ item.variant.price }}
-                        </div>
+
+    ₹{{ item.offer_data.final_price|floatformat:2 }}
+
+    {% if item.offer_data.offer %}
+
+    <div class="original-price">
+
+        ₹{{ item.offer_data.original_price }}
+
+    </div>
+
+    <div class="discount-badge">
+
+        {% if item.offer_data.offer.discount_type == "PERCENTAGE" %}
+
+            {{ item.offer_data.offer.discount_value }}% OFF
+
+        {% else %}
+
+            ₹{{ item.offer_data.offer.discount_value }} OFF
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
 
                     </div>
 
@@ -647,13 +701,25 @@ id="subtotal-{{ item.id }}"
 
             <div class="summary-row">
 
-                <span>Subtotal</span>
+    <span>Subtotal</span>
 
-                <span>
-                    ₹{{ subtotal }}
-                </span>
+    <span id="summary-subtotal">
 
-            </div>
+        ₹{{ subtotal|floatformat:2 }}
+
+    </span>
+
+</div><div class="summary-row">
+
+    <span>You Save</span>
+
+    <span id="total-discount">
+
+        ₹{{ total_discount|floatformat:2 }}
+
+    </span>
+
+</div>
 
             <div class="summary-row">
 
@@ -891,7 +957,19 @@ document.addEventListener(
                 "cart-total"
 
             ).innerText = `₹${data.total}`;
-        }
+
+            document.getElementById(
+
+                "summary-subtotal"
+
+            ).innerText = `₹${data.summary_subtotal}`;
+
+            document.getElementById(
+
+                "total-discount"
+
+            ).innerText = `₹${data.total_discount}`;
+                    }
 
         // ================= HANDLE AJAX =================
 

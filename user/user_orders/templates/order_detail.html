@@ -892,10 +892,25 @@ Order Details
 
         <div class="product-price">
 
-            ₹{{ item.total_price }}
+    ₹{{ item.total_price|floatformat:2 }}
 
-        </div>
+    <div
+    style="
+    font-size:12px;
+    color:#8d7e74;
+    margin-top:6px;
+    "
+    >
 
+        Qty : {{ item.quantity }}
+
+        ×
+
+        ₹{{ item.price_at_purchase|floatformat:2 }}
+
+    </div>
+
+</div>
     </div>
 
     <!-- ITEM ACTIONS -->
@@ -1047,21 +1062,34 @@ data-id="{{ item.id }}"
                     <span>Subtotal</span>
 
                     <span>
-                        ₹{{ order.total_amount }}
+                        ₹{{ subtotal|floatformat:2 }}
                     </span>
 
                 </div>
 
                 <div class="summary-row">
 
-                    <span>Discount</span>
+    <span>Offer Savings</span>
 
-                    <span>
-                        ₹0.00
-                    </span>
+    <span>
 
-                </div>
+        -₹{{ offer_discount|floatformat:2 }}
 
+    </span>
+
+</div>
+
+<div class="summary-row">
+
+    <span>Coupon Discount</span>
+
+    <span>
+
+        -₹{{ coupon_discount|floatformat:2 }}
+
+    </span>
+
+</div>
                 <div class="summary-row">
 
                     <span>Delivery Fee</span>
@@ -1087,7 +1115,7 @@ data-id="{{ item.id }}"
                     <span>Total Amount</span>
 
                     <span>
-                        ₹{{ order.total_amount }}
+                        ₹{{ order.total_amount|floatformat:2 }}
                     </span>
 
                 </div>

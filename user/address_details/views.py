@@ -356,11 +356,12 @@ def add_address(request):
 
         )
 
-        return redirect(
+        next_page = request.GET.get("next") or request.POST.get("next")
 
-            "address_details:address_view"
+        if next_page == "checkout":
+            return redirect("checkout_page")
 
-        )
+        return redirect("address_details:address_view")
 
     return render(
 
@@ -721,11 +722,12 @@ def edit_address(request, id):
 
         )
 
-        return redirect(
+        next_page = request.GET.get("next") or request.POST.get("next")
 
-            "address_details:address_view"
+        if next_page == "checkout":
+            return redirect("checkout_page")
 
-        )
+        return redirect("address_details:address_view")
 
     return render(
 

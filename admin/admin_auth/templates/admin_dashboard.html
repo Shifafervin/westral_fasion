@@ -289,6 +289,9 @@ Admin Dashboard
 .price{
     font-weight:700;
 }
+a{
+    text-decoration:none;
+}
 
 </style>
 {% endblock %}
@@ -316,17 +319,14 @@ Admin Dashboard
 
         <div class="top-actions">
 
-            <span class="material-symbols-outlined">
-                search
-            </span>
+            <a
+            href="{% url 'sales_report' %}"
+            class="report-btn"
+            >
 
-            <span class="material-symbols-outlined">
-                notifications
-            </span>
-
-            <button class="report-btn">
                 VIEW SALES REPORT
-            </button>
+
+            </a>
 
         </div>
 
@@ -350,7 +350,7 @@ Admin Dashboard
 
             <div class="card-bottom">
 
-                <h2>$142,850</h2>
+                <h2>₹{{ total_revenue }}</h2>
 
                 <div class="bars">
                     <div class="bar1"></div>
@@ -371,7 +371,7 @@ Admin Dashboard
             </div>
 
             <div class="card-bottom">
-                <h2>1,240</h2>
+               <h2>{{ total_orders }}</h2>
             </div>
 
         </div>
@@ -384,7 +384,7 @@ Admin Dashboard
             </div>
 
             <div class="card-bottom">
-                <h2>48</h2>
+                <h2>{{ pending_orders }}</h2>
             </div>
 
         </div>
@@ -397,7 +397,7 @@ Admin Dashboard
             </div>
 
             <div class="card-bottom">
-                <h2>8.4k</h2>
+                <h2>{{ total_customers }}</h2>
             </div>
 
         </div>
@@ -412,134 +412,92 @@ Admin Dashboard
 
             <h3>Revenue Overview</h3>
 
-            <div class="toggle">
-                <button class="active">WEEKLY</button>
-                <button>MONTHLY</button>
-            </div>
-
         </div>
 
-        <div class="graph">
+<div style="height:320px;">
 
-            <div class="lines">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
+    <canvas id="revenueChart"></canvas>
 
-            <svg viewBox="0 0 100 60">
-
-                <path
-                    d="M0,45 C20,30 40,50 60,25 S80,20 100,10"
-                    fill="none"
-                    stroke="#341818"
-                    stroke-width="2.5"
-                />
-
-            </svg>
-
-            <div class="days">
-
-                <span>MON</span>
-                <span>TUE</span>
-                <span>WED</span>
-                <span>THU</span>
-                <span>FRI</span>
-                <span>SAT</span>
-                <span>SUN</span>
-
-            </div>
-
-        </div>
+</div>
 
     </div>
 
     <!-- TABLE -->
 
-    <div class="table-card">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <div class="table-header">
+{{ weekly_labels|json_script:"weekly-labels" }}
+{{ weekly_data|json_script:"weekly-data" }}
 
-            <h3>Trending Pieces</h3>
+<script>
 
-            <span>FULL INVENTORY</span>
+const labels = JSON.parse(
+    document.getElementById(
+        "weekly-labels"
+    ).textContent
+);
 
-        </div>
+const values = JSON.parse(
+    document.getElementById(
+        "weekly-data"
+    ).textContent
+);
 
-        <div class="table-head">
+new Chart(
 
-            <span>PRODUCT</span>
-            <span>CATEGORY</span>
-            <span>SALES</span>
-            <span>REVENUE</span>
+    document.getElementById(
+        "revenueChart"
+    ),
 
-        </div>
+    {
 
-        <!-- ROW -->
+        type:"line",
 
-        <div class="table-row">
+        data:{
 
-            <div class="product">
+            labels:labels,
 
-                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?q=80&w=300">
+            datasets:[{
 
-                <div class="product-info">
+                data:values,
 
-                    <span class="product-name">
-                        Midnight Velvet Gown
-                    </span>
+                borderColor:"#4B2D2D",
 
-                    <span class="product-code">
-                        AW24-082
-                    </span>
+                backgroundColor:
+                "rgba(75,45,45,.12)",
 
-                </div>
+                fill:true,
 
-            </div>
+                tension:.4,
 
-            <div>Western Wear</div>
+                borderWidth:3,
 
-            <div>482</div>
+                pointRadius:5
 
-            <div class="price">
-                Rs.28,920
-            </div>
+            }]
+        },
 
-        </div>
+        options:{
 
-        <!-- ROW -->
+            responsive:true,
 
-        <div class="table-row">
+            maintainAspectRatio:false,
 
-            <div class="product">
+            plugins:{
+                legend:{
+                    display:false
+                }
+            },
 
-                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=300">
+            scales:{
+                y:{
+                    beginAtZero:true
+                }
+            }
+        }
+    }
+);
 
-                <div class="product-info">
-
-                    <span class="product-name">
-                        Artisanal Wool Coat
-                    </span>
-
-                    <span class="product-code">
-                        AW24-015
-                    </span>
-
-                </div>
-
-            </div>
-
-            <div>Winter Edition</div>
-
-            <div>315</div>
-
-            <div class="price">
-                Rs.44,100
-            </div>
-
-        </div>
-
-    </div>
+</script>
 
 {% endblock %}

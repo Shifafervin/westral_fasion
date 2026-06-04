@@ -1,0 +1,563 @@
+{% extends "admin_base.html" %}
+{% block extra_css %}
+<style>
+
+.content{
+    flex:1;
+    padding:40px 50px;
+}
+
+.page-header{
+    margin-bottom:30px;
+}
+
+.page-header h1{
+    font-size:48px;
+    font-weight:700;
+    color:#3b1d1d;
+}
+
+.offer-form{
+    background:#fff;
+    max-width:1000px;
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 2px 15px rgba(0,0,0,.05);
+}
+
+.form-group{
+    margin-bottom:25px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:10px;
+    font-size:13px;
+    font-weight:600;
+    text-transform:uppercase;
+    color:#777;
+    letter-spacing:.5px;
+}
+
+.form-control{
+    width:100%;
+    height:54px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    background:#f8f6f4;
+    padding:0 16px;
+    font-size:15px;
+    outline:none;
+}
+
+.form-control:focus{
+    border-color:#3b1d1d;
+}
+
+.radio-group{
+    display:flex;
+    gap:25px;
+    align-items:center;
+}
+
+.radio-group label{
+    margin:0;
+    text-transform:none;
+    font-size:14px;
+    font-weight:500;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.row-3{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:20px;
+}
+
+.switch-wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin:30px 0;
+}
+
+.button-group{
+    display:flex;
+    gap:15px;
+    margin-top:30px;
+}
+
+.btn-save{
+    flex:1;
+    height:56px;
+    border:none;
+    border-radius:10px;
+    background:#5a2c2c;
+    color:#fff;
+    font-weight:700;
+    letter-spacing:1px;
+    cursor:pointer;
+}
+
+.btn-cancel{
+    flex:1;
+    height:56px;
+    border-radius:10px;
+    background:#ead8c6;
+    color:#3b1d1d;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+    font-weight:700;
+    letter-spacing:1px;
+}
+.validation-alert{
+    display:flex;
+    gap:18px;
+    padding:20px;
+    margin-bottom:25px;
+    border-radius:14px;
+    background:#fff8f8;
+    border:1px solid #ffd8d8;
+    border-left:5px solid #c0392b;
+}
+
+.validation-icon{
+    width:46px;
+    height:46px;
+    min-width:46px;
+    border-radius:50%;
+    background:#ffe8e8;
+    color:#c0392b;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    font-weight:700;
+}
+
+.validation-content{
+    flex:1;
+}
+
+.validation-title{
+    font-size:15px;
+    font-weight:700;
+    color:#7a241d;
+    margin-bottom:4px;
+}
+
+.validation-subtitle{
+    font-size:13px;
+    color:#7d6a63;
+    line-height:1.6;
+}
+
+.success-alert{
+    background:#f4fff6;
+    border:1px solid #cfead4;
+    border-left:5px solid #2e7d32;
+}
+
+.success-alert .validation-icon{
+    background:#e6f7ea;
+    color:#2e7d32;
+}
+
+.success-alert .validation-title{
+    color:#2e7d32;
+}
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+
+    <h1>Edit Offer</h1>
+
+</div>
+
+<form
+    method="POST"
+    action="{% url 'edit_offer' offer.id %}"
+    class="offer-form"
+>
+
+    {% csrf_token %}
+
+    {% if messages %}
+
+    {% for message in messages %}
+
+        <div class="validation-alert {% if message.tags == 'success' %}success-alert{% endif %}">
+
+            <div class="validation-icon">
+
+                {% if message.tags == "success" %}
+                    ✓
+                {% else %}
+                    ⚠
+                {% endif %}
+
+            </div>
+
+            <div class="validation-content">
+
+                <div class="validation-title">
+
+                    {% if message.tags == "success" %}
+                        Success
+                    {% else %}
+                        Validation Error
+                    {% endif %}
+
+                </div>
+
+                <div class="validation-subtitle">
+
+                    {{ message }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+    <div class="form-group">
+
+    <label>Offer Name</label>
+
+    <input
+type="text"
+name="offer_name"
+class="form-control"
+value="{{ offer.offer_name }}"
+required
+>
+
+</div>
+
+    <div class="form-group">
+
+    <label>Discount Value</label>
+<input
+    type="number"
+    name="discount_value"
+    class="form-control"
+    step="0.01"
+    value="{{ offer.discount_value }}"
+    required
+>
+
+</div>
+    
+<div class="form-group">
+
+    <label>Discount Type</label>
+
+    <div class="radio-group">
+
+        <label>
+    <input
+    type="radio"
+    name="discount_type"
+    value="PERCENTAGE"
+    {% if offer.discount_type == "PERCENTAGE" %}
+        checked
+    {% endif %}
+    >
+    Percentage
+</label>
+
+<label>
+    <input
+    type="radio"
+    name="discount_type"
+    value="FLAT"
+    {% if offer.discount_type == "FLAT" %}
+        checked
+    {% endif %}
+    >
+    Flat
+</label>
+
+    </div>
+
+</div>
+
+       <div class="form-group">
+
+    <label>Apply To</label>
+
+    <div class="radio-group">
+
+       <label>
+    <input
+    type="radio"
+    name="offer_type"
+    value="PRODUCT"
+    {% if offer.offer_type == "PRODUCT" %}checked{% endif %}
+    >
+    Product
+</label>
+
+<label>
+    <input
+    type="radio"
+    name="offer_type"
+    value="CATEGORY"
+    {% if offer.offer_type == "CATEGORY" %}checked{% endif %}
+    >
+    Category
+</label>
+
+    </div>
+
+</div>
+
+    <div
+    id="product-container"
+    class="form-group"
+    {% if offer.offer_type == "CATEGORY" %}
+        style="display:none;"
+    {% endif %}
+>
+
+        <label>Select Product</label>
+
+        <select
+    name="product"
+    class="form-control"
+>
+
+    <option value="">
+        Select Product
+    </option>
+
+    {% for product in products %}
+
+    <option
+        value="{{ product.id }}"
+        {% if offer.product and offer.product.id == product.id %}
+            selected
+        {% endif %}
+    >
+        {{ product.product_name }}
+    </option>
+
+    {% endfor %}
+
+</select>
+
+    </div>
+
+    <div
+    id="category-container"
+    class="form-group"
+    {% if offer.offer_type == "PRODUCT" %}
+        style="display:none;"
+    {% endif %}
+>
+
+        <label>Select Category</label>
+
+        <select
+        name="category"
+        class="form-control"
+    >
+
+            <option value="">
+                Select Category
+            </option>
+
+            {% for category in categories %}
+
+<option
+    value="{{ category.id }}"
+    {% if offer.category and offer.category.id == category.id %}
+        selected
+    {% endif %}
+>
+    {{ category.category_name }}
+</option>
+
+{% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="row">
+
+    <div class="form-group">
+
+        <label>Minimum Purchase</label>
+
+        <input
+        type="number"
+        name="minimum_purchase_amount"
+        class="form-control"
+        step="0.01"
+        value="{{ offer.minimum_purchase_amount }}"
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>Maximum Discount</label>
+
+        <input
+        type="number"
+        name="maximum_discount_amount"
+        class="form-control"
+        step="0.01"
+        value="{{ offer.maximum_discount_amount }}"
+        >
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="form-group">
+
+        <label>Start Date</label>
+
+        <input
+        type="datetime-local"
+        name="start_date"
+        class="form-control"
+        value="{{ offer.start_date|date:'Y-m-d\\TH:i' }}"
+        required
+        >
+
+    </div>
+
+    <div class="form-group">
+
+        <label>End Date</label>
+
+        <input
+        type="datetime-local"
+        name="end_date"
+        class="form-control"
+        value="{{ offer.end_date|date:'Y-m-d\\TH:i' }}"
+        required
+        >
+
+    </div>
+
+</div>
+    <div class="switch-wrapper">
+
+    <div>
+
+        <strong>Active Status</strong>
+
+        <p
+        style="
+        margin:0;
+        color:#888;
+        font-size:13px;
+        "
+        >
+            Enable this offer immediately
+        </p>
+
+    </div>
+
+    <input
+type="checkbox"
+name="is_active"
+{% if offer.is_active %}
+checked
+{% endif %}
+>
+
+</div>
+
+   <div class="button-group">
+
+    <button
+        type="submit"
+        class="btn-save"
+    >
+        SAVE OFFER
+    </button>
+
+    <a
+        href="{% url 'offer_list' %}"
+        class="btn-cancel"
+    >
+        CANCEL
+    </a>
+
+</div>
+</form>
+
+<script>
+
+const offerTypeRadios =
+document.querySelectorAll(
+    'input[name="offer_type"]'
+);
+
+offerTypeRadios.forEach(radio => {
+
+    radio.addEventListener(
+
+        "change",
+
+        function(){
+
+            const productBox =
+            document.getElementById(
+                "product-container"
+            );
+
+            const categoryBox =
+            document.getElementById(
+                "category-container"
+            );
+
+            if(this.value === "PRODUCT"){
+
+                productBox.style.display =
+                "block";
+
+                categoryBox.style.display =
+                "none";
+
+            }else{
+
+                productBox.style.display =
+                "none";
+
+                categoryBox.style.display =
+                "block";
+
+            }
+
+        }
+
+    );
+
+});
+
+</script>
+
+{% endblock %}

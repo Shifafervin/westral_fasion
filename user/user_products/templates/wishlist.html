@@ -118,6 +118,35 @@ Wishlist
     font-size:26px;
     font-weight:800;
 }
+.original-price{
+
+    font-size:14px;
+
+    color:#999;
+
+    text-decoration:line-through;
+
+    margin-top:6px;
+}
+
+.discount-badge{
+
+    display:inline-block;
+
+    margin-top:8px;
+
+    padding:5px 10px;
+
+    border-radius:20px;
+
+    background:#eef5ee;
+
+    color:#2d6b36;
+
+    font-size:11px;
+
+    font-weight:700;
+}
 
 /* ================= STOCK ================= */
 
@@ -413,9 +442,33 @@ Wishlist
 
                         <div class="wishlist-price">
 
-                            ₹{{ item.variant.price }}
+    ₹{{ item.offer_data.final_price }}
 
-                        </div>
+</div>
+
+{% if item.offer_data.offer %}
+
+<div class="original-price">
+
+    ₹{{ item.offer_data.original_price }}
+
+</div>
+
+<div class="discount-badge">
+
+    {% if item.offer_data.offer.discount_type == "PERCENTAGE" %}
+
+        {{ item.offer_data.offer.discount_value }}% OFF
+
+    {% else %}
+
+        ₹{{ item.offer_data.offer.discount_value }} OFF
+
+    {% endif %}
+
+</div>
+
+{% endif %}
 
                     </div>
 

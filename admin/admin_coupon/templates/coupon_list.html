@@ -1,0 +1,846 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block title %}
+Coupons
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* ================= CONTENT ================= */
+
+.content{
+    flex:1;
+    padding:40px;
+}
+
+/* ================= HEADER ================= */
+
+.top-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+}
+
+.page-title{
+    font-size:38px;
+    font-weight:900;
+    color:#2f1410;
+    margin-bottom:8px;
+}
+
+.page-subtitle{
+    font-size:13px;
+    color:#8d7f76;
+}
+
+.add-btn{
+    height:46px;
+    padding:0 22px;
+    border:none;
+    border-radius:10px;
+    background:#3b1f1b;
+    color:white;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:1px;
+    cursor:pointer;
+    transition:0.2s;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.add-btn:hover{
+    background:#24110e;
+}
+
+/* ================= TABLE CARD ================= */
+
+.table-card{
+    background:white;
+    border-radius:20px;
+    border:1px solid #eee4dc;
+    padding:24px;
+}
+
+/* ================= TABLE TOP ================= */
+
+.table-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:24px;
+    gap:16px;
+    flex-wrap:wrap;
+}
+
+/* ================= SEARCH ================= */
+
+.search-form{
+    flex:1;
+}
+
+.search-box{
+    width:100%;
+    height:44px;
+    border:1px solid #ebe3dc;
+    border-radius:10px;
+    background:#faf8f6;
+    padding:0 18px;
+    outline:none;
+    font-size:13px;
+}
+
+.search-box:focus{
+    border-color:#2f1410;
+    background:white;
+}
+
+/* ================= ACTION BUTTONS ================= */
+
+.top-actions{
+    display:flex;
+    gap:10px;
+}
+
+.action-btn{
+
+    height:42px;
+
+    padding:0 18px;
+
+    border:1px solid #ebe3dc;
+
+    border-radius:10px;
+
+    background:white;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    color:#2f1410;
+
+    cursor:pointer;
+
+    transition:0.2s;
+
+    text-decoration:none;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    min-width:90px;
+}
+
+.action-btn.active{
+
+    background:#3b1f1b;
+
+    color:white;
+
+    border-color:#3b1f1b;
+}
+
+.action-btn:hover{
+    background:#f8f5f2;
+}
+
+/* ================= TABLE ================= */
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+thead th{
+    text-align:left;
+    font-size:10px;
+    letter-spacing:1px;
+    color:#9b8f86;
+    padding-bottom:18px;
+}
+
+tbody tr{
+    border-top:1px solid #f3ede8;
+}
+
+tbody td{
+    padding:22px 0;
+    vertical-align:middle;
+}
+
+/* ================= COUPON CODE ================= */
+
+.code-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:8px 14px;
+    border-radius:8px;
+    background:#f4e4d6;
+    color:#7b4f3f;
+    font-size:11px;
+    font-weight:800;
+}
+
+/* ================= DISCOUNT ================= */
+
+.discount-main{
+    font-size:16px;
+    font-weight:900;
+    color:#2f1410;
+    margin-bottom:4px;
+}
+
+.discount-sub{
+    font-size:11px;
+    color:#8d7f76;
+    line-height:1.5;
+}
+
+/* ================= USAGE BAR ================= */
+
+.usage-text{
+    font-size:11px;
+    color:#7d6f66;
+    margin-bottom:8px;
+}
+
+.progress-bar{
+    width:120px;
+    height:6px;
+    background:#efe7e1;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    background:#3b1f1b;
+}
+
+/* ================= STATUS ================= */
+
+.status-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:7px 16px;
+    border-radius:30px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.active-status{
+    background:#f5e7d7;
+    color:#b06f2c;
+}
+
+.inactive-status{
+    background:#efefef;
+    color:#777;
+}
+
+/* ================= ACTIONS ================= */
+
+.table-actions{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.action-link{
+    text-decoration:none;
+    font-size:12px;
+    font-weight:700;
+    color:#2f1410;
+}
+
+.action-link:hover{
+    opacity:0.7;
+}
+
+.delete-link{
+    color:#c0392b;
+}
+
+/* ================= PAGINATION ================= */
+
+.pagination{
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:8px;
+    margin-top:28px;
+}
+
+.page-btn{
+    width:34px;
+    height:34px;
+    border-radius:8px;
+    border:1px solid #e8dfd8;
+    background:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+    color:#2f1410;
+    font-size:12px;
+    font-weight:700;
+}
+
+.page-btn.active{
+    background:#2f1410;
+    color:white;
+}
+/* ================= DELETE MODAL ================= */
+
+.delete-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.35);
+    backdrop-filter:blur(4px);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.delete-modal{
+    width:420px;
+    background:#fff;
+    border-radius:18px;
+    padding:35px;
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.15);
+}
+
+.delete-icon{
+    font-size:30px;
+    color:#8b6a52;
+    margin-bottom:18px;
+}
+
+.delete-modal h3{
+    font-size:28px;
+    font-weight:500;
+    color:#3b1f1b;
+    line-height:1.5;
+    margin-bottom:30px;
+}
+
+.delete-actions{
+    display:flex;
+    gap:12px;
+}
+
+.modal-delete-btn{
+    flex:1;
+    height:50px;
+    background:#4a2a2a;
+    color:white;
+    border-radius:10px;
+    text-decoration:none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    letter-spacing:2px;
+}
+
+.modal-delete-btn:hover{
+    background:#321b1b;
+}
+
+.modal-cancel-btn{
+    flex:1;
+    height:50px;
+    border:none;
+    border-radius:10px;
+    background:#ead8c6;
+    color:#5f4636;
+    font-weight:700;
+    letter-spacing:2px;
+    cursor:pointer;
+}
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:900px){
+
+    .content{
+        padding:20px;
+    }
+
+    .table-card{
+        overflow-x:auto;
+    }
+}
+
+@media(max-width:700px){
+
+    .top-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:18px;
+    }
+
+    .table-top{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .top-actions{
+        width:100%;
+    }
+
+    .action-btn{
+        flex:1;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="content">
+
+    <!-- HEADER -->
+
+    <div class="top-header">
+
+        <div>
+
+            <div class="page-title">
+
+                Coupons
+
+            </div>
+
+            <div class="page-subtitle">
+
+                Create and manage promotional discount codes for your collections.
+
+            </div>
+
+        </div>
+
+        <a
+        href="{% url 'create_coupon' %}"
+        class="add-btn"
+        >
+
+            + ADD NEW COUPON
+
+        </a>
+
+    </div>
+
+    <!-- TABLE CARD -->
+
+    <div class="table-card">
+
+        <!-- TOP BAR -->
+
+        <div class="table-top">
+
+            <!-- SEARCH -->
+
+            <form method="GET" class="search-form">
+
+                <input
+                type="text"
+                name="search"
+                class="search-box"
+                placeholder="Search by coupon code or title..."
+                value="{{ search_query }}"
+                >
+
+            </form>
+
+            <!-- ACTIONS -->
+
+            <div class="top-actions">
+
+              <a
+href="?status=all"
+class="action-btn {% if status_filter == 'all' %}active{% endif %}"
+>
+    All
+</a>
+
+<a
+href="?status=active"
+class="action-btn {% if status_filter == 'active' %}active{% endif %}"
+>
+    Active
+</a>
+
+<a
+href="?status=inactive"
+class="action-btn {% if status_filter == 'inactive' %}active{% endif %}"
+>
+    Inactive
+</a>
+<button class="action-btn active">
+    Export
+</button>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>CODE</th>
+
+                    <th>DISCOUNT</th>
+
+                    <th>MIN PURCHASE / MAX</th>
+
+                    <th>USAGE</th>
+
+                    <th>EXPIRY DATE</th>
+
+                    <th>STATUS</th>
+
+                    <th>ACTIONS</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for coupon in page_obj %}
+
+                <tr>
+
+                    <td>
+
+                        <span class="code-badge">
+
+                            {{ coupon.code }}
+
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <div class="discount-main">
+
+                            {% if coupon.discount_type == 'Percentage' %}
+
+                                {{ coupon.discount_value }}% OFF
+
+                            {% else %}
+
+                                ₹{{ coupon.discount_value }} OFF
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="discount-sub">
+
+                            {{ coupon.discount_type }} Discount
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <div class="discount-sub">
+
+                            Min: ₹{{ coupon.minimum_purchase_amount }}
+
+                        </div>
+
+                        <div class="discount-sub">
+
+                            Max: ₹{{ coupon.maximum_discount_amount }}
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        <div class="usage-text">
+
+                            {{ coupon.used_count }}/{{ coupon.total_usage_limit }} used
+
+                        </div>
+
+                        <div class="progress-bar">
+
+                            <div
+                            class="progress-fill"
+                            style="width:{% widthratio coupon.used_count coupon.total_usage_limit 100 %}%"
+                            ></div>
+
+                        </div>
+
+                    </td>
+
+                    <td>
+
+                        {{ coupon.valid_to|date:"M d, Y" }}
+
+                    </td>
+
+                    <td>
+
+                        {% if coupon.is_active %}
+
+                            <span class="status-badge active-status">
+
+                                ACTIVE
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge inactive-status">
+
+                                INACTIVE
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+               <td>
+
+    <div class="table-actions">
+
+        <a
+        href="{% url 'edit_coupon' coupon.id %}"
+        class="action-link"
+        >
+
+            Edit
+
+        </a>
+
+        <a
+        href="{% url 'toggle_coupon_status' coupon.id %}"
+        class="action-link"
+        >
+
+            {% if coupon.is_active %}
+
+                Deactivate
+
+            {% else %}
+
+                Activate
+
+            {% endif %}
+
+        </a>
+
+<a
+href="#"
+class="action-link delete-link"
+onclick="openDeleteModal('{{ coupon.id }}')"
+>
+    Delete
+</a>
+
+    </div>
+
+</td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="7">
+
+                        No coupons found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        <!-- PAGINATION -->
+
+        <div class="pagination">
+
+            {% if page_obj.has_previous %}
+
+                <a
+                href="?page={{ page_obj.previous_page_number }}"
+                class="page-btn"
+                >
+                    ‹
+                </a>
+
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+
+                {% if page_obj.number == num %}
+
+                    <a
+                    href="?page={{ num }}"
+                    class="page-btn active"
+                    >
+                        {{ num }}
+                    </a>
+
+                {% else %}
+
+                    <a
+                    href="?page={{ num }}"
+                    class="page-btn"
+                    >
+                        {{ num }}
+                    </a>
+
+                {% endif %}
+
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+
+                <a
+                href="?page={{ page_obj.next_page_number }}"
+                class="page-btn"
+                >
+                    ›
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<div
+id="deleteModal"
+class="delete-overlay"
+>
+
+    <div class="delete-modal">
+
+        <div class="delete-icon">
+
+            🗑
+
+        </div>
+
+        <h3>
+
+            Are you sure want to delete this coupon?
+
+        </h3>
+
+        <div class="delete-actions">
+
+            <a
+            id="deleteLink"
+            href="#"
+            class="modal-delete-btn"
+            >
+                DELETE
+            </a>
+
+            <button
+            type="button"
+            class="modal-cancel-btn"
+            onclick="closeDeleteModal()"
+            >
+                CANCEL
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+
+document
+.getElementById("export-btn")
+.addEventListener("click", function(){
+
+    this.classList.toggle("active");
+
+});
+
+</script>
+<script>
+
+function openDeleteModal(couponId){
+
+    document.getElementById(
+        "deleteLink"
+    ).href =
+    "/admin_coupon/delete/" +
+    couponId +
+    "/";
+
+    document.getElementById(
+        "deleteModal"
+    ).style.display =
+    "flex";
+
+}
+
+function closeDeleteModal(){
+
+    document.getElementById(
+        "deleteModal"
+    ).style.display =
+    "none";
+
+}
+
+window.onclick = function(event){
+
+    const modal =
+    document.getElementById(
+        "deleteModal"
+    );
+
+    if(event.target === modal){
+
+        closeDeleteModal();
+
+    }
+
+}
+
+</script>
+
+{% endblock %}

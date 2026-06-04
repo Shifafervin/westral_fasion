@@ -588,6 +588,23 @@ tbody td{
 
     background:#f5f5f5;
 }
+.dropdown-form{
+
+    margin:0;
+}
+
+.dropdown-form button{
+
+    width:100%;
+
+    border:none;
+
+    background:none;
+
+    text-align:left;
+
+    cursor:pointer;
+}
 </style>
 {% endblock %}
 
@@ -818,12 +835,17 @@ tbody td{
                         <td>
 
                             <div class="customer-box">
-
-                                <img
-                                src="{% static 'images/default-user.png' %}"
-                                class="customer-image"
-                                >
-
+{% if return_request.user.profile_image %}
+    <img
+    src="{{ return_request.user.profile_image.url }}"
+    class="customer-image"
+    >
+{% else %}
+    <img
+    src="{% static 'images/default.png' %}"
+    class="customer-image"
+    >
+{% endif %}
                                 <div>
 
                                     <div class="customer-name">
@@ -906,23 +928,41 @@ id="dropdown-{{ return_request.id }}"
 
 {% if return_request.status == "Pending" %}
 
-    <a
-    href="{% url 'approve_return' return_request.id %}"
+    <form
+method="POST"
+action="{% url 'approve_return' return_request.id %}"
+>
+
+    {% csrf_token %}
+
+    <button
+    type="submit"
     class="dropdown-item approve-item"
     >
 
         Approve Return
 
-    </a>
+    </button>
 
-    <a
-    href="{% url 'reject_return' return_request.id %}"
+</form>
+
+    <form
+method="POST"
+action="{% url 'reject_return' return_request.id %}"
+>
+
+    {% csrf_token %}
+
+    <button
+    type="submit"
     class="dropdown-item reject-item"
     >
 
         Reject Return
 
-    </a>
+    </button>
+
+</form>
 
 {% else %}
 

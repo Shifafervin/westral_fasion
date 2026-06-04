@@ -691,13 +691,13 @@ class="top-btn"
 
                     <td>
 
-                        ₹{{ item.price_at_purchase }}
+                       ₹{{ item.price_at_purchase|floatformat:2 }}
 
                     </td>
 
                     <td>
 
-                        ₹{{ item.total_price }}
+                       ₹{{ item.total_price|floatformat:2 }}
 
                     </td>
 
@@ -715,15 +715,26 @@ class="top-btn"
 
             <div class="total-row">
 
-                <span>Subtotal</span>
+    <span>Subtotal</span>
 
-                <span>
+    <span>
 
-                    ₹{{ order.total_amount }}
+        ₹{{ subtotal|floatformat:2 }}
 
-                </span>
+    </span>
 
-            </div>
+</div>
+<div class="total-row">
+
+    <span>Coupon Discount</span>
+
+    <span>
+
+        -₹{{ coupon_discount|floatformat:2 }}
+
+    </span>
+
+</div>
 
             <div class="total-row">
 

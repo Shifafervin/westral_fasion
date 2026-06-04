@@ -16,12 +16,12 @@
 
 /* ================= RESET ================= */
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
 
+.main{
+    width:100%;
+    min-height:100vh;
+    padding:10px 20px;
+}
 /* ================= HTML ================= */
 
 html{
@@ -96,24 +96,16 @@ body::-webkit-scrollbar-thumb{
 
 /* ================= MAIN ================= */
 
-.main{
-    width:100%;
-
-    min-height:100vh;
-
-    padding:26px 34px;
-}
 
 /* ================= TOPBAR ================= */
 
 .topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:26px;
+    margin-bottom:10px;
 }
-
+.page-title{
+    margin:0;
+    line-height:1.2;
+}
 .left-top{
     display:flex;
     align-items:center;
@@ -151,14 +143,20 @@ body::-webkit-scrollbar-thumb{
 }
 
 .discard{
+    height:38px;
+
+    padding:0 22px;
+
     border:none;
 
-    background:none;
+    border-radius:8px;
 
-    color:#a09287;
+    background:#ffff;
 
-    font-size:10px;
-    letter-spacing:1px;
+    color:#341818;
+
+    font-size:11px;
+    font-weight:600;
 
     cursor:pointer;
 }
@@ -203,19 +201,19 @@ body::-webkit-scrollbar-thumb{
 /* ================= CARD ================= */
 
 .card{
-    background:white;
-
-    border-radius:18px;
-
-    padding:24px;
-
-    max-width:850px;
-
+    max-width:1000px;
     margin:auto;
 
-    box-shadow:0 4px 20px rgba(0,0,0,.03);
-}
+    background:#fff;
+    border-radius:20px;
 
+    padding:35px;
+
+    border:1px solid #ece6e0;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.05);
+}
 /* ================= CARD LABEL ================= */
 
 .card-label{
@@ -374,7 +372,28 @@ body::-webkit-scrollbar-thumb{
 .switch input:checked + .slider::before{
     transform:translateX(24px);
 }
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+}
 
+.full-width{
+    grid-column:1 / -1;
+}.topbar{
+    max-width:1000px;
+    margin:0 auto 25px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.page-title{
+    font-size:34px;
+    font-weight:700;
+    font-style:normal;
+}
 
 </style>
 </head>
@@ -428,7 +447,7 @@ body::-webkit-scrollbar-thumb{
     Edit Product:
     {{ product.product_name }}
 
-</div>
+
 
 {% if messages %}
 
@@ -483,17 +502,7 @@ body::-webkit-scrollbar-thumb{
 
         <div class="top-icons">
 
-            <span class="material-symbols-outlined">
-
-                notifications
-
-            </span>
-
-            <span class="material-symbols-outlined">
-
-                settings
-
-            </span>
+       
 
         </div>
 

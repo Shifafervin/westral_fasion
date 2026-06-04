@@ -620,7 +620,11 @@ input[type="radio"]:checked + .type-btn {
 
 <!-- ROW 1 -->
 <div class="row">
-
+<input
+type="hidden"
+name="next"
+value="{{ request.GET.next }}"
+>
     <div class="input-box">
         <label>FULL NAME</label>
         <input

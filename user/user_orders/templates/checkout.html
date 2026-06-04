@@ -413,6 +413,259 @@ Checkout
 
     opacity:.7;
 }
+/* ================= COUPON ================= */
+
+.coupon-section{
+
+    margin:24px 0 30px;
+}
+
+/* ================= FORM ================= */
+
+.coupon-form{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    width:100%;
+}
+
+/* ================= INPUT ================= */
+
+.coupon-input{
+
+    flex:1;
+
+    height:54px;
+
+    border:1px solid #d9d3cd;
+
+    border-radius:30px;
+
+    padding:0 22px;
+
+    outline:none;
+
+    font-size:15px;
+
+    background:white;
+
+    transition:.2s;
+
+    min-width:0;
+}
+
+.coupon-input:focus{
+
+    border-color:#6B4F3B;
+}
+
+/* ================= BUTTON ================= */
+
+.coupon-btn{
+
+    width:120px;
+
+    height:54px;
+
+    border:none;
+
+    border-radius:30px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    font-size:13px;
+
+    font-weight:800;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    flex-shrink:0;
+}
+
+.coupon-btn:hover{
+
+    background:#563c2c;
+}
+
+/* ================= AVAILABLE LINK ================= */
+
+.available-coupon-link{
+
+    display:inline-block;
+
+    margin-top:16px;
+
+    text-decoration:none;
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#6B4F3B;
+
+    transition:.2s;
+}
+
+.available-coupon-link:hover{
+
+    color:#563c2c;
+
+    text-decoration:underline;
+}
+
+/* ================= APPLIED ================= */
+
+.coupon-applied-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:10px 0;
+}
+
+.coupon-applied-text{
+
+    font-size:14px;
+
+    font-weight:700;
+
+    color:#2e7d32;
+}
+
+.remove-coupon-btn{
+
+    text-decoration:none;
+
+    color:#d63031;
+
+    font-size:13px;
+
+    font-weight:700;
+}
+.coupon-discount{
+
+    font-size:12px;
+
+    color:#2e7d32;
+
+    margin-top:4px;
+
+    font-weight:600;
+}
+.coupon-modal{
+
+    display:none;
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    background:rgba(0,0,0,.5);
+
+    z-index:9999;
+}
+
+.coupon-modal-content{
+
+    width:500px;
+
+    max-width:90%;
+
+    background:white;
+
+    margin:80px auto;
+
+    padding:25px;
+
+    border-radius:12px;
+}
+
+.coupon-modal-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+}
+
+#closeCouponModal{
+
+    cursor:pointer;
+
+    font-size:28px;
+}
+
+.coupon-card{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    padding:15px;
+
+    margin-bottom:12px;
+}
+
+.coupon-code{
+
+    font-weight:700;
+
+    color:#6B4F3B;
+
+    margin-bottom:8px;
+}
+.apply-coupon-btn{
+
+    background:#6B4F3B;
+
+    color:white;
+
+    border:none;
+
+    padding:10px 20px;
+
+    border-radius:8px;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.apply-coupon-btn:hover{
+
+    background:#563c2c;
+}
+
 </style>
 
 {% endblock %}
@@ -420,6 +673,8 @@ Checkout
 {% block content %}
 
 <div class="checkout-wrapper">
+{% comment %} 
+    {{ messages }} {% endcomment %}
 
     <!-- ================= TITLE ================= -->
 
@@ -429,18 +684,13 @@ Checkout
 
     <!-- ================= FORM START ================= -->
 
-    <form
-    method="POST"
-    action="{% url 'place_order' %}"
-    >
+<form
+method="POST"
+action="{% url 'place_order' %}"
+id="checkout-form"
+>
 
         {% csrf_token %}
-
-        <input
-        type="hidden"
-        name="payment_method"
-        value="COD"
-        >
 
         <div class="checkout-layout">
 
@@ -458,12 +708,12 @@ Checkout
                             DELIVERY ADDRESS
                         </div>
 
-                        <a
-                        href="{% url 'address_details:add_address' %}"
-                        class="edit-link"
-                        >
-                            + Add Address
-                        </a>
+            <a
+            href="{% url 'address_details:add_address' %}?next=checkout"
+            class="edit-link"
+            >
+                + Add Address
+            </a>
 
                     </div>
 
@@ -471,7 +721,15 @@ Checkout
 
                         {% for address in addresses %}
 
-                        <label class="address-card {% if address.is_default %}active{% endif %}">
+                        <label class="address-card
+
+{% if selected_address_id|stringformat:'s' == address.id|stringformat:'s' %}
+active
+{% elif not selected_address_id and address.is_default %}
+active
+{% endif %}
+
+">
 
                             <input
                             type="radio"
@@ -479,7 +737,9 @@ Checkout
                             value="{{ address.id }}"
                             hidden
 
-                            {% if address.is_default %}
+                            {% if selected_address_id|stringformat:"s" == address.id|stringformat:"s" %}
+                            checked
+                            {% elif not selected_address_id and address.is_default %}
                             checked
                             {% endif %}
                             >
@@ -510,12 +770,9 @@ Checkout
 
         {% endif %}
 
-        <a
-
-        href="{% url 'address_details:edit_address' address.id %}"
-
-        class="address-edit-btn"
-
+<a
+href="{% url 'address_details:edit_address' address.id %}?next=checkout"
+class="address-edit-btn"
         onclick="event.stopPropagation();"
 
         >
@@ -569,26 +826,97 @@ Checkout
 
                     </div>
 
-                    <div class="payment-option active">
+                    <div class="payment-option
+{% if selected_payment_method == 'COD' %}
+active
+{% endif %}
+">
 
-<input
-type="hidden"
-name="payment_method"
-value="COD"
->
-                        <div>
+    <input
+    type="radio"
+    name="payment_method"
+    value="COD"
 
-                            <div class="payment-title">
-                                Cash On Delivery
-                            </div>
+    {% if selected_payment_method == "COD" %}
+    checked
+    {% endif %}
+    >
 
-                            <div class="payment-sub">
-                                Pay when your order arrives
-                            </div>
+    <div>
 
-                        </div>
+        <div class="payment-title">
+            Cash On Delivery
+        </div>
 
-                    </div>
+        <div class="payment-sub">
+            Pay when your order arrives
+        </div>
+
+    </div>
+
+</div>
+
+<div class="payment-option
+{% if selected_payment_method == 'RAZORPAY' %}
+active
+{% endif %}
+">
+
+    <input
+    type="radio"
+    name="payment_method"
+    value="RAZORPAY"
+
+    {% if selected_payment_method == "RAZORPAY" %}
+    checked
+    {% endif %}
+    >
+
+    <div>
+
+        <div class="payment-title">
+            Razorpay
+        </div>
+
+        <div class="payment-sub">
+            Pay securely using Razorpay
+        </div>
+
+    </div>
+
+</div>
+<div class="payment-option
+{% if selected_payment_method == 'WALLET' %}
+active
+{% endif %}
+">
+
+    <input
+    type="radio"
+    name="payment_method"
+    value="WALLET"
+
+    {% if selected_payment_method == "WALLET" %}
+    checked
+    {% endif %}
+    >
+
+    <div>
+
+        <div class="payment-title">
+            Wallet
+        </div>
+
+        <div class="payment-sub">
+
+            Available Balance :
+            ₹{{ wallet.balance }}
+
+        </div>
+
+    </div>
+
+</div>
 
                 </div>
 
@@ -646,8 +974,43 @@ value="COD"
                             </div>
 
                             <div class="order-price">
-                                ₹{{ item.subtotal }}
-                            </div>
+
+    ₹{{ item.subtotal }}
+
+    {% if item.offer_data.offer %}
+
+    <div style="
+        color:#888;
+        text-decoration:line-through;
+        font-size:13px;
+        margin-top:4px;
+    ">
+
+        ₹{{ item.offer_data.original_price }}
+
+    </div>
+
+    <div style="
+        color:#2d6b36;
+        font-size:11px;
+        font-weight:700;
+    ">
+
+        {% if item.offer_data.offer.discount_type == "PERCENTAGE" %}
+
+            {{ item.offer_data.offer.discount_value }}% OFF
+
+        {% else %}
+
+            ₹{{ item.offer_data.offer.discount_value }} OFF
+
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+</div>
 
                         </div>
 
@@ -672,11 +1035,20 @@ value="COD"
                     <span>Subtotal</span>
 
                     <span>
-                        ₹{{ subtotal }}
-                    </span>
+    ₹{{ subtotal|floatformat:2 }}
+</span>
 
                 </div>
+                <div class="summary-row">
 
+    <span>Offer Savings</span>
+
+    <span>
+    -₹{{ offer_discount|floatformat:2 }}
+</span>
+
+</div>
+              
                 <div class="summary-row">
 
                     <span>Shipping</span>
@@ -692,8 +1064,8 @@ value="COD"
                     <span>Discount</span>
 
                     <span>
-                        -₹{{ discount }}
-                    </span>
+    -₹{{ discount|floatformat:2 }}
+</span>
 
                 </div>
 
@@ -706,15 +1078,83 @@ value="COD"
                     </span>
 
                 </div>
+                <!-- ================= COUPON ================= -->
+
+<div class="coupon-section">
+
+    {% if request.session.coupon_id %}
+
+        <div class="coupon-applied-row">
+
+    <div>
+
+        <div class="coupon-applied-text">
+
+            {{ applied_coupon.code }} Applied
+
+        </div>
+
+        <div class="coupon-discount">
+
+            Discount : ₹{{ discount|floatformat:2 }}
+        </div>
+
+    </div>
+
+    <a
+    href="{% url 'remove_coupon' %}"
+    class="remove-coupon-btn"
+    >
+
+        Remove
+
+    </a>
+
+</div>
+
+    {% else %}
+
+<div class="coupon-form">
+
+
+    <input
+    type="text"
+    name="coupon_code"
+    id="coupon_code"
+    class="coupon-input"
+    placeholder="Enter coupon code"
+    required
+    >
+
+    <button
+type="button"
+class="coupon-btn"
+id="apply-coupon-btn"
+>
+    APPLY
+</button>
+
+</div>
+
+<a
+href="javascript:void(0)"
+class="available-coupon-link"
+id="showCouponModal"
+>
+    View all available coupons
+</a>
+
+    {% endif %}
+
+</div>
 
                 <div class="summary-row total-row">
 
                     <span>Total</span>
 
                     <span>
-                        ₹{{ final_total }}
-                    </span>
-
+    ₹{{ final_total|floatformat:2 }}
+</span>
                 </div>
 
                 {% if checkout_disabled %}
@@ -739,8 +1179,9 @@ value="COD"
 
 {% endif %}
 <button
-type="submit"
+type="button"
 class="place-btn"
+id="place-order-btn"
 
 {% if not addresses %}
 disabled
@@ -765,14 +1206,169 @@ disabled
     </form>
 
     <!-- ================= FORM END ================= -->
+<div id="couponModal" class="coupon-modal">
+
+    <div class="coupon-modal-content">
+
+        <div class="coupon-modal-header">
+
+            <h3>Available Coupons</h3>
+
+            <span id="closeCouponModal">&times;</span>
+
+        </div>
+
+{% for coupon in active_coupons %}
+
+<div class="coupon-card">
+
+    <div>
+
+        <div class="coupon-code">
+
+            {{ coupon.code }}
+
+        </div>
+
+        <div>
+
+            {% if coupon.discount_type == "Percentage" %}
+                {{ coupon.discount_value }}% OFF
+            {% else %}
+                ₹{{ coupon.discount_value }} OFF
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <form
+    method="POST"
+    action="{% url 'apply_coupon' %}"
+    >
+
+        {% csrf_token %}
+
+        <input
+        type="hidden"
+        name="coupon_code"
+        value="{{ coupon.code }}"
+        >
+
+        <input
+        type="hidden"
+        name="payment_method"
+        id="modal_payment_method"
+        >
+
+        <input
+        type="hidden"
+        name="selected_address"
+        id="modal_selected_address"
+        >
+
+        <button
+        type="submit"
+        class="apply-coupon-btn"
+        >
+
+            APPLY
+
+        </button>
+
+    </form>
 
 </div>
+
+{% endfor %}
+
+        
+
+    </div>
+
+    
+
+</div>
+</div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
 <script>
 
+// ================= ADDRESS ACTIVE =================
+const couponModal =
+document.getElementById("couponModal");
+
+const showCouponModalBtn =
+document.getElementById("showCouponModal");
+
+if(showCouponModalBtn){
+
+    showCouponModalBtn.addEventListener(
+
+        "click",
+
+        function(){
+
+            couponModal.style.display = "block";
+
+        }
+
+    );
+
+}
+
+const closeCouponModalBtn =
+document.getElementById("closeCouponModal");
+
+if(closeCouponModalBtn){
+
+    closeCouponModalBtn.addEventListener(
+
+        "click",
+
+        function(){
+
+            couponModal.style.display = "none";
+
+        }
+
+    );
+
+}
+
+window.addEventListener("click", function(e){
+
+    if(e.target === couponModal){
+
+        couponModal.style.display = "none";
+
+    }
+
+});
+
+document
+.querySelectorAll(".apply-coupon-btn")
+.forEach(button => {
+
+    button.addEventListener("click", function(){
+
+        const couponCode =
+        this.dataset.coupon;
+
+        document.getElementById(
+            "coupon_code"
+        ).value = couponCode;
+
+        document.getElementById(
+            "couponModal"
+        ).style.display = "none";
+
+    });
+
+});
+
 const addressCards =
-document.querySelectorAll(
-    ".address-card"
-);
+document.querySelectorAll(".address-card");
 
 addressCards.forEach(card => {
 
@@ -784,15 +1380,15 @@ addressCards.forEach(card => {
 
             addressCards.forEach(c => {
 
-                c.classList.remove(
-                    "active"
-                );
+                c.classList.remove("active");
 
             });
 
-            this.classList.add(
-                "active"
-            );
+            this.classList.add("active");
+
+            this.querySelector(
+                'input[name="selected_address"]'
+            ).checked = true;
 
         }
 
@@ -800,5 +1396,376 @@ addressCards.forEach(card => {
 
 });
 
+// ================= PAYMENT ACTIVE =================
+
+const paymentOptions =
+document.querySelectorAll(".payment-option");
+
+paymentOptions.forEach(option => {
+
+    option.addEventListener(
+
+        "click",
+
+        function(){
+
+            paymentOptions.forEach(o => {
+
+                o.classList.remove("active");
+
+            });
+
+            this.classList.add("active");
+
+            this.querySelector("input").checked = true;
+
+        }
+
+    );
+
+});
+
+const applyCouponBtn =
+document.getElementById(
+    "apply-coupon-btn"
+);
+
+if(applyCouponBtn){
+
+    applyCouponBtn.addEventListener(
+
+        "click",
+
+        function(){
+
+        const couponCode =
+        document.getElementById(
+            "coupon_code"
+        ).value;
+
+        if(!couponCode){
+
+            alert(
+                "Please enter a coupon code"
+            );
+
+            return;
+        }
+
+        const form =
+        document.createElement("form");
+
+        form.method = "POST";
+
+        form.action =
+        "{% url 'apply_coupon' %}";
+
+        const csrf =
+        document.createElement("input");
+
+        csrf.type = "hidden";
+
+        csrf.name =
+        "csrfmiddlewaretoken";
+
+        csrf.value =
+        "{{ csrf_token }}";
+
+        form.appendChild(csrf);
+
+        const couponInput =
+        document.createElement("input");
+
+        couponInput.type = "hidden";
+
+        couponInput.name =
+        "coupon_code";
+
+        couponInput.value =
+        couponCode;
+
+        form.appendChild(
+    couponInput
+);
+
+const selectedPayment =
+document.querySelector(
+    'input[name="payment_method"]:checked'
+);
+alert(
+    "Payment: " +
+    (
+        selectedPayment
+        ?
+        selectedPayment.value
+        :
+        "NULL"
+    )
+);
+if(selectedPayment){
+
+    const paymentInput =
+    document.createElement("input");
+
+    paymentInput.type = "hidden";
+
+    paymentInput.name =
+    "payment_method";
+
+    paymentInput.value =
+    selectedPayment.value;
+
+    form.appendChild(
+        paymentInput
+    );
+
+}
+
+const selectedAddress =
+document.querySelector(
+    'input[name="selected_address"]:checked'
+);
+alert(
+    "Address: " +
+    (
+        selectedAddress
+        ?
+        selectedAddress.value
+        :
+        "NULL"
+    )
+);
+if(selectedAddress){
+
+    const addressInput =
+    document.createElement("input");
+
+    addressInput.type = "hidden";
+
+    addressInput.name =
+    "selected_address";
+
+    addressInput.value =
+    selectedAddress.value;
+
+    form.appendChild(
+        addressInput
+    );
+
+}
+
+document.body.appendChild(
+    form
+);
+
+form.submit();
+
+    }
+
+);
+} 
+
+
+
+// ================= PLACE ORDER =================
+
+const placeOrderBtn =
+document.getElementById(
+    "place-order-btn"
+);
+
+if(placeOrderBtn){
+
+    placeOrderBtn.addEventListener(
+
+    "click",
+
+    function(e){
+
+        e.preventDefault();
+
+        const paymentMethod =
+        document.querySelector(
+            'input[name="payment_method"]:checked'
+        ).value;
+
+        const selectedAddress =
+        document.querySelector(
+            'input[name="selected_address"]:checked'
+        );
+
+        if(!selectedAddress){
+
+            alert("Please select an address");
+
+            return;
+        }
+
+        // ================= COD FLOW =================
+
+        if(paymentMethod === "COD"){
+
+            document
+            .getElementById("checkout-form")
+            .submit();
+
+        }
+        else if(paymentMethod === "WALLET"){
+
+            document
+            .getElementById("checkout-form")
+            .submit();
+        }
+
+        // ================= RAZORPAY FLOW =================
+
+        else if(paymentMethod === "RAZORPAY"){
+
+            fetch(
+
+                "{% url 'create_razorpay_order' %}",
+
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type": "application/json",
+
+                        "X-CSRFToken": "{{ csrf_token }}"
+
+                    },
+
+                    body: JSON.stringify({
+
+                        amount: "{{ final_total }}"
+
+                    })
+
+                }
+
+            )
+
+            .then(response => response.json())
+
+            .then(data => {
+
+                var options = {
+
+                    "key": data.key,
+
+                    "amount": data.amount,
+
+                    "currency": "INR",
+
+                    "name": "Westral Fashion",
+
+                    "description": "Order Payment",
+
+                    "order_id": data.razorpay_order_id,
+
+                    "handler": function(response){
+
+                        const addressId =
+                        selectedAddress.value;
+
+                        window.location.href =
+                        `/orders/payment-success/?payment_id=${response.razorpay_payment_id}&order_id=${response.razorpay_order_id}&signature=${response.razorpay_signature}&address_id=${addressId}`;
+
+                    },
+
+                    "theme": {
+
+                        "color": "#6B4F3B"
+
+                    }
+
+                };
+
+                var rzp1 =
+                new Razorpay(options);
+
+                rzp1.open();
+
+
+                rzp1.on(
+
+                    'payment.failed',
+
+                    function () {
+
+                        window.location.href =
+                        "/orders/payment-failed/";
+
+                    }
+
+                );
+
+            })
+
+            .catch(error => {
+
+                console.log(error);
+
+                alert(
+
+                    "Something went wrong with Razorpay"
+
+                );
+
+            });
+
+        }
+
+    }
+
+);
+}
+document
+.querySelectorAll(".apply-coupon-btn")
+.forEach(button => {
+
+    button.addEventListener(
+
+        "click",
+
+        function(){
+
+            const payment =
+            document.querySelector(
+                'input[name="payment_method"]:checked'
+            );
+
+            const address =
+            document.querySelector(
+                'input[name="selected_address"]:checked'
+            );
+
+            if(payment){
+
+                this.closest("form")
+                .querySelector(
+                    'input[name="payment_method"]'
+                ).value = payment.value;
+
+            }
+
+            if(address){
+
+                this.closest("form")
+                .querySelector(
+                    'input[name="selected_address"]'
+                ).value = address.value;
+
+            }
+
+        }
+
+    );
+
+});
 </script>
+
+
 {% endblock %}

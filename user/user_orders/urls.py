@@ -84,4 +84,37 @@ path(
     name="download_invoice"
 
 ),
+path(
+
+    "create-razorpay-order/",
+
+    views.create_razorpay_order,
+
+    name="create_razorpay_order"
+),
+
+path(
+
+    "payment-success/",
+
+    views.payment_success,
+
+    name="payment_success"
+),
+
+path(
+
+    "razorpay-success/<str:order_id>/",
+
+    views.razorpay_success,
+
+    name="razorpay_success"
+),
+path(
+
+    "payment-failed/",
+    views.payment_failed,
+    name="payment_failed"
+),
+
 ]

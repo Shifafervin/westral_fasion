@@ -25,9 +25,11 @@ SECRET_KEY = 'django-insecure-ugxl9r0pb@co20qq(agi=ta^kw8+wfui2io63(imk48&y^yl7)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    ".ngrok-free.dev",
+]
 
 # Application definition
 
@@ -45,13 +47,16 @@ INSTALLED_APPS = [
     'user.address_details',
     'user.user_products',
     'user.user_orders',
+    'user.user_payments',
 
 
 
     'admin.admin_auth',
     'admin.admin_category',
     'admin.admin_product',
-    'admin.admin_orders',
+    'admin.admin_orders.apps.AdminOrderConfig',
+    'admin.admin_coupon',
+    'admin.admin_offers',
 
 
 
@@ -198,3 +203,7 @@ STATICFILES_DIRS = [
 ]
 
 AUTH_USER_MODEL = 'admin_auth.CustomUser'
+
+RAZORPAY_KEY_ID = "rzp_test_SslIDaJcoJyLJO"
+
+RAZORPAY_KEY_SECRET = "CJcXXnUC2Fj9iPDw5AbMjnD7"

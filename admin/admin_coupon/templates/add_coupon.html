@@ -1,0 +1,701 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+
+{% block title %}
+Add Coupon
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+/* ================= PAGE ================= */
+
+.content{
+    flex:1;
+    padding:40px 55px;
+    background:#f7f4f1;
+    min-height:100vh;
+}
+
+/* ================= HEADER ================= */
+
+.breadcrumb{
+    font-size:10px;
+    letter-spacing:2px;
+    color:#a09389;
+    text-transform:uppercase;
+    margin-bottom:14px;
+}
+.breadcrumb a{
+    font-size:10px;
+    letter-spacing:2px;
+    color:#a09389;
+    text-transform:uppercase;
+    margin-bottom:14px;
+    text-decoration:none;
+}
+
+.page-title{
+    font-size:42px;
+    color:#3a1f1a;
+    font-weight:500;
+    margin-bottom:38px;
+}
+
+/* ================= LAYOUT ================= */
+
+.coupon-layout{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:28px;
+}
+
+.left-column,
+.right-column{
+    display:flex;
+    flex-direction:column;
+    gap:26px;
+}
+
+/* ================= CARD ================= */
+
+.form-card{
+    background:white;
+    border-radius:16px;
+    border:1px solid #eee5df;
+    padding:28px;
+}
+
+.card-title{
+    font-size:18px;
+    color:#2f1410;
+    margin-bottom:22px;
+    padding-bottom:16px;
+    border-bottom:1px solid #f1ebe6;
+}
+
+/* ================= FORM ================= */
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+.full-width{
+    grid-column:1 / -1;
+}
+
+/* ================= LABEL ================= */
+
+.form-label{
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+    color:#8e8177;
+    margin-bottom:10px;
+    text-transform:uppercase;
+}
+
+/* ================= INPUT ================= */
+
+.form-input,
+.form-date{
+    width:100%;
+    height:48px;
+    border:none;
+    background:#f5f2ef;
+    border-radius:8px;
+    padding:0 16px;
+    outline:none;
+    font-size:13px;
+    color:#2f1410;
+}
+
+.form-input:focus,
+.form-date:focus{
+    background:white;
+    border:1px solid #2f1410;
+}
+
+/* ================= RADIO ================= */
+
+.radio-group{
+    display:flex;
+    gap:24px;
+    margin-top:4px;
+}
+
+.radio-group ul{
+    display:flex;
+    gap:24px;
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.radio-group li{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:#4f433b;
+}
+
+/* ================= STATUS ================= */
+
+.status-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:26px;
+}
+
+.status-info h4{
+    font-size:14px;
+    margin-bottom:6px;
+    color:#2f1410;
+}
+
+.status-info p{
+    font-size:11px;
+    color:#8d7f76;
+    line-height:1.7;
+    max-width:260px;
+}
+
+/* ================= SWITCH ================= */
+
+.switch{
+    position:relative;
+    width:52px;
+    height:28px;
+}
+
+.switch input{
+    opacity:0;
+    width:0;
+    height:0;
+}
+
+.slider{
+    position:absolute;
+    cursor:pointer;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background:#d8d0ca;
+    border-radius:30px;
+    transition:.3s;
+}
+
+.slider:before{
+    position:absolute;
+    content:"";
+    height:22px;
+    width:22px;
+    left:3px;
+    bottom:3px;
+    background:white;
+    border-radius:50%;
+    transition:.3s;
+}
+
+.switch input:checked + .slider{
+    background:#3a1f1a;
+}
+
+.switch input:checked + .slider:before{
+    transform:translateX(24px);
+}
+
+/* ================= NOTE ================= */
+
+.note-card{
+    background:#faf4eb;
+    border-left:4px solid #3a1f1a;
+}
+
+.note-title{
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1px;
+    color:#4b352e;
+    margin-bottom:14px;
+    text-transform:uppercase;
+}
+
+.note-text{
+    font-size:12px;
+    line-height:1.8;
+    color:#7e7067;
+}
+
+/* ================= BUTTONS ================= */
+
+.form-actions{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:24px;
+    margin-top:42px;
+}
+
+.cancel-btn{
+    text-decoration:none;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#9b8d84;
+    font-weight:800;
+}
+
+.submit-btn{
+    width:180px;
+    height:54px;
+    border:none;
+    border-radius:8px;
+    background:#3a1f1a;
+    color:white;
+    font-size:11px;
+    font-weight:800;
+    letter-spacing:2px;
+    cursor:pointer;
+    transition:0.2s;
+    box-shadow:0 10px 24px rgba(58,31,26,0.18);
+}
+
+.submit-btn:hover{
+    background:#24110e;
+}
+
+/* ================= ERROR ================= */
+
+.form-error-box{
+    background:#fff;
+    border-left:5px solid #c0392b;
+    border-radius:12px;
+    padding:18px 20px;
+    margin-bottom:25px;
+    box-shadow:0 4px 15px rgba(0,0,0,.05);
+}
+
+.error-heading{
+    color:#c0392b;
+    font-size:15px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.error-item{
+    color:#7a2f2f;
+    font-size:13px;
+    padding:6px 0;
+}
+.validation-alert{
+    display:flex;
+    gap:18px;
+    padding:22px;
+    margin-bottom:28px;
+    border-radius:16px;
+    background:#fff7f7;
+    border:1px solid #ffd6d6;
+    border-left:5px solid #c0392b;
+    box-shadow:0 6px 18px rgba(192,57,43,.08);
+}
+
+.validation-icon{
+    width:52px;
+    height:52px;
+    min-width:52px;
+    border-radius:50%;
+    background:#fdeaea;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#c0392b;
+    font-size:20px;
+}
+
+.validation-content{
+    flex:1;
+}
+
+.validation-title{
+    font-size:16px;
+    font-weight:700;
+    color:#7a241d;
+    margin-bottom:4px;
+}
+
+.validation-subtitle{
+    font-size:13px;
+    color:#8f6c68;
+    margin-bottom:14px;
+}
+
+.validation-list{
+    margin:0;
+    padding-left:18px;
+}
+
+.validation-list li{
+    margin-bottom:8px;
+    color:#6d3b36;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.validation-list strong{
+    color:#3a1f1a;
+}
+/* ================= RESPONSIVE ================= */
+
+@media(max-width:1000px){
+
+    .coupon-layout{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .content{
+        padding:20px;
+    }
+
+    .form-grid{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="content">
+
+    <div class="breadcrumb">
+
+        <a href="{% url "coupon_list" %}">Coupons<a> > Add New Coupon
+
+    </div>
+
+    <div class="page-title">
+
+        Add New Coupon
+
+    </div>
+
+    <form method="POST">
+
+    {% csrf_token %}
+
+{% if form.errors %}
+
+<div class="validation-alert">
+
+    <div class="validation-icon">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+    </div>
+
+    <div class="validation-content">
+
+        <div class="validation-title">
+            Unable to Save Coupon
+        </div>
+
+        <div class="validation-subtitle">
+            Please correct the following errors and try again.
+        </div>
+
+        <ul class="validation-list">
+
+            {% for field in form %}
+
+                {% for error in field.errors %}
+
+                    <li>
+                        <strong>{{ field.label }}</strong>
+                        — {{ error }}
+                    </li>
+
+                {% endfor %}
+
+            {% endfor %}
+
+            {% for error in form.non_field_errors %}
+
+                <li>
+                    {{ error }}
+                </li>
+
+            {% endfor %}
+
+        </ul>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+    <div class="coupon-layout">
+
+            <!-- LEFT -->
+
+            <div class="left-column">
+
+                <!-- GENERAL -->
+
+                <div class="form-card">
+
+                    <div class="card-title">
+
+                        General Information
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label class="form-label">
+
+                                Coupon Code
+
+                            </label>
+
+                            {{ form.code }}
+
+                        </div>
+
+                        <div class="form-group full-width">
+
+                            <label class="form-label">
+
+                                Discount Type
+
+                            </label>
+
+                            <div class="radio-group">
+
+                                {{ form.discount_type }}
+
+                            </div>
+
+                        </div>
+
+                        <div class="form-group full-width">
+
+                            <label class="form-label">
+
+                                Discount Value
+
+                            </label>
+
+                            {{ form.discount_value }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- LIMITS -->
+
+                <div class="form-card">
+
+                    <div class="card-title">
+
+                        Limits & Status
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                Minimum Purchase
+
+                            </label>
+
+                            {{ form.minimum_purchase_amount }}
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                Maximum Discount
+
+                            </label>
+
+                            {{ form.maximum_discount_amount }}
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                Total Usage Limit
+
+                            </label>
+
+                            {{ form.total_usage_limit }}
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                Usage Limit Per Customer
+
+                            </label>
+
+                            {{ form.usage_limit_per_user }}
+
+                        </div>
+
+                    </div>
+
+                    <div class="status-row">
+
+                        <div class="status-info">
+
+                            <h4>
+
+                                Active Status
+
+                            </h4>
+
+                            <p>
+
+                                Enable or disable this coupon instantly across the storefront.
+
+                            </p>
+
+                        </div>
+
+                        <label class="switch">
+
+                            {{ form.is_active }}
+
+                            <span class="slider"></span>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+
+            <div class="right-column">
+
+                <!-- SCHEDULE -->
+
+                <div class="form-card">
+
+                    <div class="card-title">
+
+                        Schedule
+
+                    </div>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+
+                            <label class="form-label">
+
+                                Start Date
+
+                            </label>
+
+                            {{ form.valid_from }}
+
+                        </div>
+
+                        <div class="form-group full-width">
+
+                            <label class="form-label">
+
+                                End Date
+
+                            </label>
+
+                            {{ form.valid_to }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- NOTE -->
+
+                <div class="form-card note-card">
+
+                    <div class="note-title">
+
+                        Editor's Note
+
+                    </div>
+
+                    <div class="note-text">
+
+                        Coupons are applied at checkout and validated against current cart subtotals.
+                        Ensure your minimum purchase amount aligns properly with your pricing strategy.
+                        All dates are processed using UTC timezone.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <a
+            href="{% url 'coupon_list' %}"
+            class="cancel-btn"
+            >
+
+                CANCEL
+
+            </a>
+
+            <button
+            type="submit"
+            class="submit-btn"
+            >
+
+                SAVE COUPON
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

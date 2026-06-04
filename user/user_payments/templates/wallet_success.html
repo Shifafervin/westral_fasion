@@ -1,0 +1,365 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Wallet Recharge Success
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+.wallet-success-page{
+
+    width:100%;
+
+    min-height:100vh;
+
+    background:#f8f5f2;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:40px 20px;
+}
+
+.wallet-success-card{
+
+    width:100%;
+
+    max-width:460px;
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:50px 40px;
+
+    text-align:center;
+
+    box-shadow:0 10px 40px rgba(0,0,0,.08);
+
+    animation:successAnimation .3s ease;
+}
+
+@keyframes successAnimation{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(25px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+    }
+}
+
+/* ================= ICON ================= */
+
+.success-icon-wrapper{
+
+    width:78px;
+
+    height:78px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    background:#f4ede8;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    margin-bottom:28px;
+}
+
+.success-icon{
+
+    width:48px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+    font-weight:900;
+}
+
+/* ================= TITLE ================= */
+
+.wallet-success-title{
+
+    font-size:34px;
+
+    font-weight:900;
+
+    color:#2d1e15;
+
+    line-height:1.2;
+
+    margin-bottom:16px;
+}
+
+/* ================= DESCRIPTION ================= */
+
+.wallet-success-description{
+
+    font-size:15px;
+
+    line-height:1.9;
+
+    color:#7d7067;
+
+    margin-bottom:34px;
+}
+
+/* ================= DETAILS ================= */
+
+.wallet-success-details{
+
+    width:100%;
+
+    background:#faf7f4;
+
+    border:1px solid #eee5de;
+
+    border-radius:16px;
+
+    padding:24px;
+
+    margin-bottom:34px;
+}
+
+.wallet-detail-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:14px 0;
+
+    border-bottom:1px solid #ede4dd;
+}
+
+.wallet-detail-row:last-child{
+
+    border-bottom:none;
+
+    padding-bottom:0;
+}
+
+.wallet-detail-label{
+
+    font-size:12px;
+
+    letter-spacing:1px;
+
+    color:#8d7f75;
+
+    font-weight:700;
+}
+
+.wallet-detail-value{
+
+    font-size:15px;
+
+    font-weight:800;
+
+    color:#2d1e15;
+}
+
+/* ================= BUTTON ================= */
+
+.wallet-success-btn{
+
+    width:100%;
+
+    height:58px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#6B4F3B;
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:900;
+
+    letter-spacing:1px;
+
+    cursor:pointer;
+
+    transition:.2s;
+}
+
+.wallet-success-btn:hover{
+
+    background:#553c2d;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+    .wallet-success-card{
+
+        padding:40px 24px;
+    }
+
+    .wallet-success-title{
+
+        font-size:28px;
+    }
+
+    .wallet-detail-row{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:8px;
+    }
+}
+
+</style>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="wallet-success-page">
+
+    <div class="wallet-success-card">
+
+        <!-- ================= ICON ================= -->
+
+        <div class="success-icon-wrapper">
+
+            <div class="success-icon">
+
+                ✓
+
+            </div>
+
+        </div>
+
+        <!-- ================= TITLE ================= -->
+
+        <div class="wallet-success-title">
+
+            Money successfully added to your wallet.
+
+        </div>
+
+        <!-- ================= DESCRIPTION ================= -->
+
+        <div class="wallet-success-description">
+
+            The amount has been added to your available balance.
+            You can now use it for your upcoming purchases.
+
+        </div>
+
+        <!-- ================= DETAILS ================= -->
+
+        <div class="wallet-success-details">
+
+            <div class="wallet-detail-row">
+
+                <div class="wallet-detail-label">
+
+                    AMOUNT ADDED
+
+                </div>
+
+                <div class="wallet-detail-value">
+
+                    ₹{{ amount }}
+
+                </div>
+
+            </div>
+
+            <div class="wallet-detail-row">
+
+                <div class="wallet-detail-label">
+
+                    CURRENT BALANCE
+
+                </div>
+
+                <div class="wallet-detail-value">
+
+                    ₹{{ wallet.balance }}
+
+                </div>
+
+            </div>
+
+            <div class="wallet-detail-row">
+
+                <div class="wallet-detail-label">
+
+                    PAYMENT ID
+
+                </div>
+
+                <div class="wallet-detail-value">
+
+                    {{ payment_id }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= BUTTON ================= -->
+
+        <a href="{% url 'wallet_page' %}">
+
+            <button class="wallet-success-btn">
+
+                GO TO WALLET
+
+            </button>
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

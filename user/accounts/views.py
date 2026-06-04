@@ -14,6 +14,12 @@ from django.contrib.auth import login
 from django.views.decorators.cache import never_cache
 from django.views.decorators.cache import cache_control
 import time
+from admin.admin_product.models import Product
+from admin.admin_category.models import Category
+from user.decorators import user_required
+from admin.admin_orders.models import Wallet,WalletTransaction
+from decimal import Decimal
+
 
 User = get_user_model()
 
@@ -44,11 +50,22 @@ def signup_view(request):
 
     if request.user.is_authenticated:
         return redirect('home')
+    
+    ref_code = request.GET.get("ref")
+
+    if ref_code:
+
+        request.session["referral_code"] = (
+
+            ref_code.upper()
+
+        )
 
     if request.method == "POST":
 
         name = request.POST.get("name", "").strip()
         email = request.POST.get("email", "").strip().lower()
+        referral_code = request.POST.get("referral_code","").strip().upper()
         password = request.POST.get("password", "")
         confirm = request.POST.get("confirm_password", "")
 
@@ -93,9 +110,15 @@ def signup_view(request):
     
         if errors:
             return render(request, "signup.html", {
+
                 "errors": errors,
+
                 "name": name,
-                "email": email
+
+                "email": email,
+
+                "referral_code": referral_code
+
             })
 
         
@@ -103,10 +126,17 @@ def signup_view(request):
 
         
         request.session['signup_data'] = {
+
             "name": name,
+
             "email": email,
+
             "password": password,
-            "otp": otp
+
+            "otp": otp,
+
+            "referral_code": referral_code
+
         }
 
     
@@ -162,6 +192,24 @@ def signup_verify(request):
                 first_name=first,
                 last_name=last
             )
+
+        referral_code = data.get(
+            "referral_code"
+        )
+
+        if referral_code:
+
+            referrer = User.objects.filter(
+
+                referral_code=referral_code
+
+            ).first()
+
+            if referrer and referrer.id != user.id:
+
+                user.referred_by = referrer
+
+                user.save()
 
     
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
@@ -241,11 +289,48 @@ def login_view(request):
 
 @never_cache
 @cache_control(no_cache=True,must_revalidate=True,no_store=True)
+
 def home_view(request):
 
+    latest_purchased_products = Product.objects.filter(
+
+        variants__orderitem__order__payment_status="Paid",
+        is_active=True,
+        is_deleted=False
+
+    ).distinct().order_by(
+
+        "-variants__orderitem__created_at"
+
+    )[:4]
+
+    categories = Category.objects.filter(
+
+        is_active=True,
+        category_name__in=[
+
+            "Winter Wear",
+            "Kurthas",
+            "Western Wear",
+            "Saree"
+
+        ]
+
+    )
+
+    context = {
+
+        "latest_purchased_products": latest_purchased_products,
+         "categories": categories,
+
+    }
+
     return render(
+
         request,
-        "homepage.html"
+        "homepage.html",
+        context
+
     )
 
 def logout_view(request):
@@ -534,3 +619,51 @@ def navbar_search(request):
         "products": products
 
     })
+
+
+@login_required
+def referral_page(request):
+
+    referral_link = (
+
+        request.build_absolute_uri(
+
+            f"/signup/?ref={request.user.referral_code}"
+
+        )
+
+    )
+
+    referrals = request.user.referrals.all()
+
+    show_reward_modal = (
+
+        request.user.show_referral_popup
+
+    )
+
+    if show_reward_modal:
+
+        request.user.show_referral_popup = False
+
+        request.user.save()
+
+    context = {
+
+        "referral_link": referral_link,
+
+        "referrals": referrals,
+
+        "show_reward_modal": show_reward_modal,
+
+    }
+
+    return render(
+
+        request,
+
+        "referral.html",
+
+        context
+
+    )
