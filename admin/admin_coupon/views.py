@@ -5,102 +5,84 @@ from .models import Coupon
 from .forms import CouponForm
 from admin.decorators import admin_required
 from django.db.models import Q
+import csv
+from django.http import HttpResponse
 
 
 @admin_required
 def coupon_list(request):
 
-    search_query = request.GET.get(
+    search_query = request.GET.get("search", "")
 
-        "search",
+    status_filter = request.GET.get("status", "all")
 
-        ""
-
-    )
-
-    status_filter = request.GET.get(
-
-        "status",
-
-        "all"
-
-    )
-
-    coupons = Coupon.objects.filter(
-
-        is_deleted=False
-
-    )
+    coupons = Coupon.objects.filter(is_deleted=False)
 
     if search_query:
 
-        coupons = coupons.filter(
-
-            Q(code__icontains=search_query)
-
-        )
+        coupons = coupons.filter(Q(code__icontains=search_query))
 
     if status_filter == "active":
 
-        coupons = coupons.filter(
-
-            is_active=True
-
-        )
+        coupons = coupons.filter(is_active=True)
 
     elif status_filter == "inactive":
 
-        coupons = coupons.filter(
+        coupons = coupons.filter(is_active=False)
 
-            is_active=False
+    coupons = coupons.order_by("-created_at")
 
+    if request.GET.get("export") == "csv":
+
+        response = HttpResponse(content_type="text/csv")
+
+        response["Content-Disposition"] = 'attachment; filename="coupons.csv"'
+
+        writer = csv.writer(response)
+
+        writer.writerow(
+            [
+                "Code",
+                "Discount Type",
+                "Discount Value",
+                "Minimum Purchase",
+                "Maximum Discount",
+                "Usage Count",
+                "Status",
+                "Expiry Date",
+            ]
         )
 
-    coupons = coupons.order_by(
+        for coupon in coupons:
 
-        "-created_at"
+            writer.writerow(
+                [
+                    coupon.code,
+                    coupon.discount_type,
+                    coupon.discount_value,
+                    coupon.minimum_purchase_amount,
+                    coupon.maximum_discount_amount,
+                    coupon.used_count,
+                    "Active" if coupon.is_active else "Inactive",
+                    coupon.valid_to,
+                ]
+            )
 
-    )
+        return response
 
-    paginator = Paginator(
+    paginator = Paginator(coupons, 10)
 
-        coupons,
+    page_number = request.GET.get("page")
 
-        10
-
-    )
-
-    page_number = request.GET.get(
-
-        "page"
-
-    )
-
-    page_obj = paginator.get_page(
-
-        page_number
-
-    )
+    page_obj = paginator.get_page(page_number)
 
     context = {
-
         "page_obj": page_obj,
-
         "search_query": search_query,
-
-        "status_filter": status_filter
-
+        "status_filter": status_filter,
     }
 
-    return render(
-
-        request,
-
-        "coupon_list.html",
-
-        context
-
-    )
+    return render(request, "coupon_list.html", context)
 
 
 @admin_required
@@ -114,136 +96,72 @@ def create_coupon(request):
 
             form.save()
 
-            messages.success(
-                request,
-                "Coupon created successfully."
-            )
+            messages.success(request, "Coupon created successfully.")
 
             return redirect("coupon_list")
 
         else:
 
-            messages.error(
-                request,
-                "Please correct the form errors and try again."
-            )
+            messages.error(request, "Please correct the form errors and try again.")
 
     else:
 
         form = CouponForm()
 
-    return render(
-        request,
-        "add_coupon.html",
-        {
-            "form": form
-        }
-    )
+    return render(request, "add_coupon.html", {"form": form})
+
 
 @admin_required
 def edit_coupon(request, coupon_id):
 
-    coupon = get_object_or_404(
-        Coupon,
-        id=coupon_id,
-        is_deleted=False
-    )
+    coupon = get_object_or_404(Coupon, id=coupon_id, is_deleted=False)
 
     if request.method == "POST":
 
-        form = CouponForm(
-            request.POST,
-            instance=coupon
-        )
+        form = CouponForm(request.POST, instance=coupon)
 
         if form.is_valid():
 
             form.save()
 
-            messages.success(
-                request,
-                "Coupon updated successfully."
-            )
+            messages.success(request, "Coupon updated successfully.")
 
-            return redirect(
-                "coupon_list"
-            )
+            return redirect("coupon_list")
 
         else:
 
-            messages.error(
-                request,
-                "Please correct the form errors and try again."
-            )
+            messages.error(request, "Please correct the form errors and try again.")
 
     else:
 
-        form = CouponForm(
-            instance=coupon
-        )
+        form = CouponForm(instance=coupon)
 
-    return render(
-        request,
-        "edit_coupon.html",
-        {
-            "form": form,
-            "coupon": coupon
-        }
-    )
+    return render(request, "edit_coupon.html", {"form": form, "coupon": coupon})
+
 
 @admin_required
 def delete_coupon(request, coupon_id):
 
-    coupon = get_object_or_404(
-        Coupon,
-        id=coupon_id,
-        is_deleted=False
-    )
+    coupon = get_object_or_404(Coupon, id=coupon_id, is_deleted=False)
 
     coupon.is_deleted = True
 
-    Coupon.objects.filter(
-        id=coupon.id
-    ).update(
-        is_deleted=True
-    )
+    Coupon.objects.filter(id=coupon.id).update(is_deleted=True)
 
-    messages.success(
-        request,
-        "Coupon deleted successfully"
-    )
+    messages.success(request, "Coupon deleted successfully")
 
-    return redirect(
-        "coupon_list"
-    )
+    return redirect("coupon_list")
+
 
 @admin_required
 def toggle_coupon_status(request, coupon_id):
 
-    coupon = get_object_or_404(
-
-        Coupon,
-
-        id=coupon_id,
-
-        is_deleted=False
-
-    )
+    coupon = get_object_or_404(Coupon, id=coupon_id, is_deleted=False)
 
     coupon.is_active = not coupon.is_active
 
     coupon.save()
 
-    messages.success(
+    messages.success(request, "Coupon status updated")
 
-        request,
-
-        "Coupon status updated"
-
-    )
-
-    return redirect(
-
-        "coupon_list"
-
-    )
+    return redirect("coupon_list")

@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user_products', '0002_wishlist_wishlistitem'),
+        ("user_products", "0002_wishlist_wishlistitem"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cartitem',
-            name='is_available',
+            model_name="cartitem",
+            name="is_available",
             field=models.BooleanField(default=True),
         ),
     ]

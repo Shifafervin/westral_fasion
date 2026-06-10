@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_category', '0002_category_category_description'),
+        ("admin_category", "0002_category_category_description"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='category',
-            name='is_deleted',
+            model_name="category",
+            name="is_deleted",
             field=models.BooleanField(default=False),
         ),
     ]

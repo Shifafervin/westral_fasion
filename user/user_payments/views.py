@@ -14,6 +14,7 @@ from django.core.paginator import Paginator
 from admin.admin_orders.models import Order
 from user.user_products.models import Cart
 
+
 @user_required
 def apply_coupon(request):
     print("APPLY COUPON VIEW HIT")
@@ -22,40 +23,19 @@ def apply_coupon(request):
 
         return redirect("checkout_page")
 
-    coupon_code = request.POST.get(
-
-        "coupon_code",
-
-        ""
-
-    ).strip()
+    coupon_code = request.POST.get("coupon_code", "").strip()
 
     print("Entered Coupon:", coupon_code)
 
     coupon = Coupon.objects.filter(
-
-        code__iexact=coupon_code,
-
-        is_active=True,
-
-        is_deleted=False
-
+        code__iexact=coupon_code, is_active=True, is_deleted=False
     ).first()
 
     print("Coupon Found:", coupon)
 
-    # ================= EMPTY COUPON =================
-
     if not coupon_code:
 
-        messages.error(
-
-            request,
-
-            "Please enter a coupon code",
-            extra_tags="toast"
-
-        )
+        messages.error(request, "Please enter a coupon code", extra_tags="toast")
 
         return redirect("checkout_page")
 
@@ -63,41 +43,19 @@ def apply_coupon(request):
 
     if request.session.get("coupon_id"):
 
-        messages.error(
-
-            request,
-
-            "A coupon is already applied",
-            extra_tags="toast"
-
-        )
+        messages.error(request, "A coupon is already applied", extra_tags="toast")
 
         return redirect("checkout_page")
 
     # ================= COUPON EXISTS =================
 
     coupon = Coupon.objects.filter(
-
-        code__iexact=coupon_code,
-
-        is_active=True,
-
-        is_deleted=False
-
+        code__iexact=coupon_code, is_active=True, is_deleted=False
     ).first()
 
     if not coupon:
 
-        messages.error(
-
-            request,
-
-            "Invalid coupon code",
-
-            extra_tags="toast"
-
-
-        )
+        messages.error(request, "Invalid coupon code", extra_tags="toast")
 
         return redirect("checkout_page")
 
@@ -105,27 +63,13 @@ def apply_coupon(request):
 
     if not coupon.is_active:
 
-        messages.error(
-
-            request,
-
-            "This coupon is inactive",
-            extra_tags="toast"
-
-        )
+        messages.error(request, "This coupon is inactive", extra_tags="toast")
 
         return redirect("checkout_page")
 
     if coupon.is_deleted:
 
-        messages.error(
-
-            request,
-
-            "This coupon is unavailable",
-            extra_tags="toast"
-
-        )
+        messages.error(request, "This coupon is unavailable", extra_tags="toast")
 
         return redirect("checkout_page")
 
@@ -133,22 +77,9 @@ def apply_coupon(request):
 
     today = now().date()
 
-    if not (
+    if not (coupon.valid_from <= today <= coupon.valid_to):
 
-        coupon.valid_from <= today <= coupon.valid_to
-
-    ):
-
-        messages.error(
-
-            request,
-
-            "Coupon expired or inactive",
-
-            extra_tags="toast"
-
-
-        )
+        messages.error(request, "Coupon expired or inactive", extra_tags="toast")
 
         return redirect("checkout_page")
 
@@ -158,14 +89,7 @@ def apply_coupon(request):
 
     if not cart:
 
-        messages.error(
-
-            request,
-
-            "Cart not found",
-            extra_tags="toast"
-
-        )
+        messages.error(request, "Cart not found", extra_tags="toast")
 
         return redirect("cart")
 
@@ -173,14 +97,7 @@ def apply_coupon(request):
 
     if not cart_items.exists():
 
-        messages.error(
-
-            request,
-
-            "Your cart is empty",
-            extra_tags="toast"
-
-        )
+        messages.error(request, "Your cart is empty", extra_tags="toast")
 
         return redirect("cart")
 
@@ -190,25 +107,16 @@ def apply_coupon(request):
 
     for item in cart_items:
 
-        subtotal += (
-
-            item.variant.price *
-
-            item.quantity
-
-        )
+        subtotal += item.variant.price * item.quantity
 
     # ================= MINIMUM PURCHASE =================
 
     if subtotal < coupon.minimum_purchase_amount:
 
         messages.error(
-
             request,
-
             f"Minimum purchase amount is ₹{coupon.minimum_purchase_amount}",
-            extra_tags="toast"
-
+            extra_tags="toast",
         )
 
         return redirect("checkout_page")
@@ -217,44 +125,20 @@ def apply_coupon(request):
 
     if coupon.used_count >= coupon.total_usage_limit:
 
-        messages.error(
-
-            request,
-
-            "Coupon usage limit exceeded",
-            extra_tags="toast"
-
-        )
+        messages.error(request, "Coupon usage limit exceeded", extra_tags="toast")
 
         return redirect("checkout_page")
 
-    # ================= USER USAGE LIMIT =================
-
     user_usage_count = Order.objects.filter(
-
-        user=request.user,
-
-        coupon=coupon,
-
-        payment_status="SUCCESS"
-
+        user=request.user, coupon=coupon, payment_status="SUCCESS"
     ).count()
 
-    if (
-
-        user_usage_count >=
-
-        coupon.usage_limit_per_user
-
-    ):
+    if user_usage_count >= coupon.usage_limit_per_user:
 
         messages.error(
-
             request,
-
             "You have already reached the usage limit for this coupon",
-            extra_tags="toast"
-
+            extra_tags="toast",
         )
 
         return redirect("checkout_page")
@@ -263,52 +147,24 @@ def apply_coupon(request):
 
     request.session["coupon_id"] = coupon.id
 
-    print(
-        "PAYMENT FROM POST:",
-        request.POST.get("payment_method")
-    )
+    print("PAYMENT FROM POST:", request.POST.get("payment_method"))
 
-    print(
-        "ADDRESS FROM POST:",
-        request.POST.get("selected_address")
-    )
+    print("ADDRESS FROM POST:", request.POST.get("selected_address"))
 
     request.session["selected_payment_method"] = request.POST.get(
-
-        "payment_method",
-
-        "COD"
-
+        "payment_method", "COD"
     )
 
-    request.session["selected_address"] = request.POST.get(
+    request.session["selected_address"] = request.POST.get("selected_address")
 
-        "selected_address"
+    print("SESSION PAYMENT:", request.session.get("selected_payment_method"))
 
-    )
-
-    print(
-        "SESSION PAYMENT:",
-        request.session.get("selected_payment_method")
-    )
-
-    print(
-        "SESSION ADDRESS:",
-        request.session.get("selected_address")
-    )
-
+    print("SESSION ADDRESS:", request.session.get("selected_address"))
 
     # ================= SUCCESS =================
 
     messages.success(
-
-        request,
-
-        f"Coupon '{coupon.code}' applied successfully",
-
-        extra_tags="toast"
-
-
+        request, f"Coupon '{coupon.code}' applied successfully", extra_tags="toast"
     )
 
     return redirect("checkout_page")
@@ -321,71 +177,30 @@ def remove_coupon(request):
 
         del request.session["coupon_id"]
 
-        messages.success(
+        messages.success(request, "Coupon removed successfully")
 
-            request,
-
-            "Coupon removed successfully"
-
-        )
-
-    return redirect(
-
-        "checkout_page"
-
-    )
+    return redirect("checkout_page")
 
 
 @user_required
 def wallet_page(request):
 
-    wallet, created = Wallet.objects.get_or_create(
+    wallet, created = Wallet.objects.get_or_create(user=request.user)
 
-        user=request.user
-    )
-
-    transactions =WalletTransaction.objects.filter(
-
-        wallet=wallet
-
-    ).order_by(
-
+    transactions = WalletTransaction.objects.filter(wallet=wallet).order_by(
         "-created_at"
     )
 
-    paginator = Paginator(
+    paginator = Paginator(transactions, 5)
 
-        transactions,
+    page_number = request.GET.get("page")
 
-        5
-    )
+    transactions = paginator.get_page(page_number)
 
-    page_number = request.GET.get(
+    context = {"wallet": wallet, "transactions": transactions}
 
-        "page"
-    )
+    return render(request, "wallet.html", context)
 
-    transactions = paginator.get_page(
-
-        page_number
-    )
-
-    context = {
-
-        "wallet": wallet,
-
-        "transactions": transactions
-
-    }
-
-    return render(
-
-        request,
-
-        "wallet.html",
-
-        context
-    )
 
 @user_required
 def create_wallet_razorpay_order(request):
@@ -397,106 +212,61 @@ def create_wallet_razorpay_order(request):
         amount = int(data.get("amount")) * 100
 
         client = razorpay.Client(
-
-            auth=(
-
-                settings.RAZORPAY_KEY_ID,
-                settings.RAZORPAY_KEY_SECRET
-            )
+            auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
         )
 
-        payment = client.order.create({
+        payment = client.order.create(
+            {"amount": amount, "currency": "INR", "payment_capture": 1}
+        )
 
-            "amount": amount,
+        return JsonResponse(
+            {
+                "success": True,
+                "key": settings.RAZORPAY_KEY_ID,
+                "amount": payment["amount"],
+                "razorpay_order_id": payment["id"],
+            }
+        )
 
-            "currency": "INR",
+    return JsonResponse({"success": False})
 
-            "payment_capture": 1
-        })
-
-        return JsonResponse({
-
-            "success": True,
-
-            "key": settings.RAZORPAY_KEY_ID,
-
-            "amount": payment["amount"],
-
-            "razorpay_order_id": payment["id"]
-        })
-
-    return JsonResponse({
-
-        "success": False
-    })
 
 @user_required
 def wallet_payment_success(request):
 
-    razorpay_payment_id = request.GET.get(
-        "payment_id"
-    )
+    razorpay_payment_id = request.GET.get("payment_id")
 
-    razorpay_order_id = request.GET.get(
-        "order_id"
-    )
+    razorpay_order_id = request.GET.get("order_id")
 
-    razorpay_signature = request.GET.get(
-        "signature"
-    )
+    razorpay_signature = request.GET.get("signature")
 
-    amount = request.GET.get(
-        "amount"
-    )
+    amount = request.GET.get("amount")
 
     client = razorpay.Client(
-
-        auth=(
-
-            settings.RAZORPAY_KEY_ID,
-            settings.RAZORPAY_KEY_SECRET
-        )
+        auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
     )
 
     try:
 
-        client.utility.verify_payment_signature({
-
-            "razorpay_order_id":
-            razorpay_order_id,
-
-            "razorpay_payment_id":
-            razorpay_payment_id,
-
-            "razorpay_signature":
-            razorpay_signature
-
-        })
+        client.utility.verify_payment_signature(
+            {
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": razorpay_signature,
+            }
+        )
 
     except:
 
         context = {
-
             "wallet": wallet,
-
             "amount": recharge_amount,
-
-            "payment_id": razorpay_payment_id
+            "payment_id": razorpay_payment_id,
         }
 
-        return render(
+        return render(request, "wallet_success.html", context)
 
-            request,
-
-            "wallet_success.html",
-
-            context
-        )
-
-    wallet, created = Wallet.objects.get_or_create(
-
-        user=request.user
-    )
+    wallet, created = Wallet.objects.get_or_create(user=request.user)
 
     recharge_amount = Decimal(amount)
 
@@ -505,42 +275,23 @@ def wallet_payment_success(request):
     wallet.save()
 
     WalletTransaction.objects.create(
-
         wallet=wallet,
-
         transaction_type="Credit",
-
         status="Completed",
-
         amount=recharge_amount,
-
-        description="Wallet Recharge"
+        description="Wallet Recharge",
     )
 
     context = {
-
         "wallet": wallet,
-
         "amount": recharge_amount,
-
-        "payment_id": razorpay_payment_id
+        "payment_id": razorpay_payment_id,
     }
 
-    return render(
+    return render(request, "wallet_success.html", context)
 
-        request,
-
-        "wallet_success.html",
-
-        context
-    )
 
 @user_required
 def wallet_payment_failed(request):
 
-    return render(
-
-        request,
-
-        "wallet_fail.html"
-    )
+    return render(request, "wallet_fail.html")

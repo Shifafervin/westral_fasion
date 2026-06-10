@@ -6,26 +6,46 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_orders', '0005_orderitem_item_status'),
+        ("admin_orders", "0005_orderitem_item_status"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='order',
-            name='return_reason',
+            model_name="order",
+            name="return_reason",
         ),
         migrations.RemoveField(
-            model_name='order',
-            name='returned_at',
+            model_name="order",
+            name="returned_at",
         ),
         migrations.AlterField(
-            model_name='order',
-            name='order_status',
-            field=models.CharField(choices=[('Pending', 'Pending'), ('Shipped', 'Shipped'), ('Out For Delivery', 'Out For Delivery'), ('Delivered', 'Delivered'), ('Cancelled', 'Cancelled'), ('Return Requested', 'Return Requested'), ('Returned', 'Returned')], default='Pending', max_length=30),
+            model_name="order",
+            name="order_status",
+            field=models.CharField(
+                choices=[
+                    ("Pending", "Pending"),
+                    ("Shipped", "Shipped"),
+                    ("Out For Delivery", "Out For Delivery"),
+                    ("Delivered", "Delivered"),
+                    ("Cancelled", "Cancelled"),
+                    ("Return Requested", "Return Requested"),
+                    ("Returned", "Returned"),
+                ],
+                default="Pending",
+                max_length=30,
+            ),
         ),
         migrations.AlterField(
-            model_name='orderitem',
-            name='item_status',
-            field=models.CharField(choices=[('Active', 'Active'), ('Cancelled', 'Cancelled'), ('Returned', 'Returned')], default='Active', max_length=30),
+            model_name="orderitem",
+            name="item_status",
+            field=models.CharField(
+                choices=[
+                    ("Active", "Active"),
+                    ("Cancelled", "Cancelled"),
+                    ("Returned", "Returned"),
+                ],
+                default="Active",
+                max_length=30,
+            ),
         ),
     ]

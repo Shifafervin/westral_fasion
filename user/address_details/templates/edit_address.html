@@ -479,6 +479,50 @@ input[type="radio"]:checked + .type-btn {
 #default:checked + .switch .slider {
     transform:translateX(18px);
 }
+.message-container{
+
+    margin-bottom:24px;
+}
+
+.alert{
+
+    padding:16px 18px;
+
+    border-radius:14px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    margin-bottom:14px;
+}
+
+.alert.success{
+
+    background:#e7f8ee;
+
+    color:#1e7a46;
+
+    border:1px solid #b7ebc9;
+}
+
+.alert.error{
+
+    background:#fff0f0;
+
+    color:#cc2f2f;
+
+    border:1px solid #ffcaca;
+}
+
+.alert.warning{
+
+    background:#fff8e7;
+
+    color:#9c6b00;
+
+    border:1px solid #ffe29f;
+}
 
 </style>
 </head>
@@ -526,6 +570,23 @@ input[type="radio"]:checked + .type-btn {
 
 </div>
 <div class="form-wrapper">
+    {% if messages %}
+
+<div class="message-container">
+
+    {% for message in messages %}
+
+        <div class="alert {{ message.tags }}">
+
+            {{ message }}
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+{% endif %}
 <form method="POST">
 {% csrf_token %}
 <input
@@ -533,47 +594,109 @@ type="hidden"
 name="next"
 value="{{ request.GET.next }}"
 >
+<!-- ROW 1 -->
 <div class="row">
+
     <div class="input-box">
+
         <label>FULL NAME</label>
-        <input type="text" name="full_name" value="{{ address.full_name }}">
+
+        <input
+        type="text"
+        name="full_name"
+        value="{{ form_data.full_name|default:address.full_name }}"
+        >
+
     </div>
 
     <div class="input-box">
+
         <label>MOBILE NUMBER</label>
-        <input type="text" name="phone" value="{{ address.phone }}">
+
+        <input
+        type="text"
+        name="phone"
+        value="{{ form_data.phone|default:address.phone }}"
+        >
+
     </div>
+
 </div>
 
-<div class="row">
-    <div class="input-box">
-        <label>CITY</label>
-        <input type="text" name="city" value="{{ address.city }}">
-    </div>
-</div>
 
+<!-- ROW 2 -->
 <div class="row">
+
     <div class="input-box">
+
         <label>PINCODE</label>
-        <input type="text" name="pincode" value="{{ address.pincode }}">
+
+        <input
+        type="text"
+        name="pincode"
+        value="{{ form_data.pincode|default:address.pincode }}"
+        >
+
     </div>
 
     <div class="input-box">
+
         <label>STATE</label>
-        <input type="text" name="state" value="{{ address.state }}">
+
+        <input
+        type="text"
+        name="state"
+        value="{{ form_data.state|default:address.state }}"
+        >
+
     </div>
 
-    <div class="input-box">
-        <label>COUNTRY</label>
-        <input type="text" name="country" value="{{ address.country }}">
-    </div>
 </div>
 
+
+<!-- ROW 3 -->
 <div class="row">
+
     <div class="input-box">
-        <label>ADDRESS</label>
-        <textarea name="address_line">{{ address.address_line }}</textarea>
+
+        <label>CITY / DISTRICT</label>
+
+        <input
+        type="text"
+        name="city"
+        value="{{ form_data.city|default:address.city }}"
+        >
+
     </div>
+
+    <div class="input-box">
+
+        <label>COUNTRY</label>
+
+        <input
+        type="text"
+        name="country"
+        value="{{ form_data.country|default:address.country }}"
+        >
+
+    </div>
+
+</div>
+
+
+<!-- ROW 4 -->
+<div class="row">
+
+    <div class="input-box">
+
+        <label>DETAILED ADDRESS</label>
+
+        <textarea
+        name="address_line"
+        >{{ form_data.address_line|default:address.address_line }}</textarea>
+
+    </div>
+
 </div>
 
 <div class="address-type">
@@ -582,16 +705,25 @@ value="{{ request.GET.next }}"
 
     <div class="type-options">
 
-    <input type="radio" id="home" name="address_type" value="HOME"
-    {% if address.address_type == "HOME" %}checked{% endif %} hidden>
+    <input type="radio" id="home" name="address_type" value="home"
+{% if form_data.address_type|default:address.address_type == "home" %}
+checked
+{% endif %} hidden>
+
     <label for="home" class="type-btn">HOME</label>
 
-    <input type="radio" id="work" name="address_type" value="WORK"
-    {% if address.address_type == "WORK" %}checked{% endif %} hidden>
+    <input type="radio" id="work" name="address_type" value="work"
+{% if form_data.address_type|default:address.address_type == "work" %}
+checked
+{% endif %} hidden>
+
     <label for="work" class="type-btn">WORK</label>
 
-    <input type="radio" id="other" name="address_type" value="OTHER"
-    {% if address.address_type == "OTHER" %}checked{% endif %} hidden>
+    <input type="radio" id="other" name="address_type" value="other"
+{% if form_data.address_type|default:address.address_type == "other" %}
+checked
+{% endif %} hidden>
+
     <label for="other" class="type-btn">OTHER</label>
 
 </div>
@@ -602,7 +734,9 @@ value="{{ request.GET.next }}"
 <div class="default-switch">
 
     <input type="checkbox" id="default" name="is_default"
-{% if address.is_default %}checked{% endif %} hidden>
+{% if form_data.is_default or address.is_default %}
+checked
+{% endif %} hidden>
 
     <label for="default" class="switch">
         <span class="slider"></span>

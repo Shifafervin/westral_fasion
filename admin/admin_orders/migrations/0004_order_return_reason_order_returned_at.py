@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_orders', '0003_order_cancel_reason_order_cancelled_at'),
+        ("admin_orders", "0003_order_cancel_reason_order_cancelled_at"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='return_reason',
+            model_name="order",
+            name="return_reason",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='order',
-            name='returned_at',
+            model_name="order",
+            name="returned_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]

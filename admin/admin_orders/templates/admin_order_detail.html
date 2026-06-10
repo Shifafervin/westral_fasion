@@ -190,8 +190,8 @@ body{
 
 .table-header,
 .product-row{
-    display:grid;
-    grid-template-columns:2.5fr 1fr 1fr 1fr 1fr;
+     display:grid;
+    grid-template-columns:2.5fr 1fr 1fr 1fr 1fr 1fr;
     align-items:center;
     gap:18px;
 }
@@ -646,11 +646,6 @@ onchange="this.form.submit()"
 
                 </form>
 
-                <a href="#" class="top-btn light-btn">
-
-                    Print Invoice
-
-                </a>
 
                 <a href="#" class="top-btn dark-btn">
 
@@ -697,30 +692,16 @@ onchange="this.form.submit()"
                     </div>
 
                     <div class="order-table">
+<div class="table-header">
 
-                        <div class="table-header">
+    <div>PRODUCT DETAILS</div>
+    <div>SKU</div>
+    <div>UNIT PRICE</div>
+    <div>QTY</div>
+    <div>STATUS</div>
+    <div>TOTAL</div>
 
-                            <div>
-                                PRODUCT DETAILS
-                            </div>
-
-                            <div>
-                                SKU
-                            </div>
-
-                            <div>
-                                UNIT PRICE
-                            </div>
-
-                            <div>
-                                QTY
-                            </div>
-
-                            <div>
-                                TOTAL
-                            </div>
-
-                        </div>
+</div>
 
                         {% for item in order.items.all %}
 
@@ -782,6 +763,23 @@ onchange="this.form.submit()"
                                 {{ item.quantity }}
 
                             </div>
+<div>
+    {% if item.item_status == "Cancelled" %}
+        <span style="color:red;font-weight:700;">
+            CANCELLED
+        </span>
+
+    {% elif item.item_status == "Active" %}
+        <span style="color:green;font-weight:700;">
+            ACTIVE
+        </span>
+
+    {% else %}
+        <span>
+            {{ item.item_status }}
+        </span>
+    {% endif %}
+</div>
 
                             <div>
 

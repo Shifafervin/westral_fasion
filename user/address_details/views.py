@@ -4,6 +4,8 @@ from django.contrib import messages
 from .models import Address
 from user.decorators import user_required
 import re
+from django.core.exceptions import ValidationError
+
 
 @login_required(login_url='login')
 def address_page(request):
@@ -103,10 +105,11 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
 
 
@@ -127,10 +130,11 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
 
         if len(full_name) < 3:
@@ -143,10 +147,11 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
 
 
@@ -160,12 +165,12 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
-
         if len(phone) != 10:
 
             messages.error(
@@ -199,10 +204,11 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
 
         if len(pincode) != 6:
@@ -215,10 +221,11 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
 
 
@@ -238,12 +245,12 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
-
 
         if not re.match(
 
@@ -261,12 +268,12 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
-
 
 
         if not re.match(
@@ -285,10 +292,11 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
 
 
@@ -303,10 +311,11 @@ def add_address(request):
             )
 
             return render(
-
                 request,
-                "add_address.html"
-
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
             )
 
 
@@ -316,6 +325,7 @@ def add_address(request):
             Address.objects.filter(
 
                 user=request.user,
+
                 is_default=True
 
             ).update(
@@ -324,31 +334,54 @@ def add_address(request):
 
             )
 
+        try:
 
-        Address.objects.create(
+            Address.objects.create(
 
-            user=request.user,
+                user=request.user,
 
-            full_name=full_name,
+                full_name=full_name,
 
-            phone=phone,
+                phone=phone,
 
-            pincode=pincode,
+                pincode=pincode,
 
-            state=state,
+                state=state,
 
-            city=city,
+                city=city,
 
-            country=country,
+                country=country,
 
-            address_line=address_line,
+                address_line=address_line,
 
-            address_type=address_type,
+                address_type=address_type,
 
-            is_default=is_default
+                is_default=is_default
 
-        )
+            )
 
+        except ValidationError as e:
+
+            for errors in e.message_dict.values():
+
+                for error in errors:
+
+                    messages.error(
+
+                        request,
+
+                        error
+
+                    )
+
+            return render(
+                request,
+                "add_address.html",
+                {
+                    "form_data": request.POST
+                }
+            )
+        
         messages.success(
 
             request,
@@ -364,30 +397,58 @@ def add_address(request):
         return redirect("address_details:address_view")
 
     return render(
-
         request,
-        "add_address.html"
+        "add_address.html",
+        {
+            "form_data": request.POST
+        }
+    )
+
+@user_required
+def delete_address(request, id):
+    print("DELETE VIEW HIT")
+
+    address = get_object_or_404(
+
+        Address,
+
+        id=id,
+
+        user=request.user
 
     )
 
-def delete_address(request, id):
-
-    address = Address.objects.filter(id=id, user=request.user).first()
-
-    
-    if not address:
-        return redirect('address_details:address_view')
-
     if request.method == "POST":
+
         address.delete()
-        return redirect('address_details:address_view')
 
-    addresses = Address.objects.filter(user=request.user)
+        messages.success(
 
-    return render(request, "delete_address.html", {
-        "addresses": addresses
-    })
+            request,
 
+            "Address deleted successfully"
+
+        )
+
+        return redirect(
+
+            "address_details:address_view"
+
+        )
+
+    return render(
+
+        request,
+
+        "delete_address.html",
+
+        {
+
+            "address": address
+
+        }
+
+    )
 
 
 
@@ -457,10 +518,11 @@ def edit_address(request, id):
         address_type = request.POST.get(
 
             "address_type",
-            "HOME"
+
+            "home"
 
         ).strip()
-
+        
         is_default = request.POST.get(
 
             "is_default"
@@ -535,19 +597,18 @@ def edit_address(request, id):
 
 
         if not phone.isdigit():
-
             messages.error(
-
                 request,
-                "Phone number must contain only digits"
-
+                "Phone number must be exactly 10 digits"
             )
 
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
+            return render(
+                request,
+                "edit_address.html",
+                {
+                    "address": address,
+                    "form_data": request.POST
+                }
             )
 
         if len(phone) != 10:
@@ -713,11 +774,36 @@ def edit_address(request, id):
         address.address_type = address_type
         address.is_default = is_default
 
-        address.save()
+        try:
+
+            address.save()
+
+        except ValidationError as e:
+
+            for errors in e.message_dict.values():
+
+                for error in errors:
+
+                    messages.error(
+
+                        request,
+
+                        error
+
+                    )
+
+            return redirect(
+
+                "address_details:edit_address",
+
+                address.id
+
+            )
 
         messages.success(
 
             request,
+
             "Address updated successfully"
 
         )

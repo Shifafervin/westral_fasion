@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -6,1404 +7,1230 @@ Order Details
 {% endblock %}
 
 {% block extra_css %}
-
+<!-- Load Google Material Symbols for interface icons -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-/* ================= PAGE ================= */
-
-.order-detail-page{
-    padding:45px 60px 80px;
-
-    background:#f8f5f2;
-
-    min-height:100vh;
+/* ================= THEME VARIABLES ================= */
+:root {
+    --primary-color: #341818; /* Elegant deep brown from shop */
+    --primary-hover: #4e2b2b;
+    --bg-light: #faf6f0;      /* Warm boutique cream background */
+    --card-bg: #ffffff;
+    --text-main: #341818;     /* Dark charcoal brown */
+    --text-muted: #8e8076;    /* Warm beige-gray */
+    --border-color: #efeae4;  /* Thin soft border */
+    --accent-gold: #d4a373;   /* Star rating gold */
+    --accent-green: #287a43;  /* Premium stock green */
+    --accent-red: #c95c5c;    /* Soft red warnings */
+    --font-serif: 'Playfair Display', 'Noto Serif', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --shadow-sm: 0 4px 24px rgba(139, 119, 101, 0.04);
+    --shadow-md: 0 10px 30px rgba(139, 119, 101, 0.08);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ================= TOP ================= */
-
-.top-header{
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:flex-start;
-
-    flex-wrap:wrap;
-
-    gap:20px;
-
-    margin-bottom:35px;
+/* Force body background styling */
+body {
+    background-color: var(--bg-light) !important;
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    margin: 0;
 }
 
-.back-link{
-    text-decoration:none;
-
-    color:#8b7c72;
-
-    font-size:11px;
-
-    letter-spacing:1px;
-
-    font-weight:700;
+.order-detail-page {
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    padding: 45px 60px 80px;
+    box-sizing: border-box;
 }
 
-.view-orders{
-    text-decoration:none;
-
-    color:#4c382c;
-
-    font-size:11px;
-
-    letter-spacing:1px;
-
-    font-weight:800;
+.order-detail-page *, 
+.order-detail-page *::before, 
+.order-detail-page *::after {
+    box-sizing: border-box;
 }
 
-.order-title{
-    font-size:42px;
-
-    font-weight:800;
-
-    color:#2f241e;
-
-    margin-top:20px;
+/* ================= TOP HEADER ================= */
+.top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 35px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.order-date{
-    font-size:12px;
-
-    color:#9b8d83;
-
-    margin-top:10px;
+.back-link {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    transition: var(--transition);
 }
 
-/* ================= GRID ================= */
+.back-link:hover {
+    color: var(--primary-color);
+}
 
-.detail-grid{
-    display:grid;
+.view-orders {
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    transition: var(--transition);
+    border-bottom: 1.5px solid transparent;
+}
 
-    grid-template-columns:1fr 340px;
+.view-orders:hover {
+    border-bottom-color: var(--primary-color);
+}
 
-    gap:35px;
+.order-title {
+    font-family: var(--font-serif);
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-top: 16px;
+    margin-bottom: 0;
+    letter-spacing: -0.5px;
+}
 
-    align-items:start;
+.order-date {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+/* ================= DETAIL GRID LAYOUT ================= */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 35px;
+    align-items: start;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 /* ================= CARD ================= */
-
-.card{
-    background:white;
-
-    border-radius:14px;
-
-    border:1px solid #eee;
-
-    padding:28px;
+.card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
 }
 
 /* ================= STATUS TRACKER ================= */
-
-.status-tracker{
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    position:relative;
-
-    margin-bottom:40px;
+.status-tracker {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    margin-bottom: 40px;
+    background: #fbf9f6;
+    padding: 24px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
 }
 
-.status-line{
-    position:absolute;
-
-    top:12px;
-
-    left:55px;
-
-    right:55px;
-
-    height:2px;
-
-    background:#e5ddd6;
-
-    z-index:1;
+.status-line {
+    position: absolute;
+    top: 34px;
+    left: 45px;
+    right: 45px;
+    height: 2px;
+    background: #e5ddd6;
+    z-index: 1;
 }
 
-.status-step{
-    position:relative;
-
-    z-index:2;
-
-    display:flex;
-
-    flex-direction:column;
-
-    align-items:center;
+.status-step {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.status-dot{
-    width:24px;
-
-    height:24px;
-
-    border-radius:50%;
-
-    background:#6B4F3B;
-
-    border:4px solid white;
+.status-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 4px solid #ffffff;
+    box-shadow: 0 0 0 1.5px var(--primary-color);
+    transition: var(--transition);
 }
 
-.inactive-dot{
-    background:#ddd;
+.status-dot.inactive-dot {
+    background: #dfd5cb;
+    box-shadow: 0 0 0 1.5px #dfd5cb;
 }
 
-.status-label{
-    margin-top:10px;
-
-    font-size:10px;
-
-    letter-spacing:1px;
-
-    color:#7d6e65;
-
-    font-weight:700;
-
-    text-align:center;
-
-    max-width:80px;
+.status-label {
+    margin-top: 10px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
 }
 
-.cancelled-order-banner{
-
-    margin-top:25px;
-
-    padding:16px;
-
-    border-radius:10px;
-
-    background:#fceaea;
-
-    color:#d32f2f;
-
-    font-size:12px;
-
-    font-weight:800;
-
-    letter-spacing:1px;
-
-    text-align:center;
+.cancelled-order-banner {
+    margin-bottom: 24px;
+    padding: 16px;
+    border-radius: 10px;
+    background: #fceaea;
+    color: var(--accent-red);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-align: center;
 }
 
-/* ================= PRODUCT ================= */
-
-.product-box{
-    display:grid;
-
-    grid-template-columns:120px 1fr auto;
-
-    gap:25px;
-
-    align-items:start;
-}
-/* ================= SINGLE ITEM CARD ================= */
-
-.single-product-card{
-
-    border:1px solid #f1ece8;
-
-    border-radius:16px;
-
-    padding:24px;
-
-    margin-bottom:24px;
-
-    background:#fff;
+.approved-banner {
+    background: #eef5ee !important;
+    color: var(--accent-green) !important;
 }
 
-.product-image{
-    width:120px;
-
-    height:150px;
-
-    border-radius:12px;
-
-    overflow:hidden;
-
-    background:#f3efeb;
+.rejected-banner {
+    background: #fdeaea !important;
+    color: var(--accent-red) !important;
 }
 
-.product-image img{
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
+/* ================= PRODUCT SINGLE CARDS ================= */
+.single-product-card {
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 24px;
+    background: #ffffff;
+    transition: var(--transition);
 }
 
-.product-name{
-    font-size:20px;
-
-    font-weight:700;
-
-    color:#3f2d22;
-
-    margin-bottom:10px;
+.single-product-card:hover {
+    box-shadow: var(--shadow-sm);
 }
 
-.product-meta{
-    font-size:12px;
-
-    line-height:1.9;
-
-    color:#8d7e74;
-
-    text-transform:uppercase;
+.product-box {
+    display: grid;
+    grid-template-columns: 100px 1fr auto;
+    gap: 24px;
+    align-items: center;
 }
 
-.qty-box{
-    width:70px;
-
-    height:38px;
-
-    border:1px solid #d9cdc3;
-
-    border-radius:8px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    margin-top:18px;
-
-    font-size:12px;
-
-    font-weight:700;
-
-    color:#6B4F3B;
+.product-image {
+    width: 100px;
+    height: 130px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fbf9f6;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
 }
 
-.product-price{
-    font-size:18px;
-
-    font-weight:800;
-
-    color:#2f241e;
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-/* ================= INFO SECTION ================= */
-
-.info-grid{
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:25px;
-
-    margin-top:40px;
-
-    padding-top:35px;
-
-    border-top:1px solid #f1ece8;
+.product-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 6px;
+    line-height: 1.4;
 }
 
-.info-title{
-    font-size:11px;
-
-    letter-spacing:2px;
-
-    color:#9b8d83;
-
-    margin-bottom:16px;
-
-    font-weight:800;
+.product-meta {
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    text-transform: uppercase;
 }
 
-.info-text{
-    font-size:13px;
+.qty-box {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 1px solid #dfd5cb;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 10px;
+    background: #ffffff;
+    width: fit-content;
+}
 
-    color:#5f5147;
+.product-price {
+    text-align: right;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--primary-color);
+}
 
-    line-height:2;
+/* ================= INFO GRID SECTIONS ================= */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 40px;
+    padding-top: 35px;
+    border-top: 1px solid var(--border-color);
+}
+
+.info-title {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.info-text {
+    font-size: 13px;
+    color: #5d5047;
+    line-height: 1.8;
 }
 
 /* ================= SUMMARY ================= */
-
-.summary-title{
-    font-size:12px;
-
-    letter-spacing:2px;
-
-    color:#8e7f74;
-
-    font-weight:800;
-
-    margin-bottom:30px;
+.summary-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    text-transform: uppercase;
 }
 
-.summary-row{
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #4f3d3d;
+}
+
+.total-row {
+    border-top: 1px solid var(--border-color);
+    padding-top: 20px;
+    margin-top: 16px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+/* ================= ACTIONS BUTTONS ================= */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.action-btn {
+    height: 44px;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    text-transform: uppercase;
+}
+
+.action-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 24, 24, 0.2);
+}
+
+.secondary-btn {
+    background: #ffffff;
+    border: 1px solid #dfd5cb;
+    color: var(--primary-color);
+}
+
+.secondary-btn:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+}
+
+.disabled-btn {
+    background: #efeae4 !important;
+    color: var(--text-muted) !important;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ================= ITEM CANCELLATIONS ================= */
+.item-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+}
+
+.item-cancel-btn {
+    height: 38px;
+    padding: 0 16px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #dfd5cb;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-cancel-btn:hover {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+.cancelled-badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 4px;
+    background: #fdeaea;
+    color: var(--accent-red);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: fit-content;
+}
+
+/* ================= SECURITY FOOTER BOX ================= */
+.security-box {
+    margin-top: 24px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+}
+
+.security-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.security-text {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* HELP TEXT */
+.help-text {
+    margin-top: 45px;
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.help-text a {
+    color: var(--primary-color);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.help-text a:hover {
+    text-decoration: underline;
+}
+/* ================= CANCEL ITEM MODAL ================= */
+
+.cancel-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(52,24,24,.45);
     display:flex;
-
-    justify-content:space-between;
-
-    margin-bottom:18px;
-
-    font-size:14px;
-
-    color:#5f5147;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    padding:20px;
+    backdrop-filter:blur(4px);
 }
 
-.total-row{
-    border-top:1px solid #eee;
+.cancel-modal{
+    width:100%;
+    max-width:480px;
+    background:var(--card-bg);
+    border-radius:20px;
+    padding:38px;
+    border:1px solid var(--border-color);
+    box-shadow:var(--shadow-md);
+    animation:popupBounce .35s cubic-bezier(.34,1.56,.64,1) forwards;
+}
 
-    margin-top:22px;
+@keyframes popupBounce{
 
-    padding-top:22px;
+    0%{
+        transform:scale(.92);
+        opacity:0;
+    }
 
-    font-size:22px;
+    100%{
+        transform:scale(1);
+        opacity:1;
+    }
 
+}
+
+.cancel-title{
+    font-family:var(--font-serif);
+    font-size:28px;
+    font-weight:500;
+    color:var(--primary-color);
+    line-height:1.35;
+    margin:0 0 20px;
+    letter-spacing:-.5px;
+}
+
+.cancel-sub{
+    font-size:11px;
+    letter-spacing:1.5px;
+    color:var(--text-muted);
+    margin-bottom:12px;
     font-weight:800;
-
-    color:#2f241e;
+    text-transform:uppercase;
 }
 
-/* ================= BUTTONS ================= */
+.reason-box{
+    width:100%;
+    height:130px;
+    border:1px solid #dfd5cb;
+    border-radius:10px;
+    padding:16px;
+    resize:none;
+    outline:none;
+    font-size:13.5px;
+    font-family:var(--font-sans);
+    color:var(--text-main);
+    transition:var(--transition);
+}
 
-.action-buttons{
+.reason-box:focus{
+    border-color:var(--primary-color);
+    box-shadow:0 0 0 3px rgba(52,24,24,.05);
+}
+
+.button-group{
     display:flex;
-
-    flex-direction:column;
-
     gap:14px;
-
-    margin-top:35px;
+    margin-top:28px;
 }
 
-.action-btn{
-    height:50px;
-
+.modal-btn{
+    flex:1;
+    height:48px;
     border:none;
-
     border-radius:10px;
-
-    background:#6B4F3B;
-
-    color:white;
-
     font-size:12px;
-
     font-weight:800;
-
     letter-spacing:1px;
-
     cursor:pointer;
-
-    transition:0.2s;
-
+    transition:var(--transition);
+    text-transform:uppercase;
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
-    text-decoration:none;
-}
-.action-btn:hover{
-    background:#563c2c;
 }
 
-.secondary-btn{
-    background:#ebe4dd;
-
-    color:#6B4F3B;
+.confirm-btn{
+    background:var(--primary-color);
+    color:#fff;
 }
 
-.secondary-btn:hover{
-    background:#ddd3ca;
+.confirm-btn:hover{
+    background:var(--primary-hover);
+    transform:translateY(-1px);
+    box-shadow:0 4px 12px rgba(52,24,24,.2);
 }
 
-/* ================= ITEM ACTIONS ================= */
-
-.item-actions{
-
-    margin-top:20px;
-
-    display:flex;
-
-    justify-content:flex-end;
+.keep-btn{
+    background:#fff;
+    border:1px solid #dfd5cb;
+    color:var(--primary-color);
 }
 
-.item-cancel-btn{
-
-    height:42px;
-
-    padding:0 20px;
-
-    border-radius:10px;
-
-    background:#ebe4dd;
-
-    color:#6B4F3B;
-
-    text-decoration:none;
-
-    display:flex;
-
+.keep-btn:hover{
+    background:var(--bg-light);
+    border-color:var(--primary-color);
+}
+.active-badge{
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    padding:6px 12px;
+    border-radius:4px;
+    background:#eef5ee;
+    color:#287a43;
+    display:inline-flex;
     align-items:center;
-
     justify-content:center;
-
-    font-size:11px;
-
-    font-weight:800;
-
-    letter-spacing:1px;
-
-    transition:0.2s;
-}
-
-.item-cancel-btn:hover{
-
-    background:#ddd3ca;
-}
-
- .cancelled-badge{
-
-    height:42px;
-
-    padding:0 18px;
-
-    border-radius:10px;
-
-    background:#fceaea;
-
-    color:#d32f2f;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:11px;
-
-    font-weight:800;
-
-    letter-spacing:1px;
-}
-
-/* ================= SECURITY BOX ================= */
-
-.security-box{
-    margin-top:22px;
-
-    background:white;
-
-    border-radius:12px;
-
-    border:1px solid #eee;
-
-    padding:18px;
-}
-
-.security-title{
-    font-size:11px;
-
-    font-weight:800;
-
-    color:#4c382c;
-
-    margin-bottom:8px;
-
-    letter-spacing:1px;
-}
-
-.security-text{
-    font-size:11px;
-
-    color:#8d7e74;
-
-    line-height:1.8;
-}
-
-/* ================= HELP ================= */
-
-.help-text{
-    margin-top:45px;
-
-    font-size:11px;
-
-    color:#8e7f74;
-
-    letter-spacing:1px;
-}
-
-.help-text a{
-    color:#4c382c;
-
-    font-weight:700;
-
-    text-decoration:none;
+    margin-top:8px;
 }
 
 /* ================= RESPONSIVE ================= */
 
-@media(max-width:1000px){
+@media(max-width:600px){
 
-    .detail-grid{
-        grid-template-columns:1fr;
+    .cancel-modal{
+        padding:28px 22px;
+    }
+
+    .cancel-title{
+        font-size:24px;
+    }
+
+    .button-group{
+        flex-direction:column;
+        gap:10px;
+    }
+
+    .modal-btn{
+        width:100%;
+    }
+
+}
+/* ================= RESPONSIVE ================= */
+@media(max-width: 1000px){
+    .detail-grid {
+        grid-template-columns: 1fr;
     }
 }
 
-@media(max-width:750px){
-
-    .order-detail-page{
-        padding:25px 18px 60px;
+@media(max-width: 750px){
+    .order-detail-page {
+        padding: 24px 20px 60px;
     }
 
-    .product-box{
-        grid-template-columns:1fr;
-
-        text-align:center;
+    .status-line {
+        display: none;
     }
 
-    .product-image{
-        margin:auto;
+    .status-tracker {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
     }
 
-    .info-grid{
-        grid-template-columns:1fr;
+    .status-step {
+        flex-direction: row;
+        gap: 16px;
     }
 
-    .order-title{
-        font-size:30px;
+    .status-label {
+        margin-top: 0;
+        text-align: left;
+    }
+
+    .product-box {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .product-image {
+        margin: 0 auto;
+    }
+    
+    .qty-box, .product-price {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .order-title {
+        font-size: 32px;
     }
 }
-
-.approved-banner{
-
-    background:#e8f6ed;
-
-    color:#1d7a42;
-}
-
-.rejected-banner{
-
-    background:#fdeaea;
-
-    color:#c0392b;
-}
-.approved-banner{
-
-    background:#e8f6ed;
-
-    color:#1d7a42;
-}
-
-.rejected-banner{
-
-    background:#fdeaea;
-
-    color:#c0392b;
-}
-.disabled-btn{
-
-    pointer-events:none;
-
-    cursor:not-allowed;
-
-    opacity:0.9;
-}
-
-
 </style>
 {% endblock %}
-{% block content %}
 
+{% block content %}
 <div class="order-detail-page">
 
-    <!-- ================= TOP ================= -->
-
+    <!-- ================= HEADER TOP ================= -->
     <div class="top-header">
-
         <div>
-
-            <a
-            href="{% url 'my_orders' %}"
-            class="back-link"
-            >
+            <a href="{% url 'my_orders' %}" class="back-link">
                 ← BACK TO ORDERS
             </a>
-
             <div class="order-title">
-
                 ORDER #{{ order.order_id }}
-
             </div>
-
             <div class="order-date">
-
-                Placed on
-                {{ order.created_at }}
-
+                Placed on {{ order.created_at }}
             </div>
-
         </div>
 
-        <a
-        href="{% url 'my_orders' %}"
-        class="view-orders"
-        >
+        <a href="{% url 'my_orders' %}" class="view-orders">
             VIEW ALL ORDERS
         </a>
-
     </div>
 
     <!-- ================= GRID ================= -->
-
     <div class="detail-grid">
 
-        <!-- ================= LEFT ================= -->
-
+        <!-- ================= LEFT COLUMN ================= -->
         <div>
-
             <div class="card">
 
-      <!-- ================= RETURN STATUS CHECK ================= -->
+                <!-- RETURN STATE ALERTS -->
+                {% with has_returned_item=False %}
+                    {% for item in order.items.all %}
+                        {% if item.item_status == "Return Requested" or item.item_status == "Return Approved" or item.item_status == "Return Rejected" %}
+                            <div class="cancelled-order-banner {% if item.item_status == 'Return Approved' %}approved-banner{% elif item.item_status == 'Return Rejected' %}rejected-banner{% endif %}">
+                                {% if item.item_status == "Return Requested" %}
+                                    RETURN REQUEST SUBMITTED
+                                {% elif item.item_status == "Return Approved" %}
+                                    RETURN APPROVED
+                                {% elif item.item_status == "Return Rejected" %}
+                                    RETURN REJECTED
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
 
-{% with has_returned_item=False %}
+                <!-- CANCELLATION STATE ALERT -->
 
-    {% for item in order.items.all %}
 
-        {% if item.item_status == "Return Requested" or item.item_status == "Return Approved" or item.item_status == "Return Rejected" %}
+                <!-- STATUS TRACKER -->
+                {% if order.order_status != "Cancelled" %}
+                <div class="status-tracker">
+                    <div class="status-line"></div>
 
-            <div class="cancelled-order-banner
+                    <!-- ORDERED -->
+                    <div class="status-step">
+                        <div class="status-dot"></div>
+                        <div class="status-label">ORDERED</div>
+                    </div>
 
-                {% if item.item_status == 'Return Approved' %}
+                    <!-- PROCESSING -->
+                    <div class="status-step">
+                        <div class="status-dot {% if order.order_status == 'Pending' %}inactive-dot{% endif %}"></div>
+                        <div class="status-label">PROCESSING</div>
+                    </div>
 
-                    approved-banner
+                    <!-- SHIPPED -->
+                    <div class="status-step">
+                        <div class="status-dot {% if order.order_status == 'Pending' %}inactive-dot{% endif %}"></div>
+                        <div class="status-label">SHIPPED</div>
+                    </div>
 
-                {% elif item.item_status == 'Return Rejected' %}
+                    <!-- OUT FOR DELIVERY -->
+                    <div class="status-step">
+                        <div class="status-dot {% if order.order_status != 'Out For Delivery' and order.order_status != 'Delivered' %}inactive-dot{% endif %}"></div>
+                        <div class="status-label">OUT FOR DELIVERY</div>
+                    </div>
 
-                    rejected-banner
-
+                    <!-- DELIVERED -->
+                    <div class="status-step">
+                        <div class="status-dot {% if order.order_status != 'Delivered' %}inactive-dot{% endif %}"></div>
+                        <div class="status-label">DELIVERED</div>
+                    </div>
+                </div>
                 {% endif %}
 
-            ">
-
-                {% if item.item_status == "Return Requested" %}
-
-                    RETURN REQUEST SUBMITTED
-
-                {% elif item.item_status == "Return Approved" %}
-
-                    RETURN APPROVED
-
-                {% elif item.item_status == "Return Rejected" %}
-
-                    RETURN REJECTED
-
-                {% endif %}
-
-            </div>
-
-        {% endif %}
-
-    {% endfor %}
-
-{% endwith %}
-
-{% comment %} {% with has_return=False %}
-
-    {% for item in order.items.all %}
-
-        {% if item.item_status == "Return Requested" or item.item_status == "Return Approved" or item.item_status == "Return Rejected" %}
-
-            {% with has_return=True %}
-
-            {% endwith %}
-
-        {% endif %}
-
-    {% endfor %}
-
-{% endwith %} {% endcomment %}
-
-
-{% comment %} {% if not order.items.all.0.item_status == "Return Requested" and not order.items.all.0.item_status == "Return Approved" and not order.items.all.0.item_status == "Return Rejected" %} {% endcomment %}
-
-<!-- ================= STATUS TRACKER ================= -->
-
-
-{% with first_item=order.items.first %}
-
-    {% if first_item.item_status == "Cancelled" %}
-
-        <div class="cancelled-order-banner">
-
-            PRODUCT CANCELLED
-
-        </div>
-
-    {% endif %}
-
-{% endwith %}
-
-{% if order.order_status != "Cancelled" %}
-<div class="status-tracker">
-
-    <div class="status-line"></div>
-
-    <!-- ORDERED -->
-
-    <div class="status-step">
-
-        <div class="status-dot"></div>
-
-        <div class="status-label">
-
-            ORDERED
-
-        </div>
-
-    </div>
-
-    <!-- PROCESSING -->
-
-    <div class="status-step">
-
-        <div class="status-dot {% if order.order_status == 'Pending' %}inactive-dot{% endif %}"></div>
-
-        <div class="status-label">
-
-            PROCESSING
-
-        </div>
-
-    </div>
-
-    <!-- SHIPPED -->
-
-    <div class="status-step">
-
-        <div class="status-dot {% if order.order_status == 'Pending' %}inactive-dot{% endif %}"></div>
-
-        <div class="status-label">
-
-            SHIPPED
-
-        </div>
-
-    </div>
-
-    <!-- OUT FOR DELIVERY -->
-
-    <div class="status-step">
-
-        <div class="status-dot {% if order.order_status != 'Out For Delivery' and order.order_status != 'Delivered' %}inactive-dot{% endif %}"></div>
-
-        <div class="status-label">
-
-            OUT FOR DELIVERY
-
-        </div>
-
-    </div>
-
-    <!-- DELIVERED -->
-
-    <div class="status-step">
-
-        <div class="status-dot {% if order.order_status != 'Delivered' %}inactive-dot{% endif %}"></div>
-
-        <div class="status-label">
-
-            DELIVERED
-
-        </div>
-
-    </div>
-
-</div>
-{% endif %}
-
-{% comment %} {% endif %} {% endcomment %}
-                <!-- PRODUCTS -->
-
-
-
-               {% for item in order.items.all %}
-
-<div class="single-product-card">
-
-    <div class="product-box">
-
-        <!-- IMAGE -->
-
-        <div class="product-image">
-
-            {% with image=item.variant.images.first %}
-
-                {% if image %}
-
-                <img src="{{ image.image.url }}">
-
-                {% endif %}
-
-            {% endwith %}
-
-        </div>
-
-        <!-- DETAILS -->
-
-        <div>
-
-            <div class="product-name">
-
-                {{ item.variant.product.product_name }}
-
-            </div>
-
-            <div class="product-meta">
-
-                COLOR :
-                {{ item.variant.color }}
-
-                |
-
-                SIZE :
-                {{ item.variant.size }}
-
-            </div>
-
-            <div class="qty-box">
-
-                QTY :
-                {{ item.quantity }}
-
-            </div>
-
-        </div>
-
-        <!-- PRICE -->
-
-        <div class="product-price">
-
-    ₹{{ item.total_price|floatformat:2 }}
-
-    <div
-    style="
-    font-size:12px;
-    color:#8d7e74;
-    margin-top:6px;
-    "
-    >
-
-        Qty : {{ item.quantity }}
-
-        ×
-
-        ₹{{ item.price_at_purchase|floatformat:2 }}
-
-    </div>
-
-</div>
-    </div>
-
-    <!-- ITEM ACTIONS -->
-
-<div
-class="item-actions"
-id="item-action-{{ item.id }}"
->
-
-{% if item.item_status == "Return Requested" %}
+                <!-- PRODUCTS SINGLE ITEM CARDS -->
+                {% for item in order.items.all %}
+                <div class="single-product-card">
+                    <div class="product-box">
+                        
+                        <!-- IMAGE -->
+                        <div class="product-image">
+                            {% with image=item.variant.images.first %}
+                                {% if image %}
+                                <img src="{{ image.image.url }}" alt="{{ item.variant.product.product_name }}">
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    <!-- DETAILS -->
+                    <div>
+                        <div class="product-name">
+                            {{ item.variant.product.product_name }}
+                        </div>
+
+                        <div class="product-meta">
+                            COLOR : {{ item.variant.color }}
+                            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                            SIZE : {{ item.variant.size }}
+                        </div>
+
+                        <div class="qty-box">
+                            QTY : {{ item.quantity }}
+                        </div>
+{% if item.item_status == "Cancelled" %}
 
 <div class="cancelled-badge">
+    CANCELLED
+</div>
 
+{% elif order.order_status == "Delivered" %}
+
+<div class="active-badge">
+    DELIVERED
+</div>
+
+{% else %}
+
+<div class="active-badge">
+    ACTIVE
+</div>
+
+{% endif %}
+                    </div>
+
+                        <!-- PRICING -->
+                        <div class="product-price">
+                            ₹{{ item.total_price|floatformat:2 }}
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:6px; font-weight: 500;">
+                                Qty: {{ item.quantity }} × ₹{{ item.price_at_purchase|floatformat:2 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ITEM CANCELLATION ACTIONS -->
+                    <div class="item-actions" id="item-action-{{ item.id }}">
+                        {% if item.item_status == "Return Requested" %}
+
+<div class="cancelled-badge">
     RETURN REQUESTED
-
 </div>
 
 {% elif item.item_status == "Return Approved" %}
 
 <div class="cancelled-badge approved-banner">
-
     RETURN APPROVED
-
 </div>
 
 {% elif item.item_status == "Return Rejected" %}
 
 <div class="cancelled-badge rejected-banner">
-
     RETURN REJECTED
-
 </div>
 
 {% elif item.item_status == "Cancelled" %}
 
 <div class="cancelled-badge">
-
     CANCELLED
-
 </div>
+
+{% elif item.item_status == "Active" and order.order_status == "Delivered" %}
+
+<a href="{% url 'return_order' order.order_id %}" class="item-cancel-btn">
+    RETURN ITEM
+</a>
+
 {% elif order.order_status == "Pending" or order.order_status == "Processing" %}
 
 <button
-class="item-cancel-btn cancel-btn"
-data-id="{{ item.id }}"
+    class="item-cancel-btn open-cancel-modal"
+    data-id="{{ item.id }}"
 >
-
     CANCEL ITEM
-
 </button>
 
 {% else %}
 
 <div class="cancelled-badge">
-
     CANNOT CANCEL
-
 </div>
 
 {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
 
-</div>
-</div>
-
-{% endfor %}
-
-                <!-- INFO -->
-
+                <!-- INFO BLOCK -->
                 <div class="info-grid">
-
-                    <!-- ADDRESS -->
-
                     <div>
-
-                        <div class="info-title">
-
-                            SHIPPING ADDRESS
-
-                        </div>
-
-                        <div class="info-text">
-
-                            {{ order.shipping_address }}
-
-                        </div>
-
+                        <div class="info-title">SHIPPING ADDRESS</div>
+                        <div class="info-text">{{ order.shipping_address }}</div>
                     </div>
-
-                    <!-- DELIVERY -->
-
                     <div>
-
-                        <div class="info-title">
-
-                            SHIPPING METHOD
-
-                        </div>
-
+                        <div class="info-title">SHIPPING METHOD</div>
                         <div class="info-text">
-
                             Westral Express Delivery
-
                             <br>
-
                             Estimated within 5-7 days
-
                             <br>
-
                             Track shipment available soon
-
                         </div>
-
                     </div>
-
                 </div>
 
             </div>
 
             <!-- HELP -->
-
             <div class="help-text">
-
-                NEED HELP ?
-
-                <a href="#">
-                    CONTACT CUSTOMER SERVICE
-                </a>
-
+                NEED HELP ? 
+                <a href="#">CONTACT CUSTOMER SERVICE</a>
             </div>
-
         </div>
 
-        <!-- ================= RIGHT ================= -->
-
+        <!-- ================= RIGHT COLUMN ================= -->
         <div>
-
-            <!-- SUMMARY -->
-
+            
+            <!-- ORDER SUMMARY -->
             <div class="card">
-
-                <div class="summary-title">
-
-                    ORDER SUMMARY
-
-                </div>
+                <div class="summary-title">Order Summary</div>
 
                 <div class="summary-row">
-
                     <span>Subtotal</span>
-
-                    <span>
-                        ₹{{ subtotal|floatformat:2 }}
-                    </span>
-
+                    <span>₹{{ subtotal|floatformat:2 }}</span>
                 </div>
 
                 <div class="summary-row">
+                    <span>Offer Savings</span>
+                    <span style="color: var(--accent-green); font-weight: 700;">-₹{{ offer_discount|floatformat:2 }}</span>
+                </div>
 
-    <span>Offer Savings</span>
-
-    <span>
-
-        -₹{{ offer_discount|floatformat:2 }}
-
-    </span>
-
-</div>
-
-<div class="summary-row">
-
-    <span>Coupon Discount</span>
-
-    <span>
-
-        -₹{{ coupon_discount|floatformat:2 }}
-
-    </span>
-
-</div>
                 <div class="summary-row">
+                    <span>Coupon Discount</span>
+                    <span style="color: var(--accent-green); font-weight: 700;">-₹{{ coupon_discount|floatformat:2 }}</span>
+                </div>
 
+                <div class="summary-row">
                     <span>Delivery Fee</span>
-
-                    <span>
-                        FREE
-                    </span>
-
+                    <span style="color: var(--accent-green); font-weight: 700;">FREE</span>
                 </div>
 
                 <div class="summary-row">
-
                     <span>Estimated Tax</span>
-
-                    <span>
-                        Included
-                    </span>
-
+                    <span>Included</span>
                 </div>
 
                 <div class="summary-row total-row">
-
                     <span>Total Amount</span>
-
-                    <span>
-                        ₹{{ order.total_amount|floatformat:2 }}
-                    </span>
-
+                    <span>₹{{ order.total_amount|floatformat:2 }}</span>
                 </div>
 
+                <!-- RIGHT COLUMN BUTTONS -->
                 <div class="action-buttons">
+                    <a href="{% url 'invoice_page' order.order_id %}" class="action-btn">
+                        ↓ DOWNLOAD INVOICE
+                    </a>
 
-<a
-href="{% url 'invoice_page' order.order_id %}"
-class="action-btn"
->
+                    {% if order.order_status == "Pending" or order.order_status == "Processing" %}
+                    <a href="{% url 'cancel_order' order.order_id %}" class="action-btn secondary-btn">
+                        CANCEL ORDER
+                    </a>
+                    {% endif %}
+{% if order.order_status == "Delivered" %}
 
-    ↓ DOWNLOAD INVOICE
+    {% if return_requested_exists %}
 
-</a>
+        <div class="action-btn disabled-btn">
+            RETURN REQUEST SUBMITTED
+        </div>
 
-    <!-- CANCEL BUTTON -->
+    {% elif active_items %}
 
-{% if order.order_status == "Pending" or order.order_status == "Processing" %}
-
-    <a
-    href="{% url 'cancel_order' order.order_id %}"
-    class="action-btn secondary-btn"
-    >
-
-        CANCEL ORDER
-
-    </a>
+        <a href="{% url 'return_order' order.order_id %}" class="action-btn">
+            RETURN ORDER
+        </a>
 
     {% endif %}
 
-    <!-- RETURN BUTTON -->
-{% if order.order_status == "Delivered" %}
-
-    {% with first_item=order.items.first %}
-
-        {% if first_item.item_status == "Active" %}
-
-            <a
-            href="{% url 'return_order' order.order_id %}"
-            class="action-btn"
-            >
-
-                RETURN ORDER
-
-            </a>
-
-        {% elif first_item.item_status == "Return Requested" %}
-
-            <div class="action-btn disabled-btn">
-
-                RETURN REQUESTED
-
-            </div>
-
-        {% elif first_item.item_status == "Return Approved" %}
-
-            <div class="action-btn disabled-btn approved-banner">
-
-                RETURN APPROVED
-
-            </div>
-
-        {% elif first_item.item_status == "Return Rejected" %}
-
-            <div class="action-btn disabled-btn rejected-banner">
-
-                RETURN REJECTED
-
-            </div>
-
-        {% endif %}
-
-    {% endwith %}
-
 {% endif %}
-
-</div>
+                </div>
             </div>
 
-            <!-- SECURITY -->
-
+            <!-- SECURITY BOX -->
             <div class="security-box">
-
-                <div class="security-title">
-
-                    AUTHENTICITY GUARANTEED
-
-                </div>
-
+                <div class="security-title">Authenticity Guaranteed</div>
                 <div class="security-text">
-
-                    Every item sold is meticulously quality checked
-                    for authenticity and luxury standards.
-
+                    Every item sold is meticulously quality checked for authenticity and luxury standards.
                 </div>
-
             </div>
 
         </div>
 
     </div>
+</div>
+<div id="cancelItemModal" class="cancel-overlay" style="display:none;">
+
+    <div class="cancel-modal">
+
+        <h2 class="cancel-title">
+            Are you sure you want to cancel this item?
+        </h2>
+
+        <div class="cancel-sub">
+            What is the reason?
+        </div>
+
+        <form id="cancelItemForm">
+
+            {% csrf_token %}
+
+            <textarea
+                id="cancelReason"
+                class="reason-box"
+                placeholder="Write your reason here..."
+                required
+            ></textarea>
+
+            <div class="button-group">
+
+  <button
+    type="submit"
+    class="modal-btn confirm-btn"
+>
+                    Yes, Cancel Item
+                </button>
+
+<button
+    type="button"
+    id="closeCancelModal"
+    class="modal-btn keep-btn"
+>
+                    Keep Item
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
 
 </div>
-
-
+<!-- ================= JAVASCRIPT CONTROLS ================= -->
 <script>
+let selectedItemId = null;
 
-function getCookie(name) {
+document
+.querySelectorAll(".open-cancel-modal")
+.forEach(button => {
 
-    let cookieValue = null;
+    button.addEventListener(
+        "click",
+        function(){
 
-    if (document.cookie && document.cookie !== '') {
+            selectedItemId =
+            this.dataset.id;
 
-        const cookies = document.cookie.split(';');
+            document
+            .getElementById(
+                "cancelItemModal"
+            )
+            .style.display = "flex";
 
-        for (let i = 0; i < cookies.length; i++) {
+        }
+    );
 
-            const cookie = cookies[i].trim();
+});
 
-            if (
+document
+.getElementById(
+    "closeCancelModal"
+)
+.addEventListener(
+    "click",
+    function(){
 
-                cookie.substring(0, name.length + 1)
+        document
+        .getElementById(
+            "cancelItemModal"
+        )
+        .style.display = "none";
 
-                === (name + '=')
+    }
+);
 
-            ) {
+document
+.getElementById(
+    "cancelItemForm"
+)
+.addEventListener(
+    "submit",
+    async function(e){
 
-                cookieValue = decodeURIComponent(
+        e.preventDefault();
 
-                    cookie.substring(name.length + 1)
+        const reason =
+        document
+        .getElementById(
+            "cancelReason"
+        )
+        .value;
 
+        if(!reason.trim()){
+
+            alert(
+                "Please enter a reason."
+            );
+
+            return;
+
+        }
+
+        try{
+
+            const response =
+            await fetch(
+                `/orders/cancel-order-item/${selectedItemId}/`,
+                {
+                    method:"POST",
+
+                    headers:{
+                        "X-CSRFToken":csrftoken,
+                        "Content-Type":"application/json"
+                    },
+
+                    body:JSON.stringify({
+                        cancel_reason:reason
+                    })
+                }
+            );
+
+            const data =
+            await response.json();
+
+            if(data.success){
+
+                location.reload();
+
+            }else{
+
+                alert(
+                    data.message ||
+                    "Unable to cancel item."
                 );
 
+            }
+
+        }catch(error){
+
+            console.log(error);
+
+            alert(
+                "Something went wrong."
+            );
+
+        }
+
+    }
+);
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
             }
         }
     }
-
     return cookieValue;
 }
 
 const csrftoken = getCookie('csrftoken');
 
+// ================= CANCEL ITEM AJAX =================
+document.querySelectorAll(".cancel-btn").forEach(button => {
+    button.addEventListener("click", async function(){
+        const itemId = this.dataset.id;
+        this.disabled = true;
 
-// ================= CANCEL ITEM =================
+        try {
+            const response = await fetch(`/orders/cancel-order-item/${itemId}/`, {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrftoken,
+                    "Content-Type": "application/json"
+                }
+            });
 
-document.querySelectorAll(".cancel-btn")
-
-.forEach(button => {
-
-    button.addEventListener(
-
-        "click",
-
-        async function(){
-
-            const itemId = this.dataset.id;
-
-            this.disabled = true;
-
-            try{
-
-                const response = await fetch(
-
-                    `/orders/cancel-order-item/${itemId}/`,
-
-                    {
-
-                        method:"POST",
-
-                        headers:{
-
-                            "X-CSRFToken": csrftoken,
-
-                            "Content-Type":"application/json"
-
-                        }
-
-                    }
-
-                );
-
-                const data = await response.json();
-
+            const data = await response.json();
             if(data.success){
-
-                // ================= UPDATE ITEM BUTTON =================
-
-                document.getElementById(
-
-                    `item-action-${itemId}`
-
-                ).innerHTML = `
-
+                
+                // Update item visual status
+                document.getElementById(`item-action-${itemId}`).innerHTML = `
                     <div class="cancelled-badge">
-
                         CANCELLED
-
                     </div>
-
                 `;
 
-                // ================= HIDE TRACKER =================
-
-                const tracker = document.querySelector(
-
-                    ".status-tracker"
-
-                );
-
+                // Hide status progress tracker
+                const tracker = document.querySelector(".status-tracker");
                 if(tracker){
-
                     tracker.style.display = "none";
                 }
 
-                // ================= CREATE CANCEL MESSAGE =================
-
-                if(
-
-                    !document.querySelector(
-
-                        ".cancelled-order-banner"
-
-                    )
-
-                ){
-
-                    const banner = document.createElement(
-
-                        "div"
-
-                    );
-
+                // Append cancelled warning banner
+                if(!document.querySelector(".cancelled-order-banner")){
+                    const banner = document.createElement("div");
                     banner.className = "cancelled-order-banner";
+                    banner.innerHTML = `PRODUCT CANCELLED`;
 
-                    banner.innerHTML = `
-
-                        PRODUCT CANCELLED
-
-                    `;
-
-                    const card = document.querySelector(
-
-                        ".card"
-                    );
-
-                    card.insertBefore(
-
-                        banner,
-
-                        card.firstChild
-
-                    );
+                    const card = document.querySelector(".card");
+                    if (card) {
+                        card.insertBefore(banner, card.firstChild);
+                    }
                 }
 
-                // ================= FULL ORDER CANCELLED =================
-
+                // If whole order got cancelled, reload page
                 if(data.order_cancelled){
-
                     location.reload();
                 }
-            }
-                else{
-
-                    alert(
-
-                        data.message || "Unable to cancel item"
-
-                    );
-
-                    this.disabled = false;
-                }
-
-            }
-
-            catch(error){
-
-                console.log(error);
-
+            } else {
+                alert(data.message || "Unable to cancel item.");
                 this.disabled = false;
             }
-
+        } catch(error) {
+            console.log("AJAX cancellation error:", error);
+            this.disabled = false;
         }
-
-    );
-
+    });
 });
-
 </script>
-
 {% endblock %}

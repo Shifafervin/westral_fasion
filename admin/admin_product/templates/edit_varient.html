@@ -19,8 +19,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
 
 <style>
 
-/* ================= RESET ================= */
-
 *{
     margin:0;
     padding:0;
@@ -34,329 +32,13 @@ body{
     overflow:hidden;
 }
 
-/* ================= PAGE WRAPPER ================= */
-
-.page-wrapper{
-
-    width:100%;
-    min-height:100vh;
-
-    display:flex;
-
-    filter:blur(4px);
-
-    opacity:.55;
-
-    transform:scale(.995);
-
-    pointer-events:none;
-
-    user-select:none;
-}
-
-/* ================= SIDEBAR ================= */
-
-.sidebar{
-    width:245px;
-    height:100vh;
-
-    background:#f5f1ee;
-
-    border-right:1px solid #ebe5df;
-
-    padding:28px 18px;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-}
-
-/* LOGO */
-
-.logo h1{
-    font-family:'Noto Serif',serif;
-    font-size:24px;
-    line-height:1.1;
-    letter-spacing:2px;
-}
-
-.logo span{
-    display:block;
-    margin-top:8px;
-
-    font-size:10px;
-    color:#9c8e84;
-    letter-spacing:1px;
-}
-
-/* MENU */
-
-.menu{
-    margin-top:45px;
-
-    display:flex;
-    flex-direction:column;
-
-    gap:5px;
-}
-
-.menu a{
-    text-decoration:none;
-
-    display:flex;
-    align-items:center;
-
-    gap:12px;
-
-    color:#74665d;
-
-    padding:12px 14px;
-
-    border-radius:12px;
-
-    font-size:13px;
-    font-weight:500;
-
-    transition:.2s;
-}
-
-.menu a:hover{
-    background:#ece6e1;
-}
-
-.menu a.active{
-    background:#ece6e1;
-
-    border-left:3px solid #341818;
-
-    color:#1e1a18;
-
-    font-weight:700;
-}
-
-.menu a span{
-    font-size:18px;
-}
-
-/* PROFILE */
-
-.profile{
-    border-top:1px solid #e7dfd8;
-    padding-top:18px;
-}
-
-.profile-box{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.profile-box img{
-    width:42px;
-    height:42px;
-
-    border-radius:50%;
-    object-fit:cover;
-}
-
-.profile-box b{
-    font-size:12px;
-}
-
-.profile-box small{
-    font-size:10px;
-    color:#998b81;
-}
-
-/* ================= MAIN ================= */
-
-.main{
-    flex:1;
-    padding:28px;
-}
-
-/* TOPBAR */
-
-.topbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:26px;
-}
-
-.search-box{
-    width:320px;
-    height:44px;
-
-    background:#f1ece8;
-
-    border-radius:12px;
-
-    display:flex;
-    align-items:center;
-
-    gap:10px;
-
-    padding:0 14px;
-}
-
-.search-box span{
-    font-size:18px;
-    color:#998b81;
-}
-
-.search-box input{
-    width:100%;
-
-    border:none;
-    outline:none;
-
-    background:none;
-
-    font-size:13px;
-}
-
-/* HEADER */
-
-.header{
-    margin-bottom:24px;
-}
-
-.header h1{
-    font-family:'Noto Serif',serif;
-    font-size:44px;
-}
-
-.header p{
-    margin-top:8px;
-
-    color:#8f8075;
-
-    font-size:14px;
-}
-
-/* PRODUCT CARD */
-
-.product-card{
-    background:#faf7f5;
-
-    border-radius:24px;
-
-    padding:30px;
-
-    border:1px solid #eee7e1;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    margin-bottom:24px;
-}
-
-.product-left{
-    display:flex;
-    align-items:center;
-
-    gap:24px;
-}
-
-.product-left img{
-    width:90px;
-    height:120px;
-
-    object-fit:cover;
-}
-
-.collection{
-    font-size:10px;
-
-    letter-spacing:2px;
-
-    color:#9b8d82;
-
-    margin-bottom:8px;
-}
-
-.product-name{
-    font-family:'Noto Serif',serif;
-    font-size:36px;
-}
-
-/* TABLE */
-
-.table-card{
-    background:#fcfaf8;
-
-    border-radius:24px;
-
-    border:1px solid #eee7e1;
-
-    overflow:hidden;
-}
-
-.table-head,
-.row{
-    display:grid;
-
-    grid-template-columns:
-    80px
-    2fr
-    1fr
-    1fr
-    1fr
-    1fr
-    120px;
-
-    align-items:center;
-}
-
-.table-head{
-    padding:22px 26px;
-
-    border-bottom:1px solid #f0e9e3;
-}
-
-.table-head div{
-    font-size:10px;
-
-    letter-spacing:1px;
-
-    color:#9b8d82;
-
-    font-weight:700;
-}
-
-.row{
-    padding:24px 26px;
-
-    border-bottom:1px solid #f3ede8;
-}
-
-.variant{
-    display:flex;
-    align-items:center;
-
-    gap:14px;
-}
-
-.variant img{
-    width:52px;
-    height:52px;
-
-    border-radius:10px;
-
-    object-fit:cover;
-}
-
 /* ================= OVERLAY ================= */
 
 .overlay{
     position:fixed;
-
     inset:0;
-
-    background:rgba(0,0,0,.12);
+    background:rgba(0,0,0,.15);
+    backdrop-filter:blur(10px);
 
     display:flex;
     align-items:center;
@@ -368,83 +50,82 @@ body{
 /* ================= MODAL ================= */
 
 .modal{
-    width:760px;
-
+    width:720px;
     background:white;
-
-    border-radius:20px;
-
+    border-radius:24px;
     padding:34px;
-
     position:relative;
 
     box-shadow:
     0 25px 70px rgba(0,0,0,.18);
+
+    z-index:1000;
 }
 
-/* CLOSE */
+/* ================= CLOSE ================= */
 
 .close{
     position:absolute;
-
     top:20px;
     right:20px;
 
     font-size:22px;
-
     color:#84766d;
-
     cursor:pointer;
 }
 
-/* TITLE */
+/* ================= TITLE ================= */
 
 .modal h2{
     font-family:'Noto Serif',serif;
-
     font-size:40px;
-
     margin-bottom:26px;
 }
 
-/* GALLERY */
+/* ================= IMAGE GRID ================= */
 
-.gallery-title{
-    font-size:10px;
-
-    letter-spacing:1px;
-
-    color:#8f8177;
-
-    font-weight:700;
-
-    margin-bottom:12px;
-}
-
-.gallery{
-    display:flex;
-
-    gap:14px;
-
+.image-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
     margin-bottom:28px;
 }
+
 .image-box{
-    width:90px;
-    height:90px;
+    height:132px;
 
-    border:2px dashed #ded2c9;
+    border:2px dashed #dfd2c8;
+    border-radius:14px;
 
-    border-radius:12px;
+    background:#fcfaf8;
 
     display:flex;
+    flex-direction:column;
     align-items:center;
     justify-content:center;
 
-    overflow:hidden;
+    gap:10px;
+
+    color:#7f7167;
 
     cursor:pointer;
 
-    background:#faf7f5;
+    overflow:hidden;
+
+    transition:.2s;
+}
+
+.image-box:hover{
+    border-color:#4a2929;
+}
+
+.image-box span{
+    font-size:28px;
+}
+
+.image-box small{
+    font-size:11px;
+    letter-spacing:1px;
 }
 
 .image-box img{
@@ -453,79 +134,33 @@ body{
     object-fit:cover;
 }
 
-.image-box span{
-    font-size:28px;
-    color:#7d7067;
-}
-
-.gallery img{
-    width:90px;
-    height:90px;
-
-    border-radius:12px;
-
-    object-fit:cover;
-
-    border:2px solid transparent;
-
-    cursor:pointer;
-}
-
-.gallery img.active{
-    border-color:#341818;
-}
-
-.add-image{
-    width:90px;
-    height:90px;
-
-    border:2px dashed #ded2c9;
-
-    border-radius:12px;
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-
-    gap:8px;
-
-    color:#7d7067;
-
-    cursor:pointer;
-}
-
-.add-image span{
-    font-size:24px;
-}
-
-.add-image small{
-    font-size:10px;
-}
-
-/* FORM */
+/* ================= FORM ================= */
 
 .form-grid{
+
     display:grid;
 
-    grid-template-columns:repeat(3,1fr);
+    grid-template-columns:
+    repeat(2,1fr);
 
-    gap:16px;
+    gap:18px;
 
-    margin-bottom:18px;
+    margin-bottom:20px;
+
+    align-items:start;
 }
 
-.two-grid{
-    display:grid;
+.form-group{
 
-    grid-template-columns:1fr 1fr;
+    display:flex;
 
-    gap:16px;
+    flex-direction:column;
 
-    margin-bottom:18px;
+    width:100%;
 }
 
 .form-group label{
+
     display:block;
 
     margin-bottom:8px;
@@ -541,61 +176,64 @@ body{
 
 .input,
 .select{
+
     width:100%;
-    height:50px;
+
+    height:52px;
+
+    min-width:0;
 
     border:none;
 
-    background:#f3efec;
-
-    border-radius:10px;
-
-    padding:0 14px;
-
-    font-size:13px;
-
     outline:none;
-}
 
-.full-width{
-    margin-bottom:24px;
-}
-
-/* STATUS */
-
-.status-box{
     background:#f3efec;
-
-    height:54px;
 
     border-radius:12px;
 
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
+    padding:0 16px;
 
-    padding:0 18px;
+    font-size:14px;
 
-    margin-bottom:26px;
+    appearance:none;
+}
+.full-width{
+    margin-bottom:22px;
 }
 
-.status-box small{
+/* ================= BOTTOM ================= */
+
+.bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-top:10px;
+
+    position:relative;
+    z-index:9999;
+}
+
+/* ================= STATUS ================= */
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.status small{
     font-size:11px;
-
     font-weight:700;
-
     letter-spacing:1px;
 }
 
-/* SWITCH */
-
 .switch{
     position:relative;
-
     display:inline-block;
 
-    width:50px;
-    height:26px;
+    width:48px;
+    height:24px;
 }
 
 .switch input{
@@ -606,10 +244,9 @@ body{
 
 .slider{
     position:absolute;
-
     inset:0;
 
-    background:#d6cbc3;
+    background:#d5cbc3;
 
     border-radius:30px;
 
@@ -621,8 +258,8 @@ body{
 
     position:absolute;
 
-    width:20px;
-    height:20px;
+    width:18px;
+    height:18px;
 
     left:3px;
     bottom:3px;
@@ -642,31 +279,38 @@ body{
     transform:translateX(24px);
 }
 
-/* BUTTONS */
+/* ================= BUTTONS ================= */
 
 .buttons{
     display:flex;
-    justify-content:flex-end;
-
+    align-items:center;
     gap:14px;
+
+    position:relative;
+    z-index:9999;
 }
 
 .discard-btn{
+    width:120px;
     height:48px;
 
     border:none;
+    border-radius:12px;
 
-    padding:0 24px;
+    background:#f3e2d2;
 
-    border-radius:10px;
+    color:#7b5b4c;
 
-    background:#efe2d5;
-
-    color:#7c6b61;
-
+    font-size:13px;
     font-weight:700;
 
     cursor:pointer;
+
+    transition:.2s;
+}
+
+.discard-btn:hover{
+    background:#ead4c2;
 }
 
 .save-btn{
@@ -674,9 +318,9 @@ body{
 
     border:none;
 
-    padding:0 30px;
+    padding:0 28px;
 
-    border-radius:10px;
+    border-radius:12px;
 
     background:#4a2929;
 
@@ -685,7 +329,14 @@ body{
     font-weight:700;
 
     cursor:pointer;
+
+    transition:.2s;
 }
+
+.save-btn:hover{
+    opacity:.92;
+}
+
 
 </style>
 
@@ -693,241 +344,6 @@ body{
 
 <body>
 
-<!-- ================= PAGE WRAPPER ================= -->
-
-<div class="page-wrapper">
-
-    <!-- SIDEBAR -->
-
-    <div class="sidebar">
-
-        <div>
-
-            <div class="logo">
-
-                <h1>WESTRAL<br>FASHION</h1>
-
-                <span>MANAGEMENT SUITE</span>
-
-            </div>
-
-            <div class="menu">
-
-                <a href="#">
-                    <span class="material-symbols-outlined">dashboard</span>
-                    Dashboard
-                </a>
-
-                <a href="#">
-                    <span class="material-symbols-outlined">shopping_bag</span>
-                    Orders
-                </a>
-
-                <a href="#" class="active">
-                    <span class="material-symbols-outlined">inventory_2</span>
-                    Products
-                </a>
-
-                <a href="#">
-                    <span class="material-symbols-outlined">category</span>
-                    Categories
-                </a>
-
-                <a href="#">
-                    <span class="material-symbols-outlined">confirmation_number</span>
-                    Coupons
-                </a>
-
-                <a href="#">
-                    <span class="material-symbols-outlined">local_offer</span>
-                    Offers
-                </a>
-
-                <a href="#">
-                    <span class="material-symbols-outlined">group</span>
-                    Customers
-                </a>
-
-                <a href="#">
-                    <span class="material-symbols-outlined">reviews</span>
-                    Reviews
-                </a>
-
-            </div>
-
-        </div>
-
-        <!-- PROFILE -->
-
-        <div class="profile">
-
-            <div class="profile-box">
-
-                <img src="https://i.pravatar.cc/100?img=5">
-
-                <div>
-
-                    <b>SHIFA MC</b><br>
-
-                    <small>LEAD CURATOR</small>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- MAIN -->
-
-    <div class="main">
-
-        <!-- TOPBAR -->
-
-        <div class="topbar">
-
-            <div class="search-box">
-
-                <span class="material-symbols-outlined">
-                    search
-                </span>
-
-                <input
-                type="text"
-                placeholder="Search orders, products...">
-
-            </div>
-
-        </div>
-
-        <!-- HEADER -->
-
-        <div class="header">
-
-            <h1>Variant Management</h1>
-
-            <p>
-                Configure and manage product SKU variations for your atelier collections.
-            </p>
-
-        </div>
-
-        <!-- PRODUCT CARD -->
-
-        <div class="product-card">
-
-            <div class="product-left">
-
-                {% with image=variant.images.first %}
-
-    {% if image and image.image %}
-
-        <img src="{{ image.image.url }}">
-
-    {% else %}
-
-        <img src="{% static 'images/no-image.png' %}">
-
-    {% endif %}
-
-{% endwith %}
-                <div>
-
-                    <div class="collection">
-
-                        PRODUCT COLLECTION
-
-                    </div>
-
-                    <div class="product-name">
-
-                        {{ product.product_name }}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- TABLE -->
-
-        <div class="table-card">
-
-            <div class="table-head">
-
-                <div>DEFAULT</div>
-                <div>VARIANTS</div>
-                <div>SKU</div>
-                <div>PRICE</div>
-                <div>STATUS</div>
-                <div>STOCK</div>
-                <div>ACTIONS</div>
-
-            </div>
-
-            <div class="row">
-
-                <div>
-
-    {% if variant.is_default %}
-
-        <div class="default-radio active"></div>
-
-    {% else %}
-
-        <div class="default-radio"></div>
-
-    {% endif %}
-
-</div>
-
-                <div class="variant">
-
-                    {% with image=variant.images.first %}
-
-    {% if image and image.image %}
-
-        <img src="{{ image.image.url }}">
-
-    {% else %}
-
-        <img src="{% static 'images/no-image.png' %}">
-
-    {% endif %}
-
-{% endwith %}
-
-                    <div>
-
-                        <h4>
-
-    {{ variant.color }} / {{ variant.size }}
-
-</h4>
-
-                        <small>
-
-    SKU :
-    {{ variant.sku }}
-
-</small>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ================= MODAL ================= -->
 <!-- ================= MODAL ================= -->
 
 <div class="overlay">
@@ -944,15 +360,15 @@ body{
             <!-- CLOSE -->
 
             <span
-            class="material-symbols-outlined close"
-            onclick="window.location.href='{% url 'variant_management' product.id %}'"
-            >
-                close
-            </span>
+class="material-symbols-outlined close"
+onclick="window.location.href='{% url 'variant_management' product.id %}'"
+>
+    close
+</span>
 
             <!-- TITLE -->
 
-            <h2>Edit Variant</h2>
+           <h2>Edit Variant</h2>
 
 {% if messages %}
 
@@ -987,28 +403,19 @@ body{
             <input type="file" name="image2" id="imageInput1" hidden>
             <input type="file" name="image3" id="imageInput2" hidden>
 
-            <!-- GALLERY -->
+            <!-- IMAGE GRID -->
 
-            <div class="gallery-title">
-    GALLERY SELECTION
-</div>
+            <!-- IMAGE GRID -->
 
-<div class="gallery">
+<div class="image-grid">
 
-    <!-- IMAGE 1 -->
-
-    <div
-    class="image-box"
-    id="box0"
-    >
+    <div class="image-box" id="box0">
 
         {% with image=variant.images.all.0 %}
 
             {% if image %}
 
-                <img
-                src="{{ image.image.url }}"
-                >
+                <img src="{{ image.image.url }}">
 
             {% else %}
 
@@ -1016,26 +423,21 @@ body{
                     add_photo_alternate
                 </span>
 
+                <small>MAIN</small>
+
             {% endif %}
 
         {% endwith %}
 
     </div>
 
-    <!-- IMAGE 2 -->
-
-    <div
-    class="image-box"
-    id="box1"
-    >
+    <div class="image-box" id="box1">
 
         {% with image=variant.images.all.1 %}
 
             {% if image %}
 
-                <img
-                src="{{ image.image.url }}"
-                >
+                <img src="{{ image.image.url }}">
 
             {% else %}
 
@@ -1043,32 +445,29 @@ body{
                     image
                 </span>
 
+                <small>FRONT</small>
+
             {% endif %}
 
         {% endwith %}
 
     </div>
 
-    <!-- IMAGE 3 -->
-
-    <div
-    class="image-box"
-    id="box2"
-    >
+    <div class="image-box" id="box2">
 
         {% with image=variant.images.all.2 %}
 
             {% if image %}
 
-                <img
-                src="{{ image.image.url }}"
-                >
+                <img src="{{ image.image.url }}">
 
             {% else %}
 
                 <span class="material-symbols-outlined">
                     image
                 </span>
+
+                <small>BACK</small>
 
             {% endif %}
 
@@ -1077,218 +476,317 @@ body{
     </div>
 
 </div>
-            <!-- FORM -->
 
-            <div class="form-grid">
+            <!-- FORM GRID -->
 
-                <!-- COLOR -->
+           <!-- FORM GRID -->
 
-                <div class="form-group">
+<div class="form-grid">
 
-                    <label>COLOR</label>
+    <!-- COLOR -->
 
-                    <input
-                    type="text"
-                    name="color"
-                    class="input"
-                    value="{{ variant.color }}"
-                    >
+    <div class="form-group">
 
-                </div>
+        <label>COLOR</label>
 
-                <!-- WEIGHT -->
+        <select
+name="color"
+class="select">
 
-                <div class="form-group">
+    <option value="">
+        Select One
+    </option>
 
-                    <label>WEIGHT</label>
+    <option value="Black"
+    {% if form.color.value == "Black" %}
+    selected
+    {% endif %}
+    >
+        Black
+    </option>
 
-                    <input
-                    type="number"
-                    name="weight"
-                    min="1"
-                    class="input"
-                    value="{{ variant.weight }}"
-                    >
+    <option value="White"
+    {% if form.color.value == "White" %}
+    selected
+    {% endif %}
+    >
+        White
+    </option>
 
-                </div>
+    <option value="Blue"
+    {% if form.color.value == "Blue" %}
+    selected
+    {% endif %}
+    >
+        Blue
+    </option>
 
-                <!-- SIZE -->
+    <option value="Red"
+    {% if form.color.value == "Red" %}
+    selected
+    {% endif %}
+    >
+        Red
+    </option>
 
-                <div class="form-group">
+    <option value="Pink"
+    {% if form.color.value == "Pink" %}
+    selected
+    {% endif %}
+    >
+        Pink
+    </option>
 
-                    <label>SIZE</label>
+    <option value="Yellow"
+    {% if form.color.value == "Yellow" %}
+    selected
+    {% endif %}
+    >
+        Yellow
+    </option>
 
-                    <select
-                    name="size"
-                    class="select"
-                    >
+    <option value="Green"
+    {% if form.color.value == "Green" %}
+    selected
+    {% endif %}
+    >
+        Green
+    </option>
 
-                        <option
-                        value="S"
-                        {% if variant.size == 'S' %}selected{% endif %}
-                        >
-                            S
-                        </option>
+     <option value="Brown"
+    {% if form.color.value == "Brown" %}
+    selected
+    {% endif %}
+    >
+        Brown
+    </option>
 
-                        <option
-                        value="M"
-                        {% if variant.size == 'M' %}selected{% endif %}
-                        >
-                            M
-                        </option>
+</select>
+    </div>
 
-                        <option
-                        value="L"
-                        {% if variant.size == 'L' %}selected{% endif %}
-                        >
-                            L
-                        </option>
+    <!-- SIZE -->
 
-                        <option
-                        value="XL"
-                        {% if variant.size == 'XL' %}selected{% endif %}
-                        >
-                            XL
-                        </option>
+    <div class="form-group">
 
-                    </select>
+        <label>SIZE</label>
 
-                </div>
+        <select
+name="size"
+class="select">
 
-            </div>
+    <option value="">
+        Select
+    </option>
 
-            <!-- PRICE & STOCK -->
+    <option value="S"
+    {% if form.size.value == "S" %}
+    selected
+    {% endif %}
+    >
+        S
+    </option>
 
-            <div class="two-grid">
+    <option value="M"
+    {% if form.size.value == "M" %}
+    selected
+    {% endif %}
+    >
+        M
+    </option>
 
-                <!-- PRICE -->
+    <option value="L"
+    {% if form.size.value == "L" %}
+    selected
+    {% endif %}
+    >
+        L
+    </option>
 
-                <div class="form-group">
+    <option value="XL"
+    {% if form.size.value == "XL" %}
+    selected
+    {% endif %}
+    >
+        XL
+    </option>
 
-                    <label>PRICE</label>
+</select>
 
-                    <input
-                    type="number"
-                    step="0.01"
-                    min="1"
-                    name="price"
-                    class="input"
-                    value="{{ variant.price }}"
-                    >
+    </div>
 
-                </div>
+</div>
 
-                <!-- STOCK -->
 
-                <div class="form-group">
+<!-- SECOND GRID -->
 
-                    <label>STOCK</label>
+<div class="form-grid">
 
-                    <input
-                    type="number"
-                    min="0"
-                    name="stock"
-                    class="input"
-                    value="{{ variant.stock }}"
-                    >
+    <!-- WEIGHT -->
 
-                </div>
+    <div class="form-group">
 
-            </div>
+        <label>WEIGHT</label>
 
-            <!-- SKU -->
+        <input
+type="number"
+name="weight"
+min="1"
+class="input"
+placeholder="200"
+value="{{ form.weight.value|default:'' }}"
+>
 
-            <div class="form-group full-width">
+    </div>
 
-                <label>SKU</label>
+    <!-- PRICE -->
+
+    <div class="form-group">
+
+        <label>PRICE</label>
+
+        <input
+type="number"
+step="0.01"
+min="1"
+name="price"
+class="input"
+placeholder="1499"
+value="{{ form.price.value|default:'' }}"
+>
+
+    </div>
+
+</div>
+
+
+<!-- THIRD GRID -->
+
+<div class="form-grid">
+
+    <!-- STOCK -->
+
+    <div class="form-group">
+
+        <label>STOCK</label>
+
+        <input
+type="number"
+name="stock"
+min="0"
+class="input"
+placeholder="0"
+value="{{ form.stock.value|default:'' }}"
+>
+
+    </div>
+
+    <!-- SKU -->
+
+    <div class="form-group">
+
+        <label>SKU</label>
+
+        <input
+type="text"
+name="sku"
+class="input"
+placeholder="BLK-M-001"
+value="{{ form.sku.value|default:'' }}"
+>
+
+    </div>
+
+</div>
+
+<!-- BOTTOM -->
+
+<div class="bottom">
+
+    <!-- LEFT TOGGLES -->
+
+    <div
+    style="
+    display:flex;
+    gap:24px;
+    align-items:center;
+    "
+    >
+
+        <!-- ACTIVE STATUS -->
+
+        <div class="status">
+
+            <label class="switch">
 
                 <input
-                type="text"
-                name="sku"
-                class="input"
-                value="{{ variant.sku }}"
+                type="checkbox"
+                name="is_active"
+                value="on"
+
+                {% if form.is_active.value %}
+                checked
+                {% endif %}
                 >
 
-            </div>
+                <span class="slider"></span>
 
-            <!-- STATUS -->
-                <!-- DEFAULT VARIANT -->
-<!-- ACTIVE STATUS -->
+            </label>
 
-<div class="status-box">
+            <small>ACTIVE</small>
 
-    <small>ACTIVE STATUS</small>
+        </div>
 
-    <label class="switch">
+        <!-- DEFAULT VARIANT -->
 
-        <input
-        type="checkbox"
-        name="is_active"
-        value="on"
+        <div class="status">
 
-        {% if variant.is_active %}
-        checked
-        {% endif %}
+            <label class="switch">
+
+                <input
+                type="checkbox"
+                name="is_default"
+                value="on"
+
+                {% if form.is_default.value %}
+                checked
+                {% endif %}
+                >
+
+                <span class="slider"></span>
+
+            </label>
+
+            <small>DEFAULT</small>
+
+        </div>
+
+    </div>
+
+    <!-- BUTTONS -->
+
+    <div class="buttons">
+
+        <button
+        type="button"
+        class="discard-btn"
+        onclick="window.location.href='{% url 'variant_management' product.id %}'"
         >
 
-        <span class="slider"></span>
+            Discard
 
-    </label>
+        </button>
 
-</div>
+        <button
+        type="submit"
+        class="save-btn">
 
-<!-- DEFAULT VARIANT -->
+            Update Variant
 
-<div class="status-box">
+        </button>
 
-    <small>DEFAULT VARIANT</small>
-
-    <label class="switch">
-
-        <input
-        type="checkbox"
-        name="is_default"
-        value="on"
-
-        {% if variant.is_default %}
-        checked
-        {% endif %}
-        >
-
-        <span class="slider"></span>
-
-    </label>
+    </div>
 
 </div>
-
-            <!-- BUTTONS -->
-
-            <div class="buttons">
-
-                <!-- DISCARD -->
-
-                <button
-                type="button"
-                class="discard-btn"
-                onclick="window.location.href='{% url 'variant_management' product.id %}'"
-                >
-
-                    Discard
-
-                </button>
-
-                <!-- UPDATE -->
-
-                <button
-                type="submit"
-                class="save-btn"
-                >
-
-                    Update Variant
-
-                </button>
-
-            </div>
 
         </form>
 
@@ -1367,6 +865,7 @@ z-index:99999;
     </div>
 
 </div>
+
 <!-- ================= IMAGE PREVIEW ================= -->
 
 <script>
@@ -1519,7 +1018,9 @@ cancelCrop.onclick = function(){
 
 };
 
+
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 </body>
 </html>
+

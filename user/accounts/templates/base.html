@@ -263,7 +263,7 @@
     }
 }
 /* ================= SEARCH ================= */
-
+{% comment %} 
 .search-wrapper{
 
     position:relative;
@@ -386,7 +386,7 @@
     color:#6B4F3B;
 
     margin-top:5px;
-}
+} {% endcomment %}
 /* ================= PROFILE DROPDOWN ================= */
 
 .profile-dropdown{
@@ -556,12 +556,96 @@
 
     margin:8px 0;
 }
-
+.navbar-search-input:focus{
+    outline: none;
+    border: none;
+    box-shadow: none;
+}
+.navbar-search:focus-within{
+    box-shadow: 0 0 10px rgba(52,24,24,0.15);
+    border-color: #341818;
+}
 .logout-link{
 
     color:#d32f2f !important;
 }
+.navbar-search{
+    display:flex;
+    align-items:center;
 
+    width:100%;
+    max-width:450px;
+
+    background:#fff;
+
+    border:1px solid #ddd;
+    border-radius:50px;
+
+    overflow:hidden;
+
+    transition:all 0.3s ease;
+}
+
+.navbar-search:focus-within{
+    border-color:#341818;
+    box-shadow:0 0 10px rgba(52,24,24,0.15);
+}
+
+.navbar-search-input{
+    flex:1;
+
+    border:none;
+    outline:none;
+
+    padding:12px 18px;
+
+    font-size:14px;
+
+    background:transparent;
+    box-shadow: none;
+}
+
+.navbar-search-input::placeholder{
+    color:#999;
+}
+
+.navbar-search-btn{
+    border:none;
+    background:#341818;
+
+    color:#fff;
+
+    width:50px;
+    height:45px;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.navbar-search-btn:hover{
+    background:#4e2b2b;
+}
+.navbar-search-input,
+.navbar-search-input:focus,
+.navbar-search-input:active,
+.navbar-search-input:focus-visible{
+    border:none !important;
+    outline:none !important;
+    box-shadow:none !important;
+    background:transparent;
+}
+.navbar-search input{
+    border:none !important;
+    outline:none !important;
+    box-shadow:none !important;
+}
+
+.navbar-search input:focus{
+    border:none !important;
+    outline:none !important;
+    box-shadow:none !important;
+}
     </style>
 
     {% block extra_css %}{% endblock %}
@@ -587,17 +671,22 @@
         <div class="nav-icons">
 
             <div class="search-wrapper">
+<form action="{% url 'shop' %}" method="GET" class="navbar-search">
 
     <input
-    type="text"
-    id="navbar-search"
-    placeholder="Search products..."
-    autocomplete="off"
-    >
+        type="text"
+        name="search"
+        value="{{ request.GET.search }}"
+        placeholder="Search products..."
+        class="navbar-search-input">
 
-    <i class="fa-solid fa-magnifying-glass"></i>
+    <button type="submit" class="navbar-search-btn">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
 
-    <div id="search-results"></div>
+</form>
+
+    
 
 </div>
 

@@ -1,1007 +1,1310 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
 {% block title %}Profile{% endblock %}
 
 {% block extra_css %}
-
+<!-- Import premium Google Fonts and Icons -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-/* ================= RESPONSIVE ================= */
+/* ================= GLOBAL RESETS & STYLING ================= */
+:root {
+    --primary-color: #2e1414; /* Elegant deep brown */
+    --primary-hover: #4a2727;
+    --bg-light: #fdfbf9;      /* Warm cream off-white */
+    --card-bg: #ffffff;
+    --text-main: #331b1b;     /* Deep charcoal brown */
+    --text-muted: #8e8076;    /* Warm beige-gray */
+    --border-color: #efeae4;  /* Soft border color */
+    --accent-green: #287a43;  /* Premium stock green */
+    --accent-red: #c95c5c;    /* Soft red */
+    --font-serif: 'Playfair Display', 'Noto Serif', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --shadow-sm: 0 2px 10px rgba(139, 119, 101, 0.04);
+    --shadow-md: 0 10px 30px rgba(139, 119, 101, 0.08);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-@media(max-width:950px){
+.shop-container {
+    background-color: var(--bg-light);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    padding-bottom: 80px;
+    box-sizing: border-box;
+}
 
-    .nav-links{
-        display:none;
-    }
-
-    .navbar{
-        padding:0 20px;
-    }
+.shop-container *, 
+.shop-container *::before, 
+.shop-container *::after {
+    box-sizing: border-box;
 }
 
 /* ================= HEADER ================= */
-
-.header{
-    padding:44px 48px 26px;
+.header {
+    padding: 60px 48px 30px;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.header h1{
-    font-family:'Noto Serif',serif;
-    font-size:54px;
-    margin-bottom:14px;
+.header h1 {
+    font-family: var(--font-serif);
+    font-size: 48px;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin: 0 0 10px 0;
+    letter-spacing: -0.5px;
 }
 
-.header p{
-    width:650px;
-    line-height:1.7;
-    color:#7d6e65;
-    font-size:14px;
+.header {
+    width: 100%;
+    padding: 60px 40px 30px;
 }
 
-/* ================= MAIN LAYOUT ================= */
+.shop-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 32px;
 
-.wrapper{
-    display:grid;
-    grid-template-columns:1fr 320px;
-    gap:28px;
-
-    padding:0 48px 60px;
-}
-
-/* ================= PRODUCT GRID ================= */
-
-.product-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:28px;
-}
-
-.card{
-    background:white;
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-    transition:.25s;
-
-    border:1px solid #eee5df;
-}
-
-.card:hover{
-    transform:translateY(-4px);
-
-    box-shadow:
-    0 10px 30px rgba(0,0,0,.08);
-}
-
-.card-image{
-    width:100%;
-    height:420px;
-
-    background:#f3efeb;
-     position:relative;
-
-    overflow:hidden;
-}
-/* ================= WISHLIST ================= */
-
-
-.wishlist-btn{
-
-    position:absolute;
-
-    top:14px;
-    right:14px;
-
-    width:42px;
-    height:42px;
-
-    border-radius:50%;
-
-    background:white;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    cursor:pointer;
-
-    z-index:5;
-
-    box-shadow:
-    0 4px 14px rgba(0,0,0,.12);
-
-    transition:.25s;
-}
-
-.wishlist-btn:hover{
-    transform:scale(1.08);
-}
-
-.wishlist-btn span{
-
-    font-size:22px;
-
-    color:#7b6d64;
-
-    transition:.25s;
-}
-
-/* FILLED HEART */
-
-.wishlist-btn.active span{
-
-    font-variation-settings:
-    'FILL' 1;
-
-    color:#6B4F3B;
-}
-
-.card-image img{
-    width:100%;
-    height:100%;
-
-    object-fit:cover;
-}
-
-.card-body{
-    padding:20px;
-}
-
-.category{
-    font-size:10px;
-    letter-spacing:1px;
-    color:#998b81;
-    margin-bottom:10px;
-    font-weight:700;
-}
-
-.product-name{
-    font-size:18px;
-    font-weight:700;
-
-    margin-bottom:14px;
-
-    line-height:1.4;
-}
-
-.price-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.price{
-    font-size:22px;
-    font-weight:800;
-}
-
-.stock{
-    font-size:11px;
-    font-weight:700;
-
-    padding:6px 12px;
-
-    border-radius:20px;
-}
-
-.in-stock{
-    background:#eef5ee;
-    color:#2d6b36;
-}
-
-.out-stock{
-    background:#fcecec;
-    color:#9d4444;
+    width: 100%;
+    padding: 0 40px 60px;
 }
 
 /* ================= FILTER SIDEBAR ================= */
-
-.sidebar{
-    background:white;
-
-    border-radius:20px;
-
-    padding:26px;
-
-    border:1px solid #eee5df;
-
-    height:fit-content;
-
-    position:sticky;
-    top:24px;
+.sidebar {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid var(--border-color);
+    height: fit-content;
+    position: sticky;
+    top: 30px;
+    box-shadow: var(--shadow-sm);
 }
 
-.sidebar h3{
-    font-size:13px;
-    letter-spacing:2px;
-    margin-bottom:28px;
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
 }
 
-.filter-group{
-    margin-bottom:22px;
+.sidebar-header h3 {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--primary-color);
+    margin: 0;
 }
 
-.filter-group label{
-    display:block;
-
-    font-size:11px;
-    letter-spacing:1px;
-
-    color:#8d7d73;
-
-    margin-bottom:10px;
-
-    font-weight:700;
+.filter-icon {
+    font-size: 20px;
+    color: var(--text-muted);
 }
 
-.input,
-.select{
-    width:100%;
-    height:46px;
-
-    border:none;
-    outline:none;
-
-    background:#f4f0ec;
-
-    border-radius:10px;
-
-    padding:0 14px;
-
-    font-size:13px;
+.filter-group {
+    margin-bottom: 28px;
 }
 
-.search-box{
-    position:relative;
+.filter-group label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
-.search-box span{
-    position:absolute;
-
-    top:13px;
-    right:14px;
-
-    color:#8e8076;
-
-    font-size:18px;
+/* SEARCH BOX */
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
 }
 
-.filter-btn{
-    width:100%;
-    height:48px;
-
-    border:none;
-
-    background:#341818;
-
-    color:white;
-
-    border-radius:12px;
-
-    font-weight:700;
-
-    cursor:pointer;
-
-    margin-top:10px;
+.search-input {
+    width: 100%;
+    height: 44px;
+    border: 1px solid var(--border-color);
+    background: #fbf9f6;
+    border-radius: 12px;
+    padding: 0 40px 0 16px;
+    font-size: 13.5px;
+    font-family: var(--font-sans);
+    color: var(--text-main);
+    transition: var(--transition);
 }
 
-.clear-btn{
-    width:100%;
-    height:48px;
+.search-input:focus {
+    border-color: var(--primary-color);
+    background: var(--card-bg);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 20, 20, 0.05);
+}
 
-    border:1px solid #ddd1c8;
+.search-box span, .search-box a {
+    position: absolute;
+    right: 14px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: var(--transition);
+}
 
-    background:white;
+.search-box a:hover {
+    color: var(--primary-color);
+    transform: scale(1.1);
+}
 
-    color:#6f6158;
+/* CATEGORY CHECKBOXES (RADIO INTERACTION) */
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-    border-radius:12px;
+.category-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text-main);
+    user-select: none;
+}
 
-    font-weight:700;
+.category-radio {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    width: 0;
+    height: 0;
+}
 
-    cursor:pointer;
+.radio-custom {
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 4px;
+    position: relative;
+    background-color: var(--card-bg);
+    transition: var(--transition);
+    flex-shrink: 0;
+}
 
-    margin-top:12px;
+.category-radio:checked ~ .radio-custom {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.category-radio:checked ~ .radio-custom::after {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 2px;
+    width: 5px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.category-name-label {
+    color: #4f3d3d;
+    transition: var(--transition);
+}
+
+.category-radio:checked ~ .category-name-label {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* PRICE RANGE SLIDER */
+.slider-wrapper {
+    margin: 15px 0 20px;
+    position: relative;
+    height: 16px;
+}
+
+.dual-range-slider {
+    position: relative;
+    width: 100%;
+    height: 4px;
+    background: #efeae4;
+    border-radius: 2px;
+}
+
+.slider-track {
+    position: absolute;
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 2px;
+    left: 0%;
+    right: 0%;
+}
+
+.range-input {
+    position: absolute;
+    width: 100%;
+    height: 4px;
+    top: 0;
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+.range-input::-webkit-slider-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid var(--card-bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    pointer-events: auto;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.range-input::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.range-input::-moz-range-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    border: 2px solid var(--card-bg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    pointer-events: auto;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.range-input::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+.price-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.price-field {
+    display: flex;
+    align-items: center;
+    background: #fbf9f6;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 0 12px;
+    height: 40px;
+    flex: 1;
+}
+
+.currency-prefix {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 6px;
+}
+
+.price-num-input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    font-size: 13px;
+    color: var(--text-main);
+    font-weight: 600;
+    font-family: var(--font-sans);
+}
+
+.price-num-input::-webkit-outer-spin-button,
+.price-num-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.price-num-input[type=number] {
+    -moz-appearance: textfield;
+}
+
+/* SIDEBAR BUTTONS */
+.sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 10px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 24px;
+}
+
+.filter-btn {
+    width: 100%;
+    height: 46px;
+    border: none;
+    background: var(--primary-color);
+    color: #ffffff;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: var(--transition);
+}
+
+.filter-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(46, 20, 20, 0.2);
+}
+
+.clear-btn-link {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+}
+
+.clear-btn {
+    width: 100%;
+    height: 46px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-muted);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: var(--transition);
+}
+
+.clear-btn:hover {
+    background: #fbf9f6;
+    border-color: #c0b3a9;
+    color: var(--primary-color);
+}
+
+/* ================= TOOLBAR ================= */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 14px 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow-sm);
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 6px;
+}
+
+.view-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    padding: 0;
+}
+
+.view-btn:hover, .view-btn.active {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
+}
+
+.view-btn span {
+    font-size: 18px;
+}
+
+.product-count {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.sort-dropdown-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sort-dropdown-container label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sort-select {
+    height: 38px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 0 30px 0 12px;
+    font-size: 13px;
+    font-family: var(--font-sans);
+    color: var(--text-main);
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: var(--transition);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238e8076' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+}
+
+.sort-select:focus {
+    border-color: var(--primary-color);
+}
+
+/* ================= PRODUCT GRID ================= */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    transition: var(--transition);
+}
+
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: #dfd5cb;
+}
+
+.card-image-wrap {
+    width: 100%;
+    position: relative;
+    padding-top: 130%; /* Balanced Portrait 3:4 aspect ratio */
+    background: #fbf9f6;
+    overflow: hidden;
+}
+
+.card-image-wrap img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card:hover .card-image-wrap img {
+    transform: scale(1.05);
+}
+
+/* DISCOUNT & WISHLIST OVERLAYS */
+.discount-tag {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 5px 8px;
+    border-radius: 4px;
+    z-index: 2;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.wishlist-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+    border: none;
+}
+
+.wishlist-btn:hover {
+    transform: scale(1.1);
+}
+
+.wishlist-btn span {
+    font-size: 18px;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.wishlist-btn.active span {
+    color: var(--accent-red);
+    font-variation-settings: 'FILL' 1;
+}
+
+/* CARD DETAILS */
+.card-body {
+    padding: 16px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-category {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-main);
+    line-height: 1.4;
+    margin: 0 0 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 42px; /* Fixed height limits size difference layout offsets */
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    padding-top: 14px;
+}
+
+.price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.final-price {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.original-price {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: line-through;
+}
+
+.stock-badge {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.5px;
+}
+
+.in-stock {
+    background: #eef5ee;
+    color: var(--accent-green);
+}
+
+.out-of-stock {
+    background: #fcecec;
+    color: var(--accent-red);
+}
+
+/* ================= LIST VIEW EXTENSION ================= */
+.product-grid.list-view {
+    grid-template-columns: 1fr;
+}
+
+.product-grid.list-view .card {
+    flex-direction: row;
+    height: 220px;
+}
+
+.product-grid.list-view .card-image-wrap {
+    width: 220px;
+    height: 100%;
+    padding-top: 0;
+    flex-shrink: 0;
+}
+
+.product-grid.list-view .card-body {
+    padding: 24px;
+}
+
+.product-grid.list-view .card-title {
+    font-size: 18px;
+    height: auto;
+    -webkit-line-clamp: 1;
+    margin-bottom: 15px;
+}
+
+.product-grid.list-view .card-footer {
+    border-top: none;
+    padding-top: 0;
+    margin-top: 20px;
 }
 
 /* ================= PAGINATION ================= */
-
-.pagination{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    gap:10px;
-
-    margin-top:44px;
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 48px;
 }
 
-.page{
-    width:42px;
-    height:42px;
-
-    border-radius:12px;
-
-    background:white;
-
-    border:1px solid #e7ddd6;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    text-decoration:none;
-
-    color:#5d5047;
-
-    font-size:13px;
-    font-weight:700;
+.page {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-main);
+    font-size: 13px;
+    font-weight: 700;
+    transition: var(--transition);
 }
 
-.page.active{
-    background:#341818;
-    color:white;
+.page:hover, .page.active {
+    background: var(--primary-color);
+    color: #ffffff;
+    border-color: var(--primary-color);
 }
 
-/* ================= EMPTY ================= */
-
-.empty{
-    width:100%;
-
-    background:white;
-
-    border-radius:18px;
-
-    padding:80px 30px;
-
-    text-align:center;
-
-    border:1px solid #eee5df;
+.page.active {
+    pointer-events: none;
 }
 
-.empty h2{
-    font-family:'Noto Serif',serif;
-    margin-bottom:12px;
+.page.prev-next span {
+    font-size: 18px;
 }
 
-.empty p{
-    color:#8c7d74;
+/* ================= EMPTY SCREEN ================= */
+.empty {
+    width: 100%;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 80px 40px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.empty-icon {
+    font-size: 48px;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.empty h2 {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    color: var(--primary-color);
+    margin: 0 0 12px 0;
+}
+
+.empty p {
+    color: var(--text-muted);
+    font-size: 15px;
+    margin: 0 0 24px 0;
+}
+
+.reset-link {
+    display: inline-block;
+    color: #ffffff;
+    background: var(--primary-color);
+    padding: 12px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+}
+
+.reset-link:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 4px 12px rgba(46, 20, 20, 0.2);
 }
 
 /* ================= RESPONSIVE ================= */
-
-@media(max-width:1200px){
-
-    .product-grid{
-        grid-template-columns:repeat(2,1fr);
+@media (max-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media(max-width:900px){
-
-    .wrapper{
-        grid-template-columns:1fr;
+@media (max-width: 992px) {
+    .shop-layout {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
+    
+    .sidebar {
+        position: static;
+        width: 100%;
+    }
+    
+    .header {
+        padding: 40px 24px 20px;
+    }
+    
+    .shop-layout {
+        padding: 0 24px;
+    }
+}
 
-    .sidebar{
-        position:static;
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .header h1 {
+        font-size: 38px;
+    }
+    
+    .toolbar {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+    
+    .toolbar-left {
+        justify-content: space-between;
+    }
+    
+    .sort-dropdown-container {
+        justify-content: space-between;
+    }
+    
+    .sort-select {
+        flex-grow: 1;
+        max-width: none;
     }
 }
 
-@media(max-width:650px){
-
-    .product-grid{
-        grid-template-columns:1fr;
+@media (max-width: 576px) {
+    .product-grid {
+        grid-template-columns: 1fr;
     }
-
-    .navbar{
-        padding:0 20px;
+    
+    .product-grid.list-view .card {
+        flex-direction: column;
+        height: auto;
     }
-
-    .header{
-        padding:34px 20px 20px;
+    
+    .product-grid.list-view .card-image-wrap {
+        width: 100%;
+        padding-top: 130%;
     }
-
-    .wrapper{
-        padding:0 20px 40px;
-    }
-
-    .header h1{
-        font-size:38px;
-    }
-
-    .header p{
-        width:100%;
+    
+    .price-input-row {
+        flex-direction: column;
+        align-items: stretch;
     }
 }
-.search-box a{
-    position:absolute;
-
-    top:11px;
-    right:12px;
-
-    text-decoration:none;
-
-    color:#8e8076;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    transition:.2s;
-}
-
-.search-box a:hover{
-    color:#341818;
-    transform:scale(1.08);
-}
-.price-section{
-    display:flex;
-    flex-direction:column;
-    gap:4px;
-}
-
-.offer-price{
-    font-size:22px;
-    font-weight:800;
-    color:#341818;
-}
-
-.original-price{
-    font-size:14px;
-    color:#888;
-    text-decoration:line-through;
-}
-
-.discount-badge{
-    font-size:11px;
-    font-weight:700;
-    color:#198754;
-}
-
 </style>
-
 </head>
-
 <body>
 {% endblock %}
 
 {% block content %}
-
-<!-- ================= HEADER ================= -->
-
-<div class="header">
-
-    <h1>Shop Collection</h1>
-
-    <p>
-        Explore curated silhouettes designed for timeless elegance, premium comfort, and contemporary fashion aesthetics.
-    </p>
-
-</div>
-
-<!-- ================= MAIN ================= -->
-
-<div class="wrapper">
-
-    <!-- ================= PRODUCTS ================= -->
-
-    <div>
-
-        {% if products %}
-
-        <div class="product-grid">
-
-            {% for item in products %}
-
-<a
-href="{% url 'product_details' item.product.id %}"
-style="text-decoration:none;color:inherit;"
->
-
-    <div class="card">
-
-        <!-- IMAGE -->
-
-       <div class="card-image">
-
-    <div
-    class="wishlist-btn {% if item.in_wishlist %}active{% endif %}"
-    data-variant="{{ item.variant.id }}"
-    >
-
-        <span class="material-symbols-outlined">
-            favorite
-        </span>
-
+<div class="shop-container">
+    
+    <!-- ================= HEADER ================= -->
+    <div class="header">
+        <h1>Shop Collection</h1>
+        <p>Explore curated silhouettes designed for timeless elegance, premium comfort, and contemporary fashion aesthetics.</p>
     </div>
 
-    {% if item.image %}
+    <!-- ================= MAIN LAYOUT ================= -->
+    <div class="shop-layout">
 
-    <img src="{{ item.image.image.url }}">
-
-    {% else %}
-
-    <img src="{% static 'images/no-image.png' %}">
-
-    {% endif %}
-
-</div>
-
-        <!-- BODY -->
-
-        <div class="card-body">
-
-            <div class="category">
-                {{ item.product.category.category_name }}
+        <!-- ================= SIDEBAR FILTERS ================= -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h3>FILTERS</h3>
+                <span class="material-symbols-outlined filter-icon">tune</span>
             </div>
 
-            <div class="product-name">
-                {{ item.product.product_name }}
-            </div>
+            <form method="GET" id="filter-form">
+                <!-- HIDDEN SORT & CATEGORY CONTROLS -->
+                <input type="hidden" name="sort" id="hidden-sort-input" value="{{ sort }}">
+                <input type="hidden" name="category" id="hidden-category-input" value="{{ category_id }}">
 
-            <div class="price-row">
-
-                <div class="price-section">
-
-    <div class="offer-price">
-        ₹{{ item.offer_data.final_price }}
-    </div>
-
-    {% if item.offer_data.offer %}
-
-    <div class="original-price">
-        ₹{{ item.offer_data.original_price }}
-    </div>
-
-    <div class="discount-badge">
-
-        {% if item.offer_data.offer.discount_type == "PERCENTAGE" %}
-
-            {{ item.offer_data.offer.discount_value }}% OFF
-
-        {% else %}
-
-            ₹{{ item.offer_data.offer.discount_value }} OFF
-
-        {% endif %}
-
-    </div>
-
-    {% endif %}
-
-</div>
-
-                {% if item.available_stock > 0 %}
-
-                <div class="stock in-stock">
-                    IN STOCK
+                <!-- SEARCH -->
+                <div class="filter-group">
+                    <label>SEARCH</label>
+                    <div class="search-box">
+                        <input 
+                            type="text" 
+                            name="search" 
+                            class="search-input" 
+                            placeholder="Search products..." 
+                            value="{{ search }}"
+                        >
+                        {% if search %}
+                        <a href="?sort={{ sort }}&category={{ category_id }}&min_price={{ min_price }}&max_price={{ max_price }}" class="clear-search">
+                            <span class="material-symbols-outlined">close</span>
+                        </a>
+                        {% else %}
+                        <span class="material-symbols-outlined">search</span>
+                        {% endif %}
+                    </div>
                 </div>
 
-                {% else %}
-
-                <div class="stock out-stock">
-                    OUT OF STOCK
-                </div>
-
-                {% endif %}
-
-            </div>
-
-        </div>
-
-    </div>
-
-</a>
-
-{% endfor %}
-</div>
-
-        <!-- ================= PAGINATION ================= -->
-
-        <div class="pagination">
-
-            {% if products.has_previous %}
-
-            <a
-            href="?page={{ products.previous_page_number }}&search={{ search }}&sort={{ sort }}&category={{ category_id }}&min_price={{ min_price }}&max_price={{ max_price }}"
-            class="page"
-            >
-
-                ‹
-            </a>
-
-            {% endif %}
-
-            {% for num in products.paginator.page_range %}
-
-                {% if products.number == num %}
-
-                <a href="#" class="page active">
-                    {{ num }}
-                </a>
-
-                {% else %}
-
-                <a
-                href="?page={{ num }}&search={{ search }}&sort={{ sort }}&category={{ category_id }}&min_price={{ min_price }}&max_price={{ max_price }}"
-                class="page"
-                >
-                    {{ num }}
-                </a>
-
-                {% endif %}
-
-            {% endfor %}
-
-            {% if products.has_next %}
-
-            <a
-            href="?page={{ products.next_page_number }}&search={{ search }}&sort={{ sort }}&category={{ category_id }}&min_price={{ min_price }}&max_price={{ max_price }}"
-            class="page"
-            >
-            
-                ›
-            </a>
-
-            {% endif %}
-
-        </div>
-
-        {% else %}
-
-        <div class="empty">
-
-            <h2>No Products Found</h2>
-
-            <p>
-                Try adjusting filters or search terms.
-            </p>
-
-        </div>
-
-        {% endif %}
-
-    </div>
-
-    <!-- ================= FILTERS ================= -->
-
-    <div class="sidebar">
-
-        <h3>FILTER & SEARCH</h3>
-
-        <form method="GET">
-
-            <!-- SEARCH -->
-
-            <div class="filter-group">
-
-                <label>SEARCH</label>
-<div class="search-box">
-
-    <input
-    type="text"
-    name="search"
-    class="input"
-    placeholder="Search products..."
-    value="{{ search }}"
-    >
-
-    {% if search %}
-
-    <a
-    href="?sort={{ sort }}&category={{ category_id }}"
-    class="clear-search"
-    >
-
-        <span class="material-symbols-outlined">
-            close
-        </span>
-
-    </a>
-
-    {% else %}
-
-    <span class="material-symbols-outlined">
-        search
-    </span>
-
-    {% endif %}
-
-</div>
-            </div>
-
-            <!-- SORT -->
-
-            <div class="filter-group">
-
-                <label>SORT BY</label>
-
-                <select
-                name="sort"
-                class="select"
-                >
-
-                    <option value="">
-                        Select Sort
-                    </option>
-
-                    <option
-                    value="a-z"
-                    {% if sort == 'a-z' %}selected{% endif %}
-                    >
-                        A - Z
-                    </option>
-
-                    <option
-                    value="z-a"
-                    {% if sort == 'z-a' %}selected{% endif %}
-                    >
-                        Z - A
-                    </option>
-
-                    <option
-                    value="newest"
-                    {% if sort == 'newest' %}selected{% endif %}
-                    >
-                        Newest
-                    </option>
-
-                    <option
-                    value="oldest"
-                    {% if sort == 'oldest' %}selected{% endif %}
-                    >
-                        Oldest
-                    </option>
-                    <option
-value="price-low"
-{% if sort == 'price-low' %}selected{% endif %}
->
-    Price Low To High
-</option>
-
-<option
-value="price-high"
-{% if sort == 'price-high' %}selected{% endif %}
->
-    Price High To Low
-</option>
-
-                </select>
-
-            </div>
-
-            <!-- CATEGORY -->
-
-            <div class="filter-group">
-
-                <label>CATEGORY</label>
-
-                <select
-                name="category"
-                class="select"
-                >
-
-                    <option value="">
-                        All Categories
-                    </option>
-
-                    {% for category in categories %}
-
-                    <option
-                    value="{{ category.id }}"
-                    {% if category_id == category.id|stringformat:'s' %}
-                    selected
-                    {% endif %}
-                    >
-                        {{ category.category_name }}
-                    </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
-            <!-- MIN PRICE -->
-
-<div class="filter-group">
-
-    <label>MIN PRICE</label>
-
-    <input
-    type="number"
-    name="min_price"
-    class="input"
-    placeholder="₹ Minimum"
-    min="0"
-    value="{{ min_price }}"
-    >
-
-</div>
-
-<!-- MAX PRICE -->
-
-<div class="filter-group">
-
-    <label>MAX PRICE</label>
-
-    <input
-    type="number"
-    name="max_price"
-    class="input"
-    placeholder="₹ Maximum"
-    min="0"
-    value="{{ max_price }}"
-    >
-
-</div>
-
-
-            <!-- BUTTONS -->
-
-            <button
-            type="submit"
-            class="filter-btn"
-            >
-                APPLY FILTERS
-            </button>
-
-            <a href="{% url 'shop' %}">
-
-                <button
-                type="button"
-                class="clear-btn"
-                >
-                    CLEAR ALL
-                </button>
-
-            </a>
-
-        </form>
-
-    </div>
-
-</div>
-<script>
-
-document.querySelectorAll(
-
-    ".wishlist-btn"
-
-).forEach(button => {
-
-    button.addEventListener(
-
-        "click",
-
-        async function(e){
-
-            e.preventDefault();
-
-            e.stopPropagation();
-
-            const variantId = this.dataset.variant;
-
-            try{
-
-                const response = await fetch(
-
-                    `/products/toggle-wishlist/${variantId}/`
-
-                );
-
-                const data = await response.json();
-
-                // ================= HEART TOGGLE =================
-
-                if(data.status === "added"){
-
-                    this.classList.add("active");
-
-                    showToast(
-
-                        "Added to wishlist",
-
-                        "success"
-
-                    );
-
-                }
-
-                else{
-
-                    this.classList.remove("active");
-
-                    showToast(
-
-                        "Removed from wishlist",
-
-                        "error"
-
-                    );
-
-                }
-
-                // ================= NAVBAR COUNT =================
-
-                const wishlistBadge = document.getElementById(
-
-                    "wishlist-count"
-
-                );
-
-                if(data.wishlist_count > 0){
-
-                    if(wishlistBadge){
-
-                        wishlistBadge.innerText =
-
-                            data.wishlist_count;
-
-                    }
-
-                    else{
-
-                        const wishlistIcon = document.querySelector(
-
-                            ".wishlist-icon-wrap"
-
-                        );
-
-                        wishlistIcon.insertAdjacentHTML(
-
-                            "beforeend",
-
-                            `
-
-                            <span
-                            class="wishlist-badge"
-                            id="wishlist-count"
+                <!-- CATEGORY -->
+                <div class="filter-group">
+                    <label>CATEGORIES</label>
+                    <div class="category-list">
+                        <label class="category-item">
+                            <input 
+                                type="radio" 
+                                name="category_radio" 
+                                class="category-radio" 
+                                value="" 
+                                {% if not category_id %}checked{% endif %} 
+                                onchange="selectCategory(this.value)"
                             >
+                            <span class="radio-custom"></span>
+                            <span class="category-name-label">All Categories</span>
+                        </label>
+                        {% for category in categories %}
+                        <label class="category-item">
+                            <input 
+                                type="radio" 
+                                name="category_radio" 
+                                class="category-radio" 
+                                value="{{ category.id }}" 
+                                {% if category_id == category.id|stringformat:'s' %}checked{% endif %} 
+                            >
+                            <span class="radio-custom"></span>
+                            <span class="category-name-label">{{ category.category_name }}</span>
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
 
-                                ${data.wishlist_count}
+                <!-- PRICE RANGE SLIDER -->
+                <div class="filter-group">
+                    <label>PRICE RANGE</label>
+                    
+                    <div class="slider-wrapper">
+                        <div class="dual-range-slider">
+                            <div class="slider-track" id="slider-track"></div>
+                            <input 
+                                type="range" 
+                                id="range-min" 
+                                min="0" 
+                                max="10000" 
+                                value="{{ min_price|default:0 }}" 
+                                class="range-input" 
+                                oninput="updatePriceInputs(event)"
+                            >
+                            <input 
+                                type="range" 
+                                id="range-max" 
+                                min="0" 
+                                max="10000" 
+                                value="{{ max_price|default:5000 }}" 
+                                class="range-input" 
+                                oninput="updatePriceInputs(event)"
+                            >
+                        </div>
+                    </div>
 
-                            </span>
+                    <div class="price-input-row">
+                        <div class="price-field">
+                            <span class="currency-prefix">₹</span>
+                            <input 
+                                type="number" 
+                                name="min_price" 
+                                id="min-price-input" 
+                                min="0" 
+                                value="{{ min_price|default:0 }}" 
+                                placeholder="Min" 
+                                class="price-num-input" 
+                                onchange="updateSliderFromInputs()"
+                            >
+                        </div>
+                        <div class="price-field">
+                            <span class="currency-prefix">₹</span>
+                            <input 
+                                type="number" 
+                                name="max_price" 
+                                id="max-price-input" 
+                                min="0" 
+                                value="{{ max_price|default:5000 }}" 
+                                placeholder="Max" 
+                                class="price-num-input" 
+                                onchange="updateSliderFromInputs()"
+                            >
+                        </div>
+                    </div>
+                </div>
 
-                            `
+                <!-- FILTER BUTTONS -->
+                <div class="sidebar-buttons">
+                    <button type="submit" class="filter-btn">APPLY FILTERS</button>
+                    <a href="{% url 'shop' %}" class="clear-btn-link">
+                        <button type="button" class="clear-btn">CLEAR ALL</button>
+                    </a>
+                </div>
+            </form>
+        </div>
 
-                        );
+        <!-- ================= PRODUCTS SECTION ================= -->
+        <div>
+            <!-- TOOLBAR -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <div class="view-toggle">
+                        <button type="button" class="view-btn active" id="btn-grid" onclick="setView('grid')" aria-label="Grid view">
+                            <span class="material-symbols-outlined">grid_view</span>
+                        </button>
+                        <button type="button" class="view-btn" id="btn-list" onclick="setView('list')" aria-label="List view">
+                            <span class="material-symbols-outlined">view_list</span>
+                        </button>
+                    </div>
+                    <span class="product-count">
+                        Showing {% if products %}{{ products.start_index }}–{{ products.end_index }} of {{ products.paginator.count }}{% else %}0{% endif %} products
+                    </span>
+                </div>
 
-                    }
+                <div class="sort-dropdown-container">
+                    <label for="sort-select-top">Sort by:</label>
+                    <select id="sort-select-top" class="sort-select" onchange="syncSort(this.value)">
+                        <option value="" {% if not sort %}selected{% endif %}>Select Sort</option>
+                        <option value="a-z" {% if sort == 'a-z' %}selected{% endif %}>A - Z</option>
+                        <option value="z-a" {% if sort == 'z-a' %}selected{% endif %}>Z - A</option>
+                        <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest</option>
+                        <option value="oldest" {% if sort == 'oldest' %}selected{% endif %}>Oldest</option>
+                        <option value="price-low" {% if sort == 'price-low' %}selected{% endif %}>Price Low To High</option>
+                        <option value="price-high" {% if sort == 'price-high' %}selected{% endif %}>Price High To Low</option>
+                    </select>
+                </div>
+            </div>
 
-                }
+            <!-- PRODUCTS GRID -->
+            {% if products %}
+            <div class="product-grid" id="product-grid">
+                {% for item in products %}
+                <a href="{% url 'product_details' item.product.id %}" class="product-card-link">
+                    <div class="card">
+                        
+                        <!-- CARD IMAGE -->
+                        <div class="card-image-wrap">
+                            <!-- DISCOUNT TAG -->
+                            {% if item.offer_data.offer %}
+                            <div class="discount-tag">
+                                {% if item.offer_data.offer.discount_type == "PERCENTAGE" %}
+                                    {{ item.offer_data.offer.discount_value }}% OFF
+                                {% else %}
+                                    ₹{{ item.offer_data.offer.discount_value }} OFF
+                                {% endif %}
+                            </div>
+                            {% endif %}
 
-                else{
+                            <!-- WISHLIST HEART OVERLAY -->
+                            <button 
+                                type="button"
+                                class="wishlist-btn {% if item.in_wishlist %}active{% endif %}" 
+                                data-variant="{{ item.variant.id }}"
+                            >
+                                <span class="material-symbols-outlined">favorite</span>
+                            </button>
 
-                    if(wishlistBadge){
+                            {% if item.image %}
+                            <img src="{{ item.image.image.url }}" alt="{{ item.product.product_name }}">
+                            {% else %}
+                            <img src="{% static 'images/no-image.png' %}" alt="No Image Available">
+                            {% endif %}
+                        </div>
 
-                        wishlistBadge.remove();
+                        <!-- CARD BODY -->
+                        <div class="card-body">
+                            <div class="card-category">
+                                {{ item.product.category.category_name }}
+                            </div>
+                            <h4 class="card-title">
+                                {{ item.product.product_name }}
+                            </h4>
+                            
+                            <!-- CARD FOOTER (Price and Stock) -->
+                            <div class="card-footer">
+                                <div class="price-container">
+                                    <span class="final-price">₹{{ item.offer_data.final_price }}</span>
+                                    {% if item.offer_data.offer %}
+                                    <span class="original-price">₹{{ item.offer_data.original_price }}</span>
+                                    {% endif %}
+                                </div>
 
-                    }
+                                {% if item.available_stock > 0 %}
+                                <span class="stock-badge in-stock">IN STOCK</span>
+                                {% else %}
+                                <span class="stock-badge out-of-stock">OUT OF STOCK</span>
+                                {% endif %}
+                            </div>
+                        </div>
 
-                }
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
 
-            }
+            <!-- ================= PAGINATION ================= -->
+            <div class="pagination">
+                {% if products.has_previous %}
+                <a href="?page={{ products.previous_page_number }}&search={{ search }}&sort={{ sort }}&category={{ category_id }}&min_price={{ min_price }}&max_price={{ max_price }}" class="page prev-next">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </a>
+                {% endif %}
 
-            catch(error){
+                {% for num in products.paginator.page_range %}
+                    {% if products.number == num %}
+                    <span class="page active">{{ num }}</span>
+                    {% else %}
+                    <a href="?page={{ num }}&search={{ search }}&sort={{ sort }}&category={{ category_id }}&min_price={{ min_price }}&max_price={{ max_price }}" class="page">
+                        {{ num }}
+                    </a>
+                    {% endif %}
+                {% endfor %}
 
-                console.log(error);
+                {% if products.has_next %}
+                <a href="?page={{ products.next_page_number }}&search={{ search }}&sort={{ sort }}&category={{ category_id }}&min_price={{ min_price }}&max_price={{ max_price }}" class="page prev-next">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </a>
+                {% endif %}
+            </div>
 
-            }
+            {% else %}
+            <!-- EMPTY SCREEN -->
+            <div class="empty">
+                <span class="material-symbols-outlined empty-icon">sentiment_dissatisfied</span>
+                <h2>No Products Found</h2>
+                <p>Try adjusting filters or search terms.</p>
+                <a href="{% url 'shop' %}" class="reset-link">Clear all filters</a>
+            </div>
+            {% endif %}
+        </div>
 
-        }
+    </div>
+</div>
 
-    );
+<!-- ================= JAVASCRIPT CONTROLS ================= -->
+<script>
+// ================= VIEW TOGGLE (GRID / LIST) =================
+function setView(viewType) {
+    const grid = document.getElementById('product-grid');
+    const btnGrid = document.getElementById('btn-grid');
+    const btnList = document.getElementById('btn-list');
+    if(!grid) return;
+    
+    if (viewType === 'list') {
+        grid.classList.add('list-view');
+        btnList.classList.add('active');
+        btnGrid.classList.remove('active');
+    } else {
+        grid.classList.remove('list-view');
+        btnGrid.classList.add('active');
+        btnList.classList.remove('active');
+    }
+}
+
+// ================= SORT SYNCHRONIZATION =================
+function syncSort(val) {
+    document.getElementById('hidden-sort-input').value = val;
+    
+}
+
+document.querySelectorAll('.category-radio').forEach(radio => {
+
+    radio.addEventListener('change', function() {
+
+        document.getElementById(
+            'hidden-category-input'
+        ).value = this.value;
+
+    });
 
 });
 
+// ================= DUAL PRICE SLIDER =================
+function updatePriceInputs(e) {
+    const rangeMin = document.getElementById('range-min');
+    const rangeMax = document.getElementById('range-max');
+    const inputMin = document.getElementById('min-price-input');
+    const inputMax = document.getElementById('max-price-input');
+    const track = document.getElementById('slider-track');
+    
+    if (!rangeMin || !rangeMax || !inputMin || !inputMax || !track) return;
+    
+    let minVal = parseInt(rangeMin.value);
+    let maxVal = parseInt(rangeMax.value);
+    
+    if (maxVal - minVal < 200) {
+        if (e && e.target && e.target.id === 'range-min') {
+            rangeMin.value = maxVal - 200;
+            minVal = maxVal - 200;
+        } else {
+            rangeMax.value = minVal + 200;
+            maxVal = minVal + 200;
+        }
+    }
+    
+    inputMin.value = minVal;
+    inputMax.value = maxVal;
+    
+    const percentMin = (minVal / rangeMin.max) * 100;
+    const percentMax = 100 - ((maxVal / rangeMax.max) * 100);
+    track.style.left = percentMin + '%';
+    track.style.right = percentMax + '%';
+}
+
+function updateSliderFromInputs() {
+    const rangeMin = document.getElementById('range-min');
+    const rangeMax = document.getElementById('range-max');
+    const inputMin = document.getElementById('min-price-input');
+    const inputMax = document.getElementById('max-price-input');
+    const track = document.getElementById('slider-track');
+    
+    if (!rangeMin || !rangeMax || !inputMin || !inputMax || !track) return;
+    
+    let minVal = parseInt(inputMin.value) || 0;
+    let maxVal = parseInt(inputMax.value) || parseInt(rangeMax.max);
+    
+    if (minVal < 0) minVal = 0;
+    if (maxVal > parseInt(rangeMax.max)) maxVal = parseInt(rangeMax.max);
+    if (minVal > maxVal - 200) minVal = maxVal - 200;
+    
+    inputMin.value = minVal;
+    inputMax.value = maxVal;
+    
+    rangeMin.value = minVal;
+    rangeMax.value = maxVal;
+    
+    const percentMin = (minVal / rangeMin.max) * 100;
+    const percentMax = 100 - ((maxVal / rangeMax.max) * 100);
+    track.style.left = percentMin + '%';
+    track.style.right = percentMax + '%';
+}
+
+// Initial positioning on window load
+window.addEventListener('DOMContentLoaded', () => {
+    updateSliderFromInputs();
+});
+
+// ================= WISHLIST TOGGLE AJAX =================
+document.querySelectorAll(".wishlist-btn").forEach(button => {
+    button.addEventListener("click", async function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const variantId = this.dataset.variant;
+        try {
+            const response = await fetch(`/products/toggle-wishlist/${variantId}/`);
+            const data = await response.json();
+            
+            // Toggle active state
+            if (data.status === "added") {
+                this.classList.add("active");
+                if (typeof showToast === "function") {
+                    showToast("Added to wishlist", "success");
+                }
+            } else {
+                this.classList.remove("active");
+                if (typeof showToast === "function") {
+                    showToast("Removed from wishlist", "error");
+                }
+            }
+            
+            // Navbar Count Synchronization
+            const wishlistBadge = document.getElementById("wishlist-count");
+            if (data.wishlist_count > 0) {
+                if (wishlistBadge) {
+                    wishlistBadge.innerText = data.wishlist_count;
+                } else {
+                    const wishlistIcon = document.querySelector(".wishlist-icon-wrap");
+                    if (wishlistIcon) {
+                        wishlistIcon.insertAdjacentHTML("beforeend", `
+                            <span class="wishlist-badge" id="wishlist-count">
+                                ${data.wishlist_count}
+                            </span>
+                        `);
+                    }
+                }
+            } else {
+                if (wishlistBadge) {
+                    wishlistBadge.remove();
+                }
+            }
+        } catch (error) {
+            console.log("Error toggling wishlist:", error);
+        }
+    });
+});
 </script>
 </body>
 {% endblock %}
 </html>
-
-

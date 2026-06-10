@@ -6,18 +6,39 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_orders', '0007_order_return_status'),
+        ("admin_orders", "0007_order_return_status"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='order_status',
-            field=models.CharField(choices=[('Pending', 'Pending'), ('Shipped', 'Shipped'), ('Out For Delivery', 'Out For Delivery'), ('Delivered', 'Delivered'), ('Cancelled', 'Cancelled')], default='Pending', max_length=30),
+            model_name="order",
+            name="order_status",
+            field=models.CharField(
+                choices=[
+                    ("Pending", "Pending"),
+                    ("Shipped", "Shipped"),
+                    ("Out For Delivery", "Out For Delivery"),
+                    ("Delivered", "Delivered"),
+                    ("Cancelled", "Cancelled"),
+                ],
+                default="Pending",
+                max_length=30,
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='return_status',
-            field=models.CharField(choices=[('Not Requested', 'Not Requested'), ('Requested', 'Requested'), ('Approved', 'Approved'), ('Rejected', 'Rejected'), ('Returned', 'Returned'), ('Refunded', 'Refunded')], default='Not Requested', max_length=30),
+            model_name="order",
+            name="return_status",
+            field=models.CharField(
+                choices=[
+                    ("Not Requested", "Not Requested"),
+                    ("Requested", "Requested"),
+                    ("Approved", "Approved"),
+                    ("Rejected", "Rejected"),
+                    ("Returned", "Returned"),
+                    ("Refunded", "Refunded"),
+                ],
+                default="Not Requested",
+                max_length=30,
+            ),
         ),
     ]

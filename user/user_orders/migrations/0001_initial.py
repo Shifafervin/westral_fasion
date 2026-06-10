@@ -10,36 +10,103 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('admin_orders', '0006_remove_order_return_reason_remove_order_returned_at_and_more'),
+        (
+            "admin_orders",
+            "0006_remove_order_return_reason_remove_order_returned_at_and_more",
+        ),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ReturnRequest',
+            name="ReturnRequest",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('reason', models.CharField(max_length=255)),
-                ('additional_reason', models.TextField(blank=True, null=True)),
-                ('refund_method', models.CharField(choices=[('Original Payment', 'Original Payment'), ('Wallet', 'Wallet')], default='Wallet', max_length=50)),
-                ('status', models.CharField(choices=[('Pending', 'Pending'), ('Approved', 'Approved'), ('Rejected', 'Rejected'), ('Refunded', 'Refunded')], default='Pending', max_length=30)),
-                ('requested_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('admin_note', models.TextField(blank=True, null=True)),
-                ('refunded_at', models.DateTimeField(blank=True, null=True)),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='returns', to='admin_orders.order')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("reason", models.CharField(max_length=255)),
+                ("additional_reason", models.TextField(blank=True, null=True)),
+                (
+                    "refund_method",
+                    models.CharField(
+                        choices=[
+                            ("Original Payment", "Original Payment"),
+                            ("Wallet", "Wallet"),
+                        ],
+                        default="Wallet",
+                        max_length=50,
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("Pending", "Pending"),
+                            ("Approved", "Approved"),
+                            ("Rejected", "Rejected"),
+                            ("Refunded", "Refunded"),
+                        ],
+                        default="Pending",
+                        max_length=30,
+                    ),
+                ),
+                ("requested_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("admin_note", models.TextField(blank=True, null=True)),
+                ("refunded_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="returns",
+                        to="admin_orders.order",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ReturnItem',
+            name="ReturnItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField(default=1)),
-                ('refund_amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('order_item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='admin_orders.orderitem')),
-                ('return_request', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='return_items', to='user_orders.returnrequest')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField(default=1)),
+                ("refund_amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "order_item",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="admin_orders.orderitem",
+                    ),
+                ),
+                (
+                    "return_request",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="return_items",
+                        to="user_orders.returnrequest",
+                    ),
+                ),
             ],
         ),
     ]

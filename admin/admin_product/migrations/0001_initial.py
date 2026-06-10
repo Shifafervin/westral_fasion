@@ -9,24 +9,39 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('admin_category', '0003_category_is_deleted'),
+        ("admin_category", "0003_category_is_deleted"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('product_name', models.CharField(max_length=200)),
-                ('sku', models.CharField(max_length=100, unique=True)),
-                ('description', models.TextField()),
-                ('product_image', models.ImageField(upload_to='products/')),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('stock', models.PositiveIntegerField(default=0)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products', to='admin_category.category')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("product_name", models.CharField(max_length=200)),
+                ("sku", models.CharField(max_length=100, unique=True)),
+                ("description", models.TextField()),
+                ("product_image", models.ImageField(upload_to="products/")),
+                ("price", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("stock", models.PositiveIntegerField(default=0)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="products",
+                        to="admin_category.category",
+                    ),
+                ),
             ],
         ),
     ]

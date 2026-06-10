@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_offers', '0005_alter_offer_end_date_alter_offer_start_date'),
+        ("admin_offers", "0005_alter_offer_end_date_alter_offer_start_date"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='offer',
-            name='is_deleted',
+            model_name="offer",
+            name="is_deleted",
             field=models.BooleanField(default=False),
         ),
     ]

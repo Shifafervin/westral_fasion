@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -6,402 +7,455 @@ Order Success
 {% endblock %}
 
 {% block extra_css %}
-
+<!-- Load Google Material Symbols for credit card and checkmark icons -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-.success-wrapper{
-
-    min-height:100vh;
-
-    background:#f8f5f2;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    padding:80px 20px;
+/* ================= THEME VARIABLES ================= */
+:root {
+    --primary-color: #341818; /* Elegant deep brown from shop */
+    --primary-hover: #4e2b2b;
+    --bg-light: #faf6f0;      /* Warm boutique cream background */
+    --card-bg: #ffffff;
+    --text-main: #341818;     /* Dark charcoal brown */
+    --text-muted: #8e8076;    /* Warm beige-gray */
+    --border-color: #efeae4;  /* Thin soft border */
+    --accent-gold: #d4a373;   /* Star rating gold */
+    --accent-green: #287a43;  /* Premium stock green */
+    --accent-red: #c95c5c;    /* Soft red */
+    --font-serif: 'Playfair Display', 'Noto Serif', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --shadow-sm: 0 4px 24px rgba(139, 119, 101, 0.04);
+    --shadow-md: 0 10px 30px rgba(139, 119, 101, 0.08);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.success-icon{
-
-    width:72px;
-
-    height:72px;
-
-    border-radius:50%;
-
-    background:#6B4F3B;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:white;
-
-    font-size:32px;
-
-    margin-bottom:28px;
+/* Force body styling to match screenshot background */
+body {
+    background-color: var(--bg-light) !important;
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    margin: 0;
 }
 
-.success-title{
-
-    font-size:52px;
-
-    line-height:1;
-
-    font-weight:900;
-
-    text-align:center;
-
-    color:#5a3f2f;
-
-    margin-bottom:22px;
+.success-container {
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    box-sizing: border-box;
 }
 
-.success-sub{
-
-    text-align:center;
-
-    color:#7c6b60;
-
-    font-size:15px;
-
-    max-width:600px;
-
-    line-height:1.8;
-
-    margin-bottom:50px;
+.success-container *, 
+.success-container *::before, 
+.success-container *::after {
+    box-sizing: border-box;
 }
 
-.success-card{
-
-    width:100%;
-
-    max-width:620px;
-
-    background:white;
-
-    border-radius:14px;
-
-    padding:38px;
-
-    border:1px solid #eee;
-
-    margin-bottom:40px;
+/* ================= WRAPPER ================= */
+.success-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 80px 20px;
+    position: relative;
+    z-index: 2;
 }
 
-.success-grid{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:34px;
-
-    margin-bottom:34px;
+/* ================= CARDS & KEYFRAME ANIMATIONS ================= */
+@keyframes fadeInUp {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
-.label{
-
-    font-size:10px;
-
-    letter-spacing:2px;
-
-    color:#8c7c73;
-
-    margin-bottom:10px;
+@keyframes scaleIn {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.1);
+    }
+    80% {
+        transform: scale(0.95);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
-.value{
-
-    font-size:16px;
-
-    font-weight:700;
-
-    color:#3b2a1f;
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(52, 24, 24, 0.2);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(52, 24, 24, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(52, 24, 24, 0);
+    }
 }
 
-.total-box{
-
-    border-top:1px solid #eee;
-
-    padding-top:28px;
+.success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+               pulseGlow 2s infinite 1.2s;
 }
 
-.total-value{
-
-    font-size:38px;
-
-    font-weight:900;
-
-    color:#5a3f2f;
-
-    margin-top:12px;
+.success-icon span {
+    font-size: 36px;
+    font-weight: 500;
 }
 
-.success-actions{
-
-    display:flex;
-
-    gap:18px;
-
-    margin-bottom:22px;
+.success-title {
+    font-family: var(--font-serif);
+    font-size: 48px;
+    line-height: 1.15;
+    font-weight: 500;
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
 }
 
-.success-btn{
-
-    width:220px;
-
-    height:56px;
-
-    border:none;
-
-    border-radius:10px;
-
-    font-size:12px;
-
-    letter-spacing:2px;
-
-    font-weight:800;
-
-    cursor:pointer;
-
-    text-decoration:none;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    transition:.2s;
+.success-sub {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 15px;
+    max-width: 600px;
+    line-height: 1.8;
+    margin-bottom: 44px;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.3s;
 }
 
-.primary-btn{
-
-    background:#6B4F3B;
-
-    color:white;
+/* ================= DETAILS CARD ================= */
+.success-card {
+    width: 100%;
+    max-width: 600px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 38px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.4s;
+    transition: transform 0.2s ease;
 }
 
-.primary-btn:hover{
-
-    background:#563c2c;
+.success-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-.secondary-btn{
-
-    background:white;
-
-    border:1px solid #6B4F3B;
-
-    color:#6B4F3B;
+.success-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    margin-bottom: 28px;
 }
 
-.secondary-btn:hover{
-
-    background:#f5efea;
+.label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
-.success-note{
-
-    font-size:12px;
-
-    color:#8c7c73;
-
-    text-align:center;
+.value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--primary-color);
 }
 
+.total-box {
+    border-top: 1px solid var(--border-color);
+    padding-top: 24px;
+}
+
+.total-value {
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-top: 8px;
+    letter-spacing: -0.5px;
+}
+
+/* ================= BUTTONS ================= */
+.success-actions {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 22px;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.5s;
+}
+
+.success-btn {
+    width: 220px;
+    height: 52px;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.primary-btn {
+    background: var(--primary-color);
+    color: #ffffff;
+}
+
+.primary-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 24, 24, 0.2);
+}
+
+.secondary-btn {
+    background: #ffffff;
+    border: 1px solid #dfd5cb;
+    color: var(--primary-color);
+}
+
+.secondary-btn:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
+}
+
+.success-note {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    opacity: 0;
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.6s;
+}
+
+/* ================= RESPONSIVE ================= */
 @media(max-width:700px){
-
-    .success-title{
-
-        font-size:36px;
+    .success-title {
+        font-size: 36px;
     }
 
-    .success-grid{
-
-        grid-template-columns:1fr;
+    .success-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 
-    .success-actions{
-
-        flex-direction:column;
+    .success-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
     }
 
-    .success-btn{
-
-        width:100%;
+    .success-btn {
+        width: 100%;
     }
 }
-
 </style>
-
 {% endblock %}
 
 {% block content %}
+<div class="success-container">
+    
+    <!-- CONFETTI CANVAS OVERLAY -->
+    <canvas id="confetti-canvas" style="position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999;"></canvas>
 
-<div class="success-wrapper">
-
-    <div class="success-icon">
-        {% if order.payment_method == "RAZORPAY" %}
-
-💳
-
-{% else %}
-
-✓
-
-{% endif %}
-    </div>
-
-    <div class="success-title">
-
-{% if order.payment_method == "RAZORPAY" %}
-
-    PAYMENT SUCCESSFUL <br>
-    ORDER CONFIRMED!
-
-{% else %}
-
-    ORDER PLACED <br>
-    SUCCESSFULLY!
-
-{% endif %}
-
-    </div>
-
-    <div class="success-sub">
-
-        {% if order.payment_method == "RAZORPAY" %}
-
-    Your Razorpay transaction was completed successfully.
-    Your payment has been securely verified and your order is now confirmed.
-
-{% else %}
-
-    Thank you for your purchase.
-    We've received your order and are preparing it for shipment.
-
-{% endif %}
-        We've received your order and are preparing it for shipment.
-
-        A confirmation email has been sent to your registered address.
-
-    </div>
-
-    <div class="success-card">
-
-        <div class="success-grid">
-
-            <div>
-
-                <div class="label">
-                    ORDER IDENTIFIER
-                </div>
-
-                <div class="value">
-                    #{{ order.order_id }}
-                </div>
-
-            </div>
-
-            <div>
-
-                <div class="label">
-                    PAYMENT
-                </div>
-
-                <div class="value">
-
-                    {% if order.payment_method == "RAZORPAY" %}
-
-                        Razorpay Secure
-
-                    {% else %}
-
-                        Cash On Delivery
-
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-            <div>
-
-                <div class="label">
-                    PLACED ON
-                </div>
-
-                <div class="value">
-                    {{ order.created_at|date:"F d, Y" }}
-                </div>
-
-            </div>
-
-            <div>
-
-                <div class="label">
-                    ORDER STATUS
-                </div>
-
-                <div class="value">
-                    {{ order.order_status }}
-                </div>
-
-            </div>
-
+    <!-- WRAPPER -->
+    <div class="success-wrapper">
+        
+        <!-- STATUS ICON -->
+        <div class="success-icon">
+            {% if order.payment_method == "RAZORPAY" %}
+            <span class="material-symbols-outlined">credit_card</span>
+            {% else %}
+            <span class="material-symbols-outlined">check</span>
+            {% endif %}
         </div>
 
-        <div class="total-box">
+        <!-- TRANSACTION STATUS TITLE -->
+        <div class="success-title">
+            {% if order.payment_method == "RAZORPAY" %}
+                PAYMENT SUCCESSFUL <br>
+                ORDER CONFIRMED!
+            {% else %}
+                ORDER PLACED <br>
+                SUCCESSFULLY!
+            {% endif %}
+        </div>
 
-            <div class="label">
-                TOTAL TRANSACTION
+        <!-- TRANSACTION SUBTITLE -->
+        <div class="success-sub">
+            {% if order.payment_method == "RAZORPAY" %}
+                Your Razorpay transaction was completed successfully.
+                Your payment has been securely verified and your order is now confirmed.
+            {% else %}
+                Thank you for your purchase.
+                We've received your order and are preparing it for shipment.
+            {% endif %}
+            <br><br>
+            A confirmation email has been sent to your registered email address.
+        </div>
+
+        <!-- TRANSACTION DETAILS CARD -->
+        <div class="success-card">
+            <div class="success-grid">
+                <div>
+                    <div class="label">Order Identifier</div>
+                    <div class="value">#{{ order.order_id }}</div>
+                </div>
+
+                <div>
+                    <div class="label">Payment</div>
+                    <div class="value">
+                        {% if order.payment_method == "RAZORPAY" %}
+                            Razorpay Secure
+                        {% else %}
+                            Cash On Delivery
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div>
+                    <div class="label">Placed On</div>
+                    <div class="value">{{ order.created_at|date:"F d, Y" }}</div>
+                </div>
+
+                <div>
+                    <div class="label">Order Status</div>
+                    <div class="value">{{ order.order_status }}</div>
+                </div>
             </div>
 
-            <div class="total-value">
-                ₹{{ order.total_amount }}
+            <!-- TOTAL BOX -->
+            <div class="total-box">
+                <div class="label">Total Transaction</div>
+                <div class="total-value">₹{{ order.total_amount }}</div>
             </div>
+        </div>
 
+        <!-- ACTIONS -->
+        <div class="success-actions">
+            <a href="{% url 'my_orders' %}" class="success-btn primary-btn">
+                GO TO ORDERS
+            </a>
+            <a href="{% url 'home' %}" class="success-btn secondary-btn">
+                CONTINUE SHOPPING
+            </a>
+        </div>
+
+        <!-- FOOTER NOTE -->
+        <div class="success-note">
+            Need help? Contact support or reply directly to your confirmation email.
         </div>
 
     </div>
-
-    <div class="success-actions">
-
-        <a
-        href="{% url 'order_detail' order.order_id %}"
-        class="success-btn primary-btn"
-        >
-
-            GO TO ORDERS
-
-        </a>
-
-        <a
-        href="{% url 'home' %}"
-        class="success-btn secondary-btn"
-        >
-
-            CONTINUE SHOPPING
-
-        </a>
-
-    </div>
-
-    <div class="success-note">
-
-        A confirmation email has been sent to your registered email address.
-
-    </div>
-
 </div>
 
+<!-- ================= CONFETTI SCRIPT ================= -->
+<script>
+function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    
+    window.addEventListener('resize', () => {
+        width = canvas.width = window.innerWidth;
+        height = canvas.height = window.innerHeight;
+    });
+    
+    const colors = ['#341818', '#d4a373', '#287a43', '#c95c5c', '#dfd5cb'];
+    const confettiCount = 140;
+    const confetti = [];
+    
+    for (let i = 0; i < confettiCount; i++) {
+        confetti.push({
+            x: Math.random() * width,
+            y: Math.random() * height - height,
+            r: Math.random() * 6 + 4,
+            d: Math.random() * confettiCount,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            tilt: Math.random() * 10 - 5,
+            tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+            tiltAngle: 0
+        });
+    }
+    
+    let animationFrame;
+    let frameCount = 0;
+    
+    function draw() {
+        ctx.clearRect(0, 0, width, height);
+        
+        confetti.forEach((p, index) => {
+            p.tiltAngle += p.tiltAngleIncremental;
+            p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+            p.x += Math.sin(p.tiltAngle);
+            p.tilt = Math.sin(p.tiltAngle - index / 3) * 15;
+            
+            ctx.beginPath();
+            ctx.lineWidth = p.r;
+            ctx.strokeStyle = p.color;
+            ctx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+            ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+            ctx.stroke();
+        });
+        
+        update();
+        frameCount++;
+        
+        // Stop animation loop after 5 seconds (roughly 300 frames)
+        if (frameCount < 300) {
+            animationFrame = requestAnimationFrame(draw);
+        } else {
+            ctx.clearRect(0, 0, width, height);
+        }
+    }
+    
+    function update() {
+        confetti.forEach((p) => {
+            if (p.y > height) {
+                p.x = Math.random() * width;
+                p.y = -20;
+                p.tilt = Math.random() * 10 - 5;
+            }
+        });
+    }
+    
+    animationFrame = requestAnimationFrame(draw);
+}
+
+// Fire confetti on page load
+window.addEventListener('load', launchConfetti);
+</script>
 {% endblock %}

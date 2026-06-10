@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_product', '0004_product_care_guide_product_return_policy'),
+        ("admin_product", "0004_product_care_guide_product_return_policy"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='variant',
-            name='is_deleted',
+            model_name="variant",
+            name="is_deleted",
             field=models.BooleanField(default=False),
         ),
     ]

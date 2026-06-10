@@ -10,39 +10,115 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('admin_product', '0008_alter_product_options_alter_productimage_options_and_more'),
+        (
+            "admin_product",
+            "0008_alter_product_options_alter_productimage_options_and_more",
+        ),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Order',
+            name="Order",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('order_id', models.CharField(max_length=20, unique=True)),
-                ('total_amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('order_status', models.CharField(choices=[('Pending', 'Pending'), ('Shipped', 'Shipped'), ('Out For Delivery', 'Out For Delivery'), ('Delivered', 'Delivered'), ('Cancelled', 'Cancelled')], default='Pending', max_length=30)),
-                ('payment_method', models.CharField(choices=[('COD', 'Cash On Delivery'), ('ONLINE', 'Online Payment')], default='COD', max_length=20)),
-                ('payment_status', models.CharField(choices=[('Pending', 'Pending'), ('Paid', 'Paid'), ('Failed', 'Failed')], default='Pending', max_length=20)),
-                ('shipping_address', models.TextField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='orders', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("order_id", models.CharField(max_length=20, unique=True)),
+                ("total_amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "order_status",
+                    models.CharField(
+                        choices=[
+                            ("Pending", "Pending"),
+                            ("Shipped", "Shipped"),
+                            ("Out For Delivery", "Out For Delivery"),
+                            ("Delivered", "Delivered"),
+                            ("Cancelled", "Cancelled"),
+                        ],
+                        default="Pending",
+                        max_length=30,
+                    ),
+                ),
+                (
+                    "payment_method",
+                    models.CharField(
+                        choices=[
+                            ("COD", "Cash On Delivery"),
+                            ("ONLINE", "Online Payment"),
+                        ],
+                        default="COD",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "payment_status",
+                    models.CharField(
+                        choices=[
+                            ("Pending", "Pending"),
+                            ("Paid", "Paid"),
+                            ("Failed", "Failed"),
+                        ],
+                        default="Pending",
+                        max_length=20,
+                    ),
+                ),
+                ("shipping_address", models.TextField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="orders",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_at'],
+                "ordering": ["-created_at"],
             },
         ),
         migrations.CreateModel(
-            name='OrderItem',
+            name="OrderItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('quantity', models.PositiveIntegerField()),
-                ('price_at_purchase', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('total_price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('order', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='items', to='admin_orders.order')),
-                ('variant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='admin_product.variant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField()),
+                (
+                    "price_at_purchase",
+                    models.DecimalField(decimal_places=2, max_digits=10),
+                ),
+                ("total_price", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "order",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="items",
+                        to="admin_orders.order",
+                    ),
+                ),
+                (
+                    "variant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="admin_product.variant",
+                    ),
+                ),
             ],
         ),
     ]

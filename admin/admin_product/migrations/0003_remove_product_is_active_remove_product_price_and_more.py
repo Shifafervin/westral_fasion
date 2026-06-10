@@ -7,75 +7,109 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_category', '0003_category_is_deleted'),
-        ('admin_product', '0002_alter_product_category'),
+        ("admin_category", "0003_category_is_deleted"),
+        ("admin_product", "0002_alter_product_category"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='product',
-            name='is_active',
+            model_name="product",
+            name="is_active",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='price',
+            model_name="product",
+            name="price",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='product_image',
+            model_name="product",
+            name="product_image",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='sku',
+            model_name="product",
+            name="sku",
         ),
         migrations.RemoveField(
-            model_name='product',
-            name='stock',
+            model_name="product",
+            name="stock",
         ),
         migrations.AddField(
-            model_name='product',
-            name='fit_type',
+            model_name="product",
+            name="fit_type",
             field=models.CharField(blank=True, max_length=100, null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='materials',
+            model_name="product",
+            name="materials",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='updated_at',
+            model_name="product",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='product',
-            name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='products', to='admin_category.category'),
+            model_name="product",
+            name="category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="products",
+                to="admin_category.category",
+            ),
         ),
         migrations.CreateModel(
-            name='Variant',
+            name="Variant",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('size', models.CharField(max_length=20)),
-                ('sku', models.CharField(max_length=100, unique=True)),
-                ('color', models.CharField(max_length=100)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('weight', models.PositiveIntegerField()),
-                ('stock', models.PositiveIntegerField(default=0)),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_default', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='variants', to='admin_product.product')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("size", models.CharField(max_length=20)),
+                ("sku", models.CharField(max_length=100, unique=True)),
+                ("color", models.CharField(max_length=100)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=10)),
+                ("weight", models.PositiveIntegerField()),
+                ("stock", models.PositiveIntegerField(default=0)),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_default", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="variants",
+                        to="admin_product.product",
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='ProductImage',
+            name="ProductImage",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='products/')),
-                ('is_primary', models.BooleanField(default=False)),
-                ('variant', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='images', to='admin_product.variant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("image", models.ImageField(upload_to="products/")),
+                ("is_primary", models.BooleanField(default=False)),
+                (
+                    "variant",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="images",
+                        to="admin_product.variant",
+                    ),
+                ),
             ],
         ),
     ]

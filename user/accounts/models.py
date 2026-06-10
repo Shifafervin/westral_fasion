@@ -1,8 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import  BaseUserManager
+from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-
-
 
 
 class UserManager(BaseUserManager):
@@ -25,32 +23,22 @@ class UserManager(BaseUserManager):
         return user
 
 
-
-
 class User(AbstractUser):
 
-    email = models.EmailField(
-        unique=True
-    )
+    email = models.EmailField(unique=True)
     groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='custom_user_set',
-        blank=True
+        "auth.Group", related_name="custom_user_set", blank=True
     )
 
     user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='custom_user_permissions_set',
-        blank=True
+        "auth.Permission", related_name="custom_user_permissions_set", blank=True
     )
-
-
 
 
 class OTP(models.Model):
     PURPOSE_CHOICES = (
-        ('signup', 'Signup'),
-        ('reset_password', 'Reset Password'),
+        ("signup", "Signup"),
+        ("reset_password", "Reset Password"),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

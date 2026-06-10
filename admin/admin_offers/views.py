@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect,get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
 
@@ -14,238 +14,134 @@ from django.utils import timezone
 
 from django.core.exceptions import ValidationError
 
+
 @admin_required
 def offer_list(request):
 
-    offers = Offer.objects.select_related(
-        "product",
-        "category"
-    ).filter(
-        is_deleted=False
-    ).order_by(
-        "-created_at"
+    offers = (
+        Offer.objects.select_related("product", "category")
+        .filter(is_deleted=False)
+        .order_by("-created_at")
     )
 
-    search_query = request.GET.get(
-        "search",
-        ""
-    )
+    search_query = request.GET.get("search", "")
 
-    type_filter = request.GET.get(
-        "type",
-        ""
-    )
+    type_filter = request.GET.get("type", "")
 
-    status_filter = request.GET.get(
-        "status",
-        ""
-    )
-
-    # Search
+    status_filter = request.GET.get("status", "")
 
     if search_query:
 
         offers = offers.filter(
-
-            Q(offer_name__icontains=search_query) |
-
-            Q(product__product_name__icontains=search_query) |
-
-            Q(category__category_name__icontains=search_query)
-
+            Q(offer_name__icontains=search_query)
+            | Q(product__product_name__icontains=search_query)
+            | Q(category__category_name__icontains=search_query)
         )
-    # Type Filter
 
     if type_filter:
 
-        offers = offers.filter(
-            offer_type=type_filter
-        )
-
-    # Status Filter
+        offers = offers.filter(offer_type=type_filter)
 
     if status_filter == "active":
 
-        offers = offers.filter(
-            is_active=True
-        )
+        offers = offers.filter(is_active=True)
 
     elif status_filter == "inactive":
 
-        offers = offers.filter(
-            is_active=False
-        )
+        offers = offers.filter(is_active=False)
 
-    # Pagination
+    paginator = Paginator(offers, 10)
 
-    paginator = Paginator(
-        offers,
-        10
-    )
+    page_number = request.GET.get("page")
 
-    page_number = request.GET.get(
-        "page"
-    )
-
-    page_obj = paginator.get_page(
-        page_number
-    )
+    page_obj = paginator.get_page(page_number)
 
     context = {
-
         "page_obj": page_obj,
-
         "search_query": search_query,
-
         "type_filter": type_filter,
-
         "status_filter": status_filter,
-
         "today": timezone.now(),
-
     }
 
-    return render(
-
-        request,
-
-        "offer_list.html",
-
-        context
-
-    )
-
+    return render(request, "offer_list.html", context)
 
 
 @admin_required
 def add_offer(request):
 
-    products = Product.objects.filter(
-        is_deleted=False
-    )
+    products = Product.objects.filter(is_deleted=False)
 
-    categories = Category.objects.filter(
-        is_deleted=False
-    )
+    categories = Category.objects.filter(is_deleted=False)
 
     if request.method == "POST":
 
-        offer_name = request.POST.get(
-            "offer_name"
-        )
+        offer_name = request.POST.get("offer_name")
 
-        offer_type = request.POST.get(
-            "offer_type"
-        )
+        offer_type = request.POST.get("offer_type")
 
-        discount_type = request.POST.get(
-            "discount_type"
-        )
+        discount_type = request.POST.get("discount_type")
 
-        discount_value = request.POST.get(
-            "discount_value"
-        )
+        discount_value = request.POST.get("discount_value")
 
-        minimum_purchase_amount = request.POST.get(
-            "minimum_purchase_amount"
-        ) or 0
+        minimum_purchase_amount = request.POST.get("minimum_purchase_amount") or 0
 
-        maximum_discount_amount = request.POST.get(
-            "maximum_discount_amount"
-        ) or 0
+        maximum_discount_amount = request.POST.get("maximum_discount_amount") or 0
 
         from django.utils import timezone
 
         start_date = timezone.make_aware(
-            datetime.fromisoformat(
-                request.POST.get("start_date")
-            )
+            datetime.fromisoformat(request.POST.get("start_date"))
         )
 
         end_date = timezone.make_aware(
-            datetime.fromisoformat(
-                request.POST.get("end_date")
-            )
+            datetime.fromisoformat(request.POST.get("end_date"))
         )
 
-        is_active = (
-            request.POST.get(
-                "is_active"
-            ) == "on"
-        )
+        is_active = request.POST.get("is_active") == "on"
 
         product = None
         category = None
 
         if offer_type == "PRODUCT":
 
-            product_id = request.POST.get(
-                "product"
-            )
+            product_id = request.POST.get("product")
 
             if product_id:
 
-                product = Product.objects.filter(
-                    id=product_id
-                ).first()
+                product = Product.objects.filter(id=product_id).first()
 
         elif offer_type == "CATEGORY":
 
-            category_id = request.POST.get(
-                "category"
-            )
+            category_id = request.POST.get("category")
 
             if category_id:
 
-                category = Category.objects.filter(
-                    id=category_id
-                ).first()
+                category = Category.objects.filter(id=category_id).first()
 
         try:
 
             offer = Offer(
-
                 offer_name=offer_name,
-
                 offer_type=offer_type,
-
                 discount_type=discount_type,
-
                 discount_value=discount_value,
-
-                minimum_purchase_amount=
-                minimum_purchase_amount,
-
-                maximum_discount_amount=
-                maximum_discount_amount,
-
+                minimum_purchase_amount=minimum_purchase_amount,
+                maximum_discount_amount=maximum_discount_amount,
                 product=product,
-
                 category=category,
-
                 start_date=start_date,
-
                 end_date=end_date,
-
-                is_active=is_active
-
+                is_active=is_active,
             )
 
             offer.full_clean()
 
             offer.save()
 
-            messages.success(
+            messages.success(request, "Offer created successfully.")
 
-                request,
-
-                "Offer created successfully."
-
-            )
-
-            return redirect(
-                "offer_list"
-            )
+            return redirect("offer_list")
 
         except ValidationError as e:
 
@@ -253,115 +149,65 @@ def add_offer(request):
 
                 for error in errors:
 
-                    messages.error(
+                    messages.error(request, error)
 
-                        request,
+    context = {"products": products, "categories": categories}
 
-                        error
+    return render(request, "add_offer.html", context)
 
-                    )
 
-    context = {
-
-        "products": products,
-
-        "categories": categories
-
-    }
-
-    return render(
-
-        request,
-
-        "add_offer.html",
-
-        context
-
-    )
 @admin_required
 def edit_offer(request, offer_id):
 
-    offer = get_object_or_404(
-        Offer,
-        id=offer_id
-    )
+    offer = get_object_or_404(Offer, id=offer_id)
 
-    products = Product.objects.filter(
-        is_deleted=False
-    )
+    products = Product.objects.filter(is_deleted=False)
 
-    categories = Category.objects.filter(
-        is_deleted=False
-    )
+    categories = Category.objects.filter(is_deleted=False)
 
     if request.method == "POST":
 
         try:
 
-            offer.offer_name = request.POST.get(
-                "offer_name"
-            )
+            offer.offer_name = request.POST.get("offer_name")
 
-            offer.offer_type = request.POST.get(
-                "offer_type"
-            )
+            offer.offer_type = request.POST.get("offer_type")
 
-            offer.discount_type = request.POST.get(
-                "discount_type"
-            )
+            offer.discount_type = request.POST.get("discount_type")
 
-            offer.discount_value = request.POST.get(
-                "discount_value"
-            )
+            offer.discount_value = request.POST.get("discount_value")
 
             offer.minimum_purchase_amount = request.POST.get(
-                "minimum_purchase_amount",
-                0
+                "minimum_purchase_amount", 0
             )
 
             offer.maximum_discount_amount = request.POST.get(
-                "maximum_discount_amount",
-                0
+                "maximum_discount_amount", 0
             )
 
-            offer.is_active = (
-                request.POST.get("is_active")
-                == "on"
-            )
+            offer.is_active = request.POST.get("is_active") == "on"
 
             offer.start_date = timezone.make_aware(
-                datetime.fromisoformat(
-                    request.POST.get("start_date")
-                )
+                datetime.fromisoformat(request.POST.get("start_date"))
             )
 
             offer.end_date = timezone.make_aware(
-                datetime.fromisoformat(
-                    request.POST.get("end_date")
-                )
+                datetime.fromisoformat(request.POST.get("end_date"))
             )
 
             if offer.offer_type == "PRODUCT":
 
-                product_id = request.POST.get(
-                    "product"
-                )
+                product_id = request.POST.get("product")
 
-                offer.product = Product.objects.filter(
-                    id=product_id
-                ).first()
+                offer.product = Product.objects.filter(id=product_id).first()
 
                 offer.category = None
 
             else:
 
-                category_id = request.POST.get(
-                    "category"
-                )
+                category_id = request.POST.get("category")
 
-                offer.category = Category.objects.filter(
-                    id=category_id
-                ).first()
+                offer.category = Category.objects.filter(id=category_id).first()
 
                 offer.product = None
 
@@ -369,14 +215,9 @@ def edit_offer(request, offer_id):
 
             offer.save()
 
-            messages.success(
-                request,
-                "Offer updated successfully."
-            )
+            messages.success(request, "Offer updated successfully.")
 
-            return redirect(
-                "offer_list"
-            )
+            return redirect("offer_list")
 
         except ValidationError as e:
 
@@ -384,90 +225,51 @@ def edit_offer(request, offer_id):
 
                 for error in errors:
 
-                    messages.error(
-                        request,
-                        error
-                    )
+                    messages.error(request, error)
 
-    context = {
+    context = {"offer": offer, "products": products, "categories": categories}
 
-        "offer": offer,
+    return render(request, "edit_offer.html", context)
 
-        "products": products,
-
-        "categories": categories
-
-    }
-
-    return render(
-
-        request,
-
-        "edit_offer.html",
-
-        context
-
-    )
 
 @admin_required
 def activate_offer(request, offer_id):
 
-    offer = get_object_or_404(
-        Offer,
-        id=offer_id
-    )
+    offer = get_object_or_404(Offer, id=offer_id)
 
     offer.is_active = True
 
     offer.save()
 
-    messages.success(
-        request,
-        "Offer activated successfully"
-    )
+    messages.success(request, "Offer activated successfully")
 
-    return redirect(
-        "offer_list"
-    )
+    return redirect("offer_list")
+
 
 @admin_required
 def deactivate_offer(request, offer_id):
 
-    offer = get_object_or_404(
-        Offer,
-        id=offer_id
-    )
+    offer = get_object_or_404(Offer, id=offer_id)
 
     offer.is_active = False
 
     offer.save()
 
-    messages.success(
-        request,
-        "Offer deactivated successfully"
-    )
+    messages.success(request, "Offer deactivated successfully")
 
-    return redirect(
-        "offer_list"
-    )
+    return redirect("offer_list")
+
 
 @admin_required
 def delete_offer(request, offer_id):
 
-    offer = get_object_or_404(
-        Offer,
-        id=offer_id
-    )
+    offer = get_object_or_404(Offer, id=offer_id)
 
-    offer.is_deleted = True
+    # Remove offer from products first
+    Product.objects.filter(offer=offer).update(offer=None)
 
-    offer.save()
+    offer.delete()
 
-    messages.success(
-        request,
-        "Offer deleted successfully"
-    )
+    messages.success(request, "Offer deleted successfully")
 
-    return redirect(
-        "offer_list"
-    )
+    return redirect("offer_list")

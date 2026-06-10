@@ -6,30 +6,34 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_category', '0003_category_is_deleted'),
+        ("admin_category", "0003_category_is_deleted"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='category',
-            options={'ordering': ['-id']},
+            name="category",
+            options={"ordering": ["-id"]},
         ),
         migrations.AddField(
-            model_name='category',
-            name='updated_at',
+            model_name="category",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True),
         ),
         migrations.AlterField(
-            model_name='category',
-            name='category_description',
+            model_name="category",
+            name="category_description",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddIndex(
-            model_name='category',
-            index=models.Index(fields=['is_active'], name='admin_categ_is_acti_a7519e_idx'),
+            model_name="category",
+            index=models.Index(
+                fields=["is_active"], name="admin_categ_is_acti_a7519e_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='category',
-            index=models.Index(fields=['is_deleted'], name='admin_categ_is_dele_6fbf85_idx'),
+            model_name="category",
+            index=models.Index(
+                fields=["is_deleted"], name="admin_categ_is_dele_6fbf85_idx"
+            ),
         ),
     ]

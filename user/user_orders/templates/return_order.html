@@ -6,872 +6,646 @@ Return Order
 {% endblock %}
 
 {% block extra_css %}
-
+<!-- Load Google Material Symbols for interface checkmark -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-/* ================= PAGE ================= */
+/* ================= THEME VARIABLES ================= */
+:root {
+    --primary-color: #341818; /* Elegant deep brown from shop */
+    --primary-hover: #4e2b2b;
+    --bg-light: #faf6f0;      /* Warm boutique cream background */
+    --card-bg: #ffffff;
+    --text-main: #341818;     /* Dark charcoal brown */
+    --text-muted: #8e8076;    /* Warm beige-gray */
+    --border-color: #efeae4;  /* Thin soft border */
+    --accent-gold: #d4a373;   /* Star rating gold */
+    --accent-red: #c95c5c;    /* Soft red warnings */
+    --font-serif: 'Playfair Display', 'Noto Serif', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --shadow-sm: 0 4px 24px rgba(139, 119, 101, 0.04);
+    --shadow-md: 0 10px 30px rgba(139, 119, 101, 0.08);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-.return-page{
+/* Force body styling to match screenshot background */
+body {
+    background-color: var(--bg-light) !important;
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    margin: 0;
+}
 
-    padding:40px 60px 80px;
+.return-page {
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    padding: 40px 60px 80px;
+    box-sizing: border-box;
+}
 
-    background:#f8f5f2;
-
-    min-height:100vh;
+.return-page *, 
+.return-page *::before, 
+.return-page *::after {
+    box-sizing: border-box;
 }
 
 /* ================= HEADER ================= */
+/* ================= HEADER ================= */
+
+.return-header{
+
+    width:100%;
+
+    padding:20px 140px 40px;
+
+}
 
 .return-title{
 
-    font-size:38px;
+    font-family:var(--font-serif);
 
-    font-weight:800;
+    font-size:52px;
 
-    color:#2f241e;
+    font-weight:500;
 
-    margin-bottom:12px;
+    color:var(--primary-color);
+
+    letter-spacing:-1px;
+
+    line-height:1.1;
+
+    margin:0 0 14px;
+
 }
 
 .return-subtitle{
 
-    font-size:13px;
-
-    color:#8d7e74;
-
-    line-height:1.8;
-
-    margin-bottom:40px;
-}
-
-/* ================= GRID ================= */
-
-.return-grid{
-
-    display:grid;
-
-    grid-template-columns:1fr 360px;
-
-    gap:32px;
-
-    align-items:start;
-}
-
-/* ================= PRODUCTS ================= */
-
-.products-column{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:24px;
-}
-
-.product-card{
-
-    background:white;
-
-    border-radius:14px;
-
-    padding:24px;
-
-    border:1px solid #eee;
-
-    display:grid;
-
-    grid-template-columns:30px 110px 1fr auto;
-
-    gap:22px;
-
-    align-items:center;
-}
-
-/* ================= CHECKBOX ================= */
-
-.checkbox-wrapper{
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-}
-
-.return-checkbox{
-
-    width:18px;
-
-    height:18px;
-
-    accent-color:#6B4F3B;
-
-    cursor:pointer;
-}
-
-/* ================= IMAGE ================= */
-
-.product-image{
-
-    width:110px;
-
-    height:140px;
-
-    border-radius:12px;
-
-    overflow:hidden;
-
-    background:#f3efeb;
-}
-
-.product-image img{
-
-    width:100%;
-
-    height:100%;
-
-    object-fit:cover;
-}
-
-/* ================= DETAILS ================= */
-
-.product-name{
-
-    font-size:18px;
-
-    font-weight:700;
-
-    color:#2f241e;
-
-    margin-bottom:12px;
-}
-
-.product-meta{
-
-    font-size:12px;
-
-    line-height:1.9;
-
-    color:#8d7e74;
-
-    text-transform:uppercase;
-}
-
-.product-price{
-
-    font-size:20px;
-
-    font-weight:800;
-
-    color:#2f241e;
-
-    margin-top:16px;
-}
-
-/* ================= STATUS ================= */
-
-.delivery-box{
-
-    text-align:right;
-}
-
-.delivery-label{
-
-    font-size:10px;
-
-    letter-spacing:2px;
-
-    color:#9b8d83;
-
-    margin-bottom:10px;
-
-    font-weight:800;
-}
-
-.delivery-date{
-
-    font-size:13px;
-
-    color:#5f5147;
-
-    line-height:1.8;
-}
-
-/* ================= REASON ================= */
-
-.reason-card{
-
-    background:white;
-
-    border-radius:14px;
-
-    border:1px solid #eee;
-
-    padding:28px;
-
-    margin-top:28px;
-}
-
-.reason-title{
-
-    font-size:12px;
-
-    letter-spacing:2px;
-
-    font-weight:800;
-
-    color:#6B4F3B;
-
-    margin-bottom:28px;
-}
-
-.field-group{
-
-    margin-bottom:22px;
-}
-
-.field-label{
-
-    display:block;
-
-    font-size:11px;
-
-    letter-spacing:1px;
-
-    color:#8d7e74;
-
-    margin-bottom:12px;
-
-    font-weight:700;
-}
-
-.reason-select{
-
-    width:100%;
-
-    height:52px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    padding:0 16px;
-
-    outline:none;
-
-    font-size:13px;
-
-    background:white;
-}
-
-.reason-textarea{
-
-    width:100%;
-
-    height:140px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    padding:16px;
-
-    resize:none;
-
-    outline:none;
-
-    font-size:13px;
-
-    font-family:inherit;
-}
-
-.reason-select:focus,
-.reason-textarea:focus{
-
-    border-color:#6B4F3B;
-}
-
-/* ================= SUMMARY ================= */
-
-.summary-card{
-
-    background:white;
-
-    border-radius:14px;
-
-    border:1px solid #eee;
-
-    padding:30px;
-
-    position:sticky;
-
-    top:30px;
-}
-
-.summary-title{
-
-    font-size:22px;
-
-    font-weight:700;
-
-    color:#2f241e;
-
-    margin-bottom:30px;
-}
-
-.summary-row{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    margin-bottom:20px;
+    max-width:700px;
 
     font-size:14px;
 
-    color:#5f5147;
+    color:var(--text-muted);
+
+    line-height:1.8;
+
+    margin:0;
+
+}
+/* ================= GRID LAYOUT ================= */
+.return-grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 32px;
+    align-items: start;
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.refund-value{
-
-    color:#d32f2f;
-
-    font-weight:700;
+/* ================= PRODUCTS CARDS LIST ================= */
+.products-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.total-row{
+.product-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: auto 110px 1fr auto;
+    gap: 22px;
+    align-items: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
 
-    border-top:1px solid #eee;
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
 
-    margin-top:25px;
+/* CHECKBOX */
+.checkbox-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    padding-top:25px;
+.return-checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+}
 
-    font-size:20px;
+/* PRODUCT IMAGE */
+.product-image {
+    width: 110px;
+    height: 140px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fbf9f6;
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
 
-    font-weight:800;
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    color:#2f241e;
+/* PRODUCT DETAILS */
+.product-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+.product-meta {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    text-transform: uppercase;
+}
+
+.product-price {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-top: 10px;
+}
+
+/* STATUS */
+.delivery-box {
+    text-align: right;
+}
+
+.delivery-label {
+    font-size: 9px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.delivery-date {
+    font-size: 12.5px;
+    color: #5d5047;
+    font-weight: 600;
+}
+
+/* ================= REASON FOR RETURN CARD ================= */
+.reason-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    padding: 28px;
+    margin-top: 28px;
+    box-shadow: var(--shadow-sm);
+}
+
+.reason-title {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+}
+
+.field-group {
+    margin-bottom: 22px;
+}
+
+.field-group:last-child {
+    margin-bottom: 0;
+}
+
+.field-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.reason-select {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #dfd5cb;
+    border-radius: 10px;
+    padding: 0 36px 0 16px;
+    outline: none;
+    font-size: 13.5px;
+    background: #ffffff;
+    color: var(--primary-color);
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: var(--transition);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23341818' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+}
+
+.reason-textarea {
+    width: 100%;
+    height: 130px;
+    border: 1px solid #dfd5cb;
+    border-radius: 10px;
+    padding: 16px;
+    resize: none;
+    outline: none;
+    font-size: 13.5px;
+    font-family: var(--font-sans);
+    color: var(--text-main);
+    transition: var(--transition);
+}
+
+.reason-select:focus,
+.reason-textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 24, 24, 0.05);
+}
+
+/* ================= REFUND SUMMARY CARD ================= */
+.summary-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    padding: 30px;
+    position: sticky;
+    top: 30px;
+    box-shadow: var(--shadow-sm);
+}
+
+.summary-title {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #4f3d3d;
+}
+
+.refund-value {
+    color: var(--accent-red);
+    font-weight: 700;
+}
+
+.total-row {
+    border-top: 1px solid var(--border-color);
+    margin-top: 20px;
+    padding-top: 20px;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--primary-color);
 }
 
 /* ================= RETURN METHOD ================= */
-
-.method-title{
-
-    font-size:11px;
-
-    letter-spacing:2px;
-
-    color:#8d7e74;
-
-    margin:30px 0 18px;
-
-    font-weight:800;
+.method-title {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin: 28px 0 14px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
-.method-box{
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    padding:18px;
-
-    margin-bottom:14px;
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
+.method-box {
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fbf9f6;
 }
 
-.method-name{
-
-    font-size:13px;
-
-    font-weight:700;
-
-    color:#2f241e;
+.method-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--primary-color);
 }
 
-.method-badge{
-
-    font-size:10px;
-
-    padding:5px 10px;
-
-    border-radius:20px;
-
-    background:#f3efeb;
-
-    color:#6B4F3B;
-
-    font-weight:700;
+.method-badge {
+    font-size: 9px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-weight: 800;
+    letter-spacing: 0.5px;
 }
 
-/* ================= CHECK ================= */
-
-.policy-check{
-
-    display:flex;
-
-    gap:12px;
-
-    align-items:flex-start;
-
-    margin:24px 0;
+/* POLICY CHECK */
+.policy-check {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 24px 0;
 }
 
-.policy-check input{
-
-    margin-top:3px;
-
-    accent-color:#6B4F3B;
+.policy-check input {
+    margin-top: 3px;
+    accent-color: var(--primary-color);
+    cursor: pointer;
 }
 
-.policy-check label{
-
-    font-size:12px;
-
-    color:#7d6e65;
-
-    line-height:1.8;
+.policy-check label {
+    font-size: 12px;
+    color: #5d5047;
+    line-height: 1.6;
+    user-select: none;
 }
 
-/* ================= BUTTONS ================= */
-
-.return-btn{
-
-    width:100%;
-
-    height:54px;
-
-    border:none;
-
-    border-radius:10px;
-
-    background:#6B4F3B;
-
-    color:white;
-
-    font-size:12px;
-
-    font-weight:800;
-
-    letter-spacing:1px;
-
-    cursor:pointer;
-
-    transition:0.2s;
+/* ================= CONFIRM RETURN BUTTON ================= */
+.return-btn {
+    width: 100%;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: var(--primary-color);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
 }
 
-.return-btn:hover{
-
-    background:#563c2c;
+.return-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 24, 24, 0.2);
 }
 
-.cancel-link{
-
-    display:block;
-
-    text-align:center;
-
-    margin-top:16px;
-
-    text-decoration:none;
-
-    color:#8d7e74;
-
-    font-size:12px;
-
-    font-weight:700;
+.cancel-link {
+    display: block;
+    text-align: center;
+    margin-top: 16px;
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    transition: var(--transition);
 }
 
-/* ================= FOOTER INFO ================= */
+.cancel-link:hover {
+    color: var(--primary-color);
+}
 
-.footer-note{
-
-    margin-top:28px;
-
-    text-align:center;
-
-    font-size:10px;
-
-    letter-spacing:1px;
-
-    line-height:2;
-
-    color:#9b8d83;
+.footer-note {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+    color: var(--text-muted);
 }
 
 /* ================= RESPONSIVE ================= */
-
 @media(max-width:1000px){
-
-    .return-grid{
-
-        grid-template-columns:1fr;
+    .return-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
     }
 
-    .summary-card{
-
-        position:relative;
-
-        top:0;
+    .summary-card {
+        position: relative;
+        top: 0;
     }
 }
 
 @media(max-width:750px){
-
-    .return-page{
-
-        padding:25px 18px 60px;
+    .return-page {
+        padding: 24px 20px 60px;
     }
 
-    .product-card{
-
-        grid-template-columns:1fr;
-
-        text-align:center;
+    .product-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 16px;
+        padding: 24px;
     }
 
-    .delivery-box{
-
-        text-align:center;
+    .delivery-box {
+        text-align: center;
     }
 
-    .product-image{
-
-        margin:auto;
+    .product-image {
+        margin: 0 auto;
     }
 }
+@media(max-width:768px){
 
+    .return-header{
+
+        padding:20px 20px 35px;
+
+    }
+
+    .return-title{
+
+        font-size:38px;
+
+    }
+
+    .return-subtitle{
+
+        font-size:13px;
+
+    }
+
+}
 </style>
-
 {% endblock %}
 
 {% block content %}
-
 <div class="return-page">
 
-    <!-- ================= HEADER ================= -->
+    <!-- ================= HEADER TOP ================= -->
+   <div class="return-header">
 
-    <div class="return-title">
-
+    <h1 class="return-title">
         Return Order
+    </h1>
 
-    </div>
-
-    <div class="return-subtitle">
-
+    <p class="return-subtitle">
         You are returning selected items from this order.
         Please review the details and confirm your return.
+    </p>
 
-    </div>
+</div>
 
+    <!-- ================= FORM START ================= -->
     <form method="POST">
-
         {% csrf_token %}
 
         <div class="return-grid">
 
-            <!-- ================= LEFT ================= -->
-
+            <!-- ================= LEFT COLUMN ================= -->
             <div>
-
                 <div class="products-column">
-
-                    {% for item in order.items.all %}
-
+                    {% for item in returnable_items %}
+                        {% if item.item_status == "Active" %}
                     <div class="product-card">
-
-                        <!-- CHECKBOX -->
-
+                        
+                        <!-- SELECT CHECKBOX -->
                         <div class="checkbox-wrapper">
-
-                            <input
-                            type="checkbox"
-                            name="selected_items"
-                            value="{{ item.id }}"
-                            class="return-checkbox"
+                            <input 
+                                type="checkbox" 
+                                name="selected_items" 
+                                value="{{ item.id }}" 
+                                class="return-checkbox"
                             >
-
                         </div>
 
-                        <!-- IMAGE -->
-
+                        <!-- PRODUCT IMAGE -->
                         <div class="product-image">
-
                             {% with image=item.variant.images.first %}
-
                                 {% if image %}
-
-                                <img src="{{ image.image.url }}">
-
+                                <img src="{{ image.image.url }}" alt="{{ item.variant.product.product_name }}">
                                 {% endif %}
-
                             {% endwith %}
-
                         </div>
 
-                        <!-- DETAILS -->
-
+                        <!-- PRODUCT DETAILS -->
                         <div>
-
                             <div class="product-name">
-
                                 {{ item.variant.product.product_name }}
-
                             </div>
-
                             <div class="product-meta">
-
-                                SIZE :
-                                {{ item.variant.size }}
-
-                                |
-
-                                COLOR :
-                                {{ item.variant.color }}
-
+                                SIZE: {{ item.variant.size }} &nbsp;|&nbsp; COLOR: {{ item.variant.color }}
                             </div>
-
                             <div class="product-price">
-
                                 ₹{{ item.total_price }}
-
                             </div>
-
                         </div>
 
-                        <!-- STATUS -->
-
+                        <!-- STATUS PILL -->
                         <div class="delivery-box">
-
-                            <div class="delivery-label">
-
-                                DELIVERY STATUS
-
-                            </div>
-
+                            <div class="delivery-label">Delivery Status</div>
                             <div class="delivery-date">
-
-                                Delivered on
-                                {{ order.created_at|date:"d M Y" }}
-
+                                Delivered on {{ order.created_at|date:"d M Y" }}
                             </div>
-
                         </div>
 
                     </div>
-
+                    {% endif %}
                     {% endfor %}
-
                 </div>
 
-                <!-- ================= REASON ================= -->
-
+                <!-- RETURN REASON FORM CARD -->
                 <div class="reason-card">
-
                     <div class="reason-title">
-
-                        WHY ARE YOU RETURNING THIS ORDER?
-
+                        Why are you returning this order?
                     </div>
 
-                    <!-- REASON -->
-
+                    <!-- SELECT REASON -->
                     <div class="field-group">
-
-                        <label class="field-label">
-
-                            SELECT A REASON
-
-                        </label>
-
-                        <select
-                        name="return_reason"
-                        class="reason-select"
-                        required
-                        >
-
-                            <option value="">
-                                Select a reason
-                            </option>
-
-                            <option value="Wrong Size">
-                                Wrong Size
-                            </option>
-
-                            <option value="Damaged Product">
-                                Damaged Product
-                            </option>
-
-                            <option value="Quality Not Good">
-                                Quality Not Good
-                            </option>
-
-                            <option value="Received Wrong Item">
-                                Received Wrong Item
-                            </option>
-
-                            <option value="Changed My Mind">
-                                Changed My Mind
-                            </option>
-
+                        <label class="field-label">Select a reason</label>
+                        <select name="return_reason" class="reason-select" required>
+                            <option value="">Select a reason</option>
+                            <option value="Wrong Size">Wrong Size</option>
+                            <option value="Damaged Product">Damaged Product</option>
+                            <option value="Quality Not Good">Quality Not Good</option>
+                            <option value="Received Wrong Item">Received Wrong Item</option>
+                            <option value="Changed My Mind">Changed My Mind</option>
                         </select>
-
                     </div>
 
-                    <!-- OPTIONAL -->
-
+                    <!-- DETAILED EXPLANATION -->
                     <div class="field-group">
-
-                        <label class="field-label">
-
-                            WRITE YOUR REASON (OPTIONAL)
-
-                        </label>
-
-                        <textarea
-                        name="additional_reason"
-                        class="reason-textarea"
-                        placeholder="Share more details about your return..."
+                        <label class="field-label">Write your reason (Optional)</label>
+                        <textarea 
+                            name="additional_reason" 
+                            class="reason-textarea" 
+                            placeholder="Share more details about your return..."
                         ></textarea>
-
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- ================= RIGHT ================= -->
-
+            <!-- ================= RIGHT COLUMN (SUMMARY) ================= -->
             <div>
-
                 <div class="summary-card">
-
-                    <div class="summary-title">
-
-                        Refund Details
-
-                    </div>
+                    <div class="summary-title">Refund Details</div>
 
                     <div class="summary-row">
-
                         <span>Product Price Total</span>
-
-                        <span>
-                            ₹{{ order.total_amount }}
-                        </span>
-
+                        <span>₹{{ order.total_amount }}</span>
                     </div>
 
                     <div class="summary-row">
-
                         <span>Shipping Fee</span>
-
-                        <span class="refund-value">
-
-                            +₹0.00
-
-                        </span>
-
+                        <span class="refund-value">+₹0.00</span>
                     </div>
 
                     <div class="summary-row total-row">
-
                         <span>Total Refund</span>
-
-                        <span>
-                            ₹{{ order.total_amount }}
-                        </span>
-
+                        <span>₹{{ order.total_amount }}</span>
                     </div>
 
-                    <!-- METHOD -->
-
-                    <div class="method-title">
-
-                        RETURN METHOD
-
-                    </div>
-
-               
-
+                    <!-- METHOD BOX -->
+                    <div class="method-title">Return Method</div>
                     <div class="method-box">
-
-                        <div class="method-name">
-
-                            Store Wallet
-
-                        </div>
-
-                        <div class="method-badge">
-
-                            FASTER RECOMMENDED 
-
-                        </div>
-
+                        <div class="method-name">Store Wallet</div>
+                        <div class="method-badge">FASTER RECOMMENDED</div>
                     </div>
 
-                    <!-- CHECK -->
-
+                    <!-- CONDITIONS CONFIRMATION -->
                     <div class="policy-check">
-
-                        <input
-                        type="checkbox"
-                        required
-                        >
-
-                        <label>
-
-                            I confirm that the item is unused
-                            and in original condition with all tags intact.
-
+                        <input type="checkbox" id="policy-confirm" required>
+                        <label for="policy-confirm">
+                            I confirm that the item is unused and in original condition with all tags intact.
                         </label>
-
                     </div>
 
-                    <!-- BUTTON -->
-
-                    <button
-                    type="submit"
-                    class="return-btn"
-                    >
-
+                    <!-- CONFIRM BUTTON -->
+                    <button type="submit" class="return-btn">
                         CONFIRM RETURN
-
                     </button>
 
-                    <a
-                    href="{% url 'order_detail' order.order_id %}"
-                    class="cancel-link"
-                    >
-
+                    <a href="{% url 'order_detail' order.order_id %}" class="cancel-link">
                         Cancel / Keep Item
-
                     </a>
 
-                    <!-- FOOTER -->
-
+                    <!-- FOOTER NOTES -->
                     <div class="footer-note">
-
-                        HASSLE-FREE RETURNS WITHIN 7 DAYS.
-                        <br>
-                        SECURE TRANSACTIONS GUARANTEED.
-
+                        Hassle-free returns within 7 days.<br>
+                        Secure transactions guaranteed.
                     </div>
-
                 </div>
-
             </div>
 
         </div>
-
     </form>
+    <!-- ================= FORM END ================= -->
 
 </div>
-
 {% endblock %}

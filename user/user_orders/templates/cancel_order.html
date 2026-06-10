@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -6,273 +7,225 @@ Cancel Order
 {% endblock %}
 
 {% block extra_css %}
-
+<!-- Load Google Material Symbols for interface support -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-/* ================= OVERLAY ================= */
-
-.cancel-overlay{
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,0.45);
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:9999;
-
-    padding:20px;
+/* ================= THEME VARIABLES ================= */
+:root {
+    --primary-color: #341818; /* Elegant deep brown from shop */
+    --primary-hover: #4e2b2b;
+    --bg-light: #faf6f0;      /* Warm boutique cream background */
+    --card-bg: #ffffff;
+    --text-main: #341818;     /* Dark charcoal brown */
+    --text-muted: #8e8076;    /* Warm beige-gray */
+    --border-color: #efeae4;  /* Thin soft border */
+    --font-serif: 'Playfair Display', 'Noto Serif', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+    --shadow-sm: 0 4px 24px rgba(139, 119, 101, 0.04);
+    --shadow-md: 0 10px 30px rgba(139, 119, 101, 0.08);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ================= MODAL ================= */
-
-.cancel-modal{
-
-    width:100%;
-
-    max-width:480px;
-
-    background:white;
-
-    border-radius:18px;
-
-    padding:38px;
-
-    box-shadow:0 20px 50px rgba(0,0,0,0.15);
-
-    animation:popup 0.25s ease;
+/* Force body styling to match screenshot background */
+body {
+    background-color: var(--bg-light) !important;
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    margin: 0;
 }
 
-@keyframes popup{
+/* ================= OVERLAY WITH BLUR BACKDROP ================= */
+.cancel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(52, 24, 24, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+    box-sizing: border-box;
+}
 
-    from{
-        transform:scale(0.92);
-        opacity:0;
+.cancel-overlay *, 
+.cancel-overlay *::before, 
+.cancel-overlay *::after {
+    box-sizing: border-box;
+}
+
+/* ================= MODAL WITH BOUNCE TRANSITION ================= */
+@keyframes popupBounce {
+    0% {
+        transform: scale(0.92);
+        opacity: 0;
     }
-
-    to{
-        transform:scale(1);
-        opacity:1;
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
-/* ================= TITLE ================= */
-
-.cancel-title{
-
-    font-size:30px;
-
-    font-weight:800;
-
-    color:#2f241e;
-
-    line-height:1.3;
-
-    margin-bottom:18px;
-
-    text-transform:uppercase;
+.cancel-modal {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 38px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
+    animation: popupBounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
-/* ================= SUB ================= */
-
-.cancel-sub{
-
-    font-size:11px;
-
-    letter-spacing:2px;
-
-    color:#9b8d83;
-
-    margin-bottom:16px;
-
-    font-weight:700;
+/* ================= TITLES & FIELDS ================= */
+.cancel-title {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--primary-color);
+    line-height: 1.35;
+    margin: 0 0 20px 0;
+    letter-spacing: -0.5px;
 }
 
-/* ================= TEXTAREA ================= */
-
-.reason-box{
-
-    width:100%;
-
-    height:130px;
-
-    border:1px solid #ddd;
-
-    border-radius:10px;
-
-    padding:16px;
-
-    resize:none;
-
-    outline:none;
-
-    font-size:13px;
-
-    font-family:inherit;
-
-    transition:0.2s;
+.cancel-sub {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
-.reason-box:focus{
-
-    border-color:#6B4F3B;
+.reason-box {
+    width: 100%;
+    height: 130px;
+    border: 1px solid #dfd5cb;
+    border-radius: 10px;
+    padding: 16px;
+    resize: none;
+    outline: none;
+    font-size: 13.5px;
+    font-family: var(--font-sans);
+    color: var(--text-main);
+    transition: var(--transition);
 }
 
-/* ================= BUTTONS ================= */
-
-.button-group{
-
-    display:flex;
-
-    gap:14px;
-
-    margin-top:28px;
+.reason-box:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(52, 24, 24, 0.05);
 }
 
-.cancel-btn{
-
-    flex:1;
-
-    height:52px;
-
-    border:none;
-
-    border-radius:10px;
-
-    font-size:12px;
-
-    font-weight:800;
-
-    letter-spacing:1px;
-
-    cursor:pointer;
-
-    transition:0.2s;
+/* ================= ACTIONS BUTTONS ================= */
+.button-group {
+    display: flex;
+    gap: 14px;
+    margin-top: 28px;
 }
 
-/* CONFIRM */
-
-.confirm-btn{
-
-    background:#6B4F3B;
-
-    color:white;
+.cancel-btn {
+    flex: 1;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.confirm-btn:hover{
-
-    background:#563c2c;
+.confirm-btn {
+    background: var(--primary-color);
+    color: #ffffff;
 }
 
-/* KEEP */
-
-.keep-btn{
-
-    background:white;
-
-    border:1px solid #d8ccc2;
-
-    color:#6B4F3B;
-
-    text-decoration:none;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
+.confirm-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 24, 24, 0.2);
 }
 
-.keep-btn:hover{
+.keep-btn {
+    background: #ffffff;
+    border: 1px solid #dfd5cb;
+    color: var(--primary-color);
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    background:#f3efeb;
+.keep-btn:hover {
+    background: var(--bg-light);
+    border-color: var(--primary-color);
 }
 
 /* ================= RESPONSIVE ================= */
-
 @media(max-width:600px){
-
-    .cancel-modal{
-
-        padding:28px 22px;
+    .cancel-modal {
+        padding: 28px 22px;
     }
 
-    .cancel-title{
-
-        font-size:24px;
+    .cancel-title {
+        font-size: 24px;
     }
 
-    .button-group{
-
-        flex-direction:column;
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .cancel-btn {
+        width: 100%;
     }
 }
-
 </style>
-
 {% endblock %}
 
 {% block content %}
-
 <div class="cancel-overlay">
 
     <div class="cancel-modal">
-
-        <div class="cancel-title">
-
-            Are You Sure You Want To
-            Cancel This Order?
-
-        </div>
+        
+        <!-- TITLE -->
+        <h2 class="cancel-title">
+            Are you sure you want to cancel this order?
+        </h2>
 
         <div class="cancel-sub">
-
-            WHAT IS THE REASON?
-
+            What is the reason?
         </div>
 
+        <!-- REASON FORM -->
         <form method="POST">
-
             {% csrf_token %}
 
             <textarea
-            name="cancel_reason"
-            class="reason-box"
-            placeholder="Write your reason (max 150 words)"
+                name="cancel_reason"
+                class="reason-box"
+                placeholder="Write your reason here..."
+                required
             ></textarea>
 
             <div class="button-group">
-
-                <button
-                type="submit"
-                class="cancel-btn confirm-btn"
-                >
-
-                    YES, CANCEL ORDER
-
+                <button type="submit" class="cancel-btn confirm-btn">
+                    Yes, Cancel Order
                 </button>
-
-                <a
-                href="{% url 'order_detail' order.order_id %}"
-                class="cancel-btn keep-btn"
-                >
-
-                    KEEP ORDER
-
+                
+                <a href="{% url 'order_detail' order.order_id %}" class="cancel-btn keep-btn">
+                    Keep Order
                 </a>
-
             </div>
-
         </form>
 
     </div>
 
 </div>
-
 {% endblock %}

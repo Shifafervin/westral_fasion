@@ -7,14 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_category', '0003_category_is_deleted'),
-        ('admin_product', '0001_initial'),
+        ("admin_category", "0003_category_is_deleted"),
+        ("admin_product", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='product',
-            name='category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='admin_category.category'),
+            model_name="product",
+            name="category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="admin_category.category",
+            ),
         ),
     ]

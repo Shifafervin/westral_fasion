@@ -7,14 +7,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_orders', '0008_alter_order_order_status_alter_order_return_status'),
-        ('user_orders', '0001_initial'),
+        ("admin_orders", "0008_alter_order_order_status_alter_order_return_status"),
+        ("user_orders", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='returnitem',
-            name='order_item',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='returns', to='admin_orders.orderitem'),
+            model_name="returnitem",
+            name="order_item",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="returns",
+                to="admin_orders.orderitem",
+            ),
         ),
     ]

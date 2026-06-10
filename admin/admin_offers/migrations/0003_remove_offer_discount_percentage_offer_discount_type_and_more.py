@@ -6,32 +6,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_offers', '0002_remove_offer_updated_at_and_more'),
+        ("admin_offers", "0002_remove_offer_updated_at_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='offer',
-            name='discount_percentage',
+            model_name="offer",
+            name="discount_percentage",
         ),
         migrations.AddField(
-            model_name='offer',
-            name='discount_type',
-            field=models.CharField(choices=[('PERCENTAGE', 'Percentage'), ('FLAT', 'Flat')], default='PERCENTAGE', max_length=20),
+            model_name="offer",
+            name="discount_type",
+            field=models.CharField(
+                choices=[("PERCENTAGE", "Percentage"), ("FLAT", "Flat")],
+                default="PERCENTAGE",
+                max_length=20,
+            ),
         ),
         migrations.AddField(
-            model_name='offer',
-            name='discount_value',
+            model_name="offer",
+            name="discount_value",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
         migrations.AddField(
-            model_name='offer',
-            name='maximum_discount_amount',
+            model_name="offer",
+            name="maximum_discount_amount",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
         migrations.AddField(
-            model_name='offer',
-            name='minimum_purchase_amount',
+            model_name="offer",
+            name="minimum_purchase_amount",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
         ),
     ]

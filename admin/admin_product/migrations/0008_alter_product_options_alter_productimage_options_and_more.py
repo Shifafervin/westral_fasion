@@ -7,61 +7,71 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_category', '0004_alter_category_options_category_updated_at_and_more'),
-        ('admin_product', '0007_product_is_active'),
+        ("admin_category", "0004_alter_category_options_category_updated_at_and_more"),
+        ("admin_product", "0007_product_is_active"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='product',
-            options={'ordering': ['-id']},
+            name="product",
+            options={"ordering": ["-id"]},
         ),
         migrations.AlterModelOptions(
-            name='productimage',
-            options={'ordering': ['id']},
+            name="productimage",
+            options={"ordering": ["id"]},
         ),
         migrations.AlterModelOptions(
-            name='variant',
-            options={'ordering': ['-id']},
+            name="variant",
+            options={"ordering": ["-id"]},
         ),
         migrations.AddField(
-            model_name='product',
-            name='slug',
+            model_name="product",
+            name="slug",
             field=models.SlugField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='productimage',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="productimage",
+            name="created_at",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='variant',
-            name='low_stock_threshold',
+            model_name="variant",
+            name="low_stock_threshold",
             field=models.PositiveIntegerField(default=5),
         ),
         migrations.AddIndex(
-            model_name='product',
-            index=models.Index(fields=['is_active'], name='admin_produ_is_acti_299dfa_idx'),
+            model_name="product",
+            index=models.Index(
+                fields=["is_active"], name="admin_produ_is_acti_299dfa_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='product',
-            index=models.Index(fields=['is_deleted'], name='admin_produ_is_dele_09874d_idx'),
+            model_name="product",
+            index=models.Index(
+                fields=["is_deleted"], name="admin_produ_is_dele_09874d_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='product',
-            index=models.Index(fields=['slug'], name='admin_produ_slug_01460a_idx'),
+            model_name="product",
+            index=models.Index(fields=["slug"], name="admin_produ_slug_01460a_idx"),
         ),
         migrations.AddIndex(
-            model_name='variant',
-            index=models.Index(fields=['sku'], name='admin_produ_sku_928245_idx'),
+            model_name="variant",
+            index=models.Index(fields=["sku"], name="admin_produ_sku_928245_idx"),
         ),
         migrations.AddIndex(
-            model_name='variant',
-            index=models.Index(fields=['is_active'], name='admin_produ_is_acti_fd157a_idx'),
+            model_name="variant",
+            index=models.Index(
+                fields=["is_active"], name="admin_produ_is_acti_fd157a_idx"
+            ),
         ),
         migrations.AddIndex(
-            model_name='variant',
-            index=models.Index(fields=['is_deleted'], name='admin_produ_is_dele_fe6309_idx'),
+            model_name="variant",
+            index=models.Index(
+                fields=["is_deleted"], name="admin_produ_is_dele_fe6309_idx"
+            ),
         ),
     ]

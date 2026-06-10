@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_auth', '0002_customuser_referral_code_customuser_referred_by'),
+        ("admin_auth", "0002_customuser_referral_code_customuser_referred_by"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='customuser',
-            name='show_referral_popup',
+            model_name="customuser",
+            name="show_referral_popup",
             field=models.BooleanField(default=False),
         ),
     ]

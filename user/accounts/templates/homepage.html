@@ -100,7 +100,15 @@
 <!-- Hero Section -->
 <section class="relative h-screen w-full overflow-hidden">
 <div class="absolute inset-0 bg-surface-container">
-<img alt="Editorial Fashion" class="w-full h-full object-cover" data-alt="high-fashion editorial portrait of an elegant woman in neutral beige clothing standing against a minimalist light architectural background with soft natural sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDhGRLuwP0tj1R7zBoyKpop4CTzSiGIeGQbGwAPEFFWrd6N64hFMW6_8tuF_l9hSDgNvnYCIdN2mv8B52FNsFFDMb_39Xjl7AVTEERm_zmUCTxyIQoeQ-DHc17qvyEMCQEV_MFtxYyozFT_HLwaNDmbWaCoDFSYOvhXZ0ljwhv7MPHY9SciAxfEKNchlLFMRVIrye_DKEDDG-ft5xMNqn4QAdOGywtZfIE3DN7IU6kiLPCWXlVCEomS-kQA8Z2ThMELCN9WtxxdMU"/>
+<video
+    class="w-full h-full object-cover"
+    autoplay
+    muted
+    loop
+    playsinline
+>
+    <source src="{% static 'videos/hero-video.mp4' %}" type="video/mp4">
+</video>
 <div class="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-transparent"></div>
 </div>
 <div class="relative h-full max-w-screen-2xl mx-auto px-12 flex flex-col justify-center items-start flex-row">
@@ -147,6 +155,7 @@
                     Latest Purchased
 
                 </h2>
+
 
                 <p class="text-sm text-[#8b7c72] mt-2">
 

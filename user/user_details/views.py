@@ -15,8 +15,6 @@ from datetime import timedelta
 from django.utils import timezone
 from user.decorators import user_required
 
-
-
 User = get_user_model()
 
 
@@ -25,26 +23,25 @@ def validate_password_strength(password):
     if len(password) < 8:
         return "Password must be at least 8 characters."
 
-    if not re.search(r'[A-Z]', password):
+    if not re.search(r"[A-Z]", password):
         return "Add at least one uppercase letter."
 
-    if not re.search(r'[a-z]', password):
+    if not re.search(r"[a-z]", password):
         return "Add at least one lowercase letter."
 
-    if not re.search(r'\d', password):
+    if not re.search(r"\d", password):
         return "Add at least one number."
 
-    if not re.search(r'[!@#$%^&*]', password):
+    if not re.search(r"[!@#$%^&*]", password):
         return "Add at least one special character (!@#$%^&*)."
 
     return None
 
 
 @never_cache
-@login_required(login_url='login')
+@login_required(login_url="login")
 def profile_page(request):
     user = request.user
-
 
     profile, created = Profile.objects.get_or_create(user=user)
 
@@ -54,38 +51,36 @@ def profile_page(request):
         email = request.POST.get("email", "").strip()
         phone = request.POST.get("phone", "").strip()
 
-    
         if not email:
             messages.error(request, "Email is required")
-            return redirect('user_details:profile')
+            return redirect("user_details:profile")
 
-    
         if User.objects.filter(email=email).exclude(id=user.id).exists():
             messages.error(request, "Email already exists")
-            return redirect('user_details:profile')
+            return redirect("user_details:profile")
 
-        
         if full_name:
             parts = full_name.split(" ", 1)
             user.first_name = parts[0]
             user.last_name = parts[1] if len(parts) > 1 else ""
 
-        
         user.email = email
         user.save()
 
-    
         profile.phone = phone
         profile.save()
 
         messages.success(request, "Profile updated successfully")
         return redirect("user_details:profile")
 
-
-    return render(request, "profile.html", {
-        "user": user,
-        "profile": profile,
-    })
+    return render(
+        request,
+        "profile.html",
+        {
+            "user": user,
+            "profile": profile,
+        },
+    )
 
 
 @user_required
@@ -119,9 +114,9 @@ def edit_profile(request):
         # EMAIL OTP LOGIC (keep as is)
         if new_email and new_email != user.email:
             otp = str(random.randint(100000, 999999))
-            request.session['otp'] = otp
-            request.session['pending_email'] = new_email
-            request.session['otp_time'] = str(timezone.now())
+            request.session["otp"] = otp
+            request.session["pending_email"] = new_email
+            request.session["otp_time"] = str(timezone.now())
 
             send_mail(
                 "Verify your new email",
@@ -147,21 +142,18 @@ def edit_profile(request):
 
     return render(request, "edit_profile.html")
 
+
 @user_required
 def verify_email_otp(request):
 
     if request.method == "POST":
 
-    
-        otp_digits = [
-            request.POST.get(f"otp{i}", "") for i in range(1, 7)
-        ]
+        otp_digits = [request.POST.get(f"otp{i}", "") for i in range(1, 7)]
 
-        
         if not all(d.isdigit() and len(d) == 1 for d in otp_digits):
-            return render(request, "verify_otp.html", {
-                "error": "Enter complete 6-digit OTP"
-            })
+            return render(
+                request, "verify_otp.html", {"error": "Enter complete 6-digit OTP"}
+            )
 
         entered_otp = "".join(otp_digits)
 
@@ -169,31 +161,24 @@ def verify_email_otp(request):
         new_email = request.session.get("pending_email")
         otp_time = request.session.get("otp_time")
 
-    
         if not session_otp or not new_email:
             messages.error(request, "Session expired. Try again.")
             return redirect("user_details:edit_profile")
 
-        
         if otp_time:
             otp_time = timezone.datetime.fromisoformat(otp_time)
             if timezone.now() > otp_time + timedelta(minutes=1):
-                return render(request, "verify_otp.html", {
-                    "error": "OTP expired. Resend again."
-                })
+                return render(
+                    request, "verify_otp.html", {"error": "OTP expired. Resend again."}
+                )
 
-        
         if entered_otp != session_otp:
-            return render(request, "profile_emailverify.html", {
-                "error": "Invalid OTP"
-            })
+            return render(request, "profile_emailverify.html", {"error": "Invalid OTP"})
 
-        
         user = request.user
         user.email = new_email
         user.save()
 
-        
         request.session.pop("otp", None)
         request.session.pop("pending_email", None)
         request.session.pop("otp_time", None)
@@ -204,23 +189,20 @@ def verify_email_otp(request):
 
     return render(request, "profile_emailverify.html")
 
+
 @user_required
 def resend_email_otp(request):
 
     new_email = request.session.get("pending_email")
 
-    
     if not new_email:
         messages.error(request, "Session expired. Try again.")
         return redirect("user_details:edit_profile")
 
-    
     otp = str(random.randint(100000, 999999))
 
-    
-    request.session['otp'] = otp
-    request.session['otp_time'] = str(timezone.now())
-
+    request.session["otp"] = otp
+    request.session["otp_time"] = str(timezone.now())
 
     send_mail(
         "Resend OTP - Verify your email",
@@ -235,8 +217,6 @@ def resend_email_otp(request):
     return redirect("user_details:verify_email_otp")
 
 
-
-
 def change_password(request):
 
     if request.method == "POST":
@@ -246,32 +226,23 @@ def change_password(request):
 
         user = request.user
 
-    
         if not user.check_password(current_password):
             messages.error(
-                request,
-                "Current password is incorrect.",
-                extra_tags="password"
+                request, "Current password is incorrect.", extra_tags="password"
             )
 
             return render(request, "change_password.html")
 
-        
         if new_password != confirm_password:
-            messages.error(
-                request,
-                "Passwords do not match.",
-                extra_tags="password"
-            )
+            messages.error(request, "Passwords do not match.", extra_tags="password")
 
             return render(request, "change_password.html")
 
-    
         if len(new_password) < 8:
             messages.error(
                 request,
                 "Password must be at least 8 characters.",
-                extra_tags="password"
+                extra_tags="password",
             )
 
             return render(request, "change_password.html")
@@ -288,29 +259,23 @@ def change_password(request):
             messages.error(request, "Must include a special character.")
             return render(request, "change_password.html")
 
-        
         user.set_password(new_password)
         user.save()
 
-        
         update_session_auth_hash(request, user)
 
         messages.success(
-            request,
-            "Password changed successfully.",
-            extra_tags="password"
+            request, "Password changed successfully.", extra_tags="password"
         )
 
-        
-        return redirect('user_details:profile')  
+        return redirect("user_details:profile")
 
     return render(request, "change_password.html")
 
 
-
-
 def logout_confirm(request):
     return render(request, "logout_confirmation.html")
+
 
 def logout_view(request):
     logout(request)
@@ -318,26 +283,22 @@ def logout_view(request):
 
 
 def profile_forgotpassword(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
+    if request.method == "POST":
+        email = request.POST.get("email")
 
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
             messages.error(request, "Email not found")
-            return render(request, 'profileforgot_password.html')
+            return render(request, "profileforgot_password.html")
 
-        
         PasswordResetOTP.objects.filter(user=user, is_used=False).delete()
 
         otp = str(random.randint(100000, 999999))
 
-        PasswordResetOTP.objects.create(
-            user=user,
-            otp=otp
-        )
+        PasswordResetOTP.objects.create(user=user, otp=otp)
 
-        request.session['reset_email'] = email
+        request.session["reset_email"] = email
 
         send_mail(
             "Password Reset OTP",
@@ -346,30 +307,25 @@ def profile_forgotpassword(request):
             [email],
         )
 
-        return redirect('user_details:profileverify_otp')  
+        return redirect("user_details:profileverify_otp")
 
-    return render(request, 'profileforgot_password.html')
+    return render(request, "profileforgot_password.html")
 
-    
 
 def profile_verify_otp(request):
     error = None
-    email = request.session.get('reset_email')
+    email = request.session.get("reset_email")
 
     if not email:
-        return redirect('profile_forgotpassword')   
+        return redirect("profile_forgotpassword")
 
     user = User.objects.get(email=email)
 
-    if request.method == 'POST':
-        entered_otp = ''.join([
-            request.POST.get(f'otp{i}', '') for i in range(1, 7)
-        ])
+    if request.method == "POST":
+        entered_otp = "".join([request.POST.get(f"otp{i}", "") for i in range(1, 7)])
 
         otp_obj = PasswordResetOTP.objects.filter(
-            user=user,
-            otp=entered_otp,
-            is_used=False
+            user=user, otp=entered_otp, is_used=False
         ).last()
 
         if not otp_obj:
@@ -382,29 +338,25 @@ def profile_verify_otp(request):
             otp_obj.is_used = True
             otp_obj.save()
 
-            request.session['otp_verified'] = True
-            return redirect('user_details:profilereset_password')   
+            request.session["otp_verified"] = True
+            return redirect("user_details:profilereset_password")
 
-    return render(request, 'profile_verifyemail.html', {"error": error})
+    return render(request, "profile_verifyemail.html", {"error": error})
 
 
 def profile_resend_otp(request):
-    email = request.session.get('reset_email')
+    email = request.session.get("reset_email")
 
     if not email:
-        return redirect('profile_forgotpassword')   
+        return redirect("profile_forgotpassword")
 
     user = User.objects.get(email=email)
-
 
     PasswordResetOTP.objects.filter(user=user, is_used=False).delete()
 
     otp = str(random.randint(100000, 999999))
 
-    PasswordResetOTP.objects.create(
-        user=user,
-        otp=otp
-    )
+    PasswordResetOTP.objects.create(user=user, otp=otp)
 
     send_mail(
         "New OTP",
@@ -414,40 +366,36 @@ def profile_resend_otp(request):
     )
 
     messages.success(request, "New OTP sent")
-    return redirect('profileverify_otp')   
+    return redirect("profileverify_otp")
+
 
 def profile_resetpassword(request):
-    email = request.session.get('reset_email')
-    verified = request.session.get('otp_verified')
+    email = request.session.get("reset_email")
+    verified = request.session.get("otp_verified")
 
-    
     if not email or not verified:
-        return redirect('user_details:profile_forgotpassword')
+        return redirect("user_details:profile_forgotpassword")
 
-    if request.method == 'POST':
-        password = request.POST.get('password')
-        confirm = request.POST.get('confirm_password')
+    if request.method == "POST":
+        password = request.POST.get("password")
+        confirm = request.POST.get("confirm_password")
 
-        
         if password != confirm:
             messages.error(request, "Passwords do not match")
-            return render(request, 'profile_resetpassword.html')
+            return render(request, "profile_resetpassword.html")
 
-        
         error = validate_password_strength(password)
         if error:
             messages.error(request, error)
-            return render(request, 'profile_resetpassword.html')
+            return render(request, "profile_resetpassword.html")
 
-        
         user = User.objects.get(email=email)
         user.set_password(password)
         user.save()
 
-    
         request.session.flush()
 
         messages.success(request, "Password reset successful")
-        return redirect('login')
+        return redirect("login")
 
-    return render(request, 'profile_resetpassword.html')
+    return render(request, "profile_resetpassword.html")

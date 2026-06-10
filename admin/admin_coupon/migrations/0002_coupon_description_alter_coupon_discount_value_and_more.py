@@ -7,38 +7,57 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_coupon', '0001_initial'),
+        ("admin_coupon", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='coupon',
-            name='description',
+            model_name="coupon",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='coupon',
-            name='discount_value',
-            field=models.DecimalField(decimal_places=2, max_digits=10, validators=[django.core.validators.MinValueValidator(0)]),
+            model_name="coupon",
+            name="discount_value",
+            field=models.DecimalField(
+                decimal_places=2,
+                max_digits=10,
+                validators=[django.core.validators.MinValueValidator(0)],
+            ),
         ),
         migrations.AlterField(
-            model_name='coupon',
-            name='maximum_discount_amount',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, validators=[django.core.validators.MinValueValidator(0)]),
+            model_name="coupon",
+            name="maximum_discount_amount",
+            field=models.DecimalField(
+                blank=True,
+                decimal_places=2,
+                max_digits=10,
+                null=True,
+                validators=[django.core.validators.MinValueValidator(0)],
+            ),
         ),
         migrations.AlterField(
-            model_name='coupon',
-            name='minimum_purchase_amount',
-            field=models.DecimalField(decimal_places=2, default=0, max_digits=10, validators=[django.core.validators.MinValueValidator(0)]),
+            model_name="coupon",
+            name="minimum_purchase_amount",
+            field=models.DecimalField(
+                decimal_places=2,
+                default=0,
+                max_digits=10,
+                validators=[django.core.validators.MinValueValidator(0)],
+            ),
         ),
         migrations.AlterField(
-            model_name='coupon',
-            name='total_usage_limit',
-            field=models.PositiveIntegerField(default=1, validators=[django.core.validators.MinValueValidator(1)]),
+            model_name="coupon",
+            name="total_usage_limit",
+            field=models.PositiveIntegerField(
+                default=1, validators=[django.core.validators.MinValueValidator(1)]
+            ),
         ),
         migrations.AlterField(
-            model_name='coupon',
-            name='usage_limit_per_user',
-            field=models.PositiveIntegerField(default=1, validators=[django.core.validators.MinValueValidator(1)]),
+            model_name="coupon",
+            name="usage_limit_per_user",
+            field=models.PositiveIntegerField(
+                default=1, validators=[django.core.validators.MinValueValidator(1)]
+            ),
         ),
     ]

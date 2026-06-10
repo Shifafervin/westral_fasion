@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ugxl9r0pb@co20qq(agi=ta^kw8+wfui2io63(imk48&y^yl7)'
+SECRET_KEY = "django-insecure-ugxl9r0pb@co20qq(agi=ta^kw8+wfui2io63(imk48&y^yl7)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -30,65 +30,58 @@ ALLOWED_HOSTS = [
     "localhost",
     ".ngrok-free.dev",
 ]
+# DEBUG = False
 
+# ALLOWED_HOSTS = [
+#     "*"
+# ]
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-
-    'user.accounts',
-    'user.user_details',
-    'user.address_details',
-    'user.user_products',
-    'user.user_orders',
-    'user.user_payments',
-
-
-
-    'admin.admin_auth',
-    'admin.admin_category',
-    'admin.admin_product',
-    'admin.admin_orders.apps.AdminOrderConfig',
-    'admin.admin_coupon',
-    'admin.admin_offers',
-
-
-
-    'django.contrib.sites',   # MUST be there
-
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    
-   
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "user.accounts",
+    "user.user_details",
+    "user.address_details",
+    "user.user_products",
+    "user.user_orders",
+    "user.user_payments",
+    "admin.admin_auth",
+    "admin.admin_category",
+    "admin.admin_product",
+    "admin.admin_orders.apps.AdminOrderConfig",
+    "admin.admin_coupon",
+    "admin.admin_offers",
+    "django.contrib.sites",  # MUST be there
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
 
-CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000']
+CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000"]
 
-SITE_ID = 1         
+SITE_ID = 1
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
-ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_LOGIN_METHODS = {"email"}
 
 ACCOUNT_SIGNUP_FIELDS = [
-    'email*',
-    'password1*',
-    'password2*',
+    "email*",
+    "password1*",
+    "password2*",
 ]
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
@@ -97,49 +90,48 @@ ACCOUNT_LOGOUT_ON_GET = True
 
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
-    'allauth.account.middleware.AccountMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
-ROOT_URLCONF = 'westral_fasion.urls'
+ROOT_URLCONF = "westral_fasion.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'user.context_processors.navbar_counts',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "user.context_processors.navbar_counts",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'westral_fasion.wsgi.application'
+WSGI_APPLICATION = "westral_fasion.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'myprojectdb',
-        'USER': 'postgres',
-        'PASSWORD': 'shifa',
-        'HOST': 'localhost',
-        'PORT': '5432',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "myprojectdb",
+        "USER": "postgres",
+        "PASSWORD": "shifa",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -149,16 +141,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -166,9 +158,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
 
@@ -188,21 +180,21 @@ EMAIL_HOST_PASSWORD = "qurhhwcksfjlzwzp"
 DEFAULT_FROM_EMAIL = "Westral Fashion <your@gmail.com>"
 
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 LOGIN_URL = "/login/"
 
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-AUTH_USER_MODEL = 'admin_auth.CustomUser'
+AUTH_USER_MODEL = "admin_auth.CustomUser"
 
 RAZORPAY_KEY_ID = "rzp_test_SslIDaJcoJyLJO"
 

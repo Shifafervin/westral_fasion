@@ -613,29 +613,21 @@ class="top-btn"
 
         <table class="invoice-table">
 
-            <thead>
-
-                <tr>
-
-                    <th>ITEM</th>
-
-                    <th>PRODUCT NAME</th>
-
-                    <th>DETAILS</th>
-
-                    <th>QTY</th>
-
-                    <th>PRICE</th>
-
-                    <th>TOTAL</th>
-
-                </tr>
-
-            </thead>
+<thead>
+<tr>
+    <th>ITEM</th>
+    <th>PRODUCT NAME</th>
+    <th>DETAILS</th>
+    <th>STATUS</th>
+    <th>QTY</th>
+    <th>PRICE</th>
+    <th>TOTAL</th>
+</tr>
+</thead>
 
             <tbody>
 
-                {% for item in order.items.all %}
+                {% for item in invoice_items %}
 
                 <tr>
 
@@ -682,7 +674,55 @@ class="top-btn"
                         </div>
 
                     </td>
+<td>
 
+{% if item.item_status == "Cancelled" %}
+
+    <span style="color:#c95c5c;font-weight:700;">
+        CANCELLED
+    </span>
+
+{% elif item.item_status == "Return Requested" %}
+
+    <span style="color:#d4a373;font-weight:700;">
+        RETURN REQUESTED
+    </span>
+
+{% elif item.item_status == "Return Approved" %}
+
+    <span style="color:#287a43;font-weight:700;">
+        RETURN APPROVED
+    </span>
+
+{% elif item.item_status == "Return Rejected" %}
+
+    <span style="color:#c95c5c;font-weight:700;">
+        RETURN REJECTED
+    </span>
+
+{% elif item.item_status == "Delivered" %}
+
+    <span style="color:#287a43;font-weight:700;">
+        DELIVERED
+    </span>
+
+{% else %}
+
+    <span style="color:#555;font-weight:700;">
+        {% if order.order_status == "Delivered" and item.item_status == "Active" %}
+
+    DELIVERED
+
+{% else %}
+
+    {{ item.item_status }}
+
+{% endif %}
+    </span>
+
+{% endif %}
+
+</td>
                     <td>
 
                         {{ item.quantity }}
@@ -766,7 +806,7 @@ class="top-btn"
 
                 <span>
 
-                    ₹{{ order.total_amount }}
+                    ₹{{ grand_total|floatformat:2 }}
 
                 </span>
 

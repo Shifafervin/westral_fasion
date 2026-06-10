@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_offers', '0004_alter_offer_options_offer_updated_at_and_more'),
+        ("admin_offers", "0004_alter_offer_options_offer_updated_at_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='offer',
-            name='end_date',
+            model_name="offer",
+            name="end_date",
             field=models.DateTimeField(),
         ),
         migrations.AlterField(
-            model_name='offer',
-            name='start_date',
+            model_name="offer",
+            name="start_date",
             field=models.DateTimeField(),
         ),
     ]

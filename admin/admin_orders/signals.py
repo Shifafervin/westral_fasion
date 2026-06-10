@@ -12,8 +12,4 @@ def create_user_wallet(sender, instance, created, **kwargs):
 
     if created:
 
-        Wallet.objects.create(
-
-            user=instance
-
-        )
+        Wallet.objects.create(user=instance)

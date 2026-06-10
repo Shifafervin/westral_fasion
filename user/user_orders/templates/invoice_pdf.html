@@ -84,9 +84,10 @@ th, td{
             <th>Size</th>
 
             <th>Color</th>
+            <th>Status</th>
 
             <th>Qty</th>
-
+            
             <th>Price</th>
 
         </tr>
@@ -111,17 +112,28 @@ th, td{
 
             </td>
 
-            <td>
+ <td>
+    {{ item.variant.color }}
+</td>
 
-                {{ item.variant.color }}
 
-            </td>
+ <td>
 
-            <td>
+{% if order.order_status == "Delivered" and item.item_status == "Active" %}
 
-                {{ item.quantity }}
+    Delivered
 
-            </td>
+{% else %}
+
+    {{ item.item_status }}
+
+{% endif %}
+
+</td>
+
+<td>
+    {{ item.quantity }}
+</td>
 
             <td>
 
@@ -138,10 +150,8 @@ th, td{
 </table>
 
 <div class="total">
-
     Total :
     ₹{{ order.total_amount }}
-
 </div>
 
 </body>

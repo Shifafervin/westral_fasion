@@ -628,11 +628,12 @@ value="{{ request.GET.next }}"
     <div class="input-box">
         <label>FULL NAME</label>
         <input
-            type="text"
-            name="full_name"
-            placeholder="Enter your full name"
-            required
-        >
+    type="text"
+    name="full_name"
+    value="{{ form_data.full_name|default:'' }}"
+    placeholder="Enter your full name"
+    required
+>
     </div>
 
     <div class="input-box">
@@ -661,6 +662,7 @@ value="{{ request.GET.next }}"
         <input
             type="text"
             name="pincode"
+            value="{{ form_data.pincode|default:'' }}"
             placeholder="6-digit pincode"
             maxlength="6"
             inputmode="numeric"
@@ -674,6 +676,7 @@ value="{{ request.GET.next }}"
         <input
             type="text"
             name="state"
+            value="{{ form_data.state|default:'' }}"
             required
         >
     </div>
@@ -690,6 +693,7 @@ value="{{ request.GET.next }}"
         <input
             type="text"
             name="city"
+            value="{{ form_data.city|default:'' }}"
             required
         >
     </div>
@@ -700,6 +704,7 @@ value="{{ request.GET.next }}"
         <input
             type="text"
             name="country"
+            value="{{ form_data.country|default:'' }}"
             required
         >
     </div>
@@ -714,10 +719,8 @@ value="{{ request.GET.next }}"
         <label>DETAILED ADDRESS</label>
 
         <textarea
-            name="address_line"
-            placeholder="House No, Building, Street, Area"
-            required
-        ></textarea>
+    name="address_line"
+>{{ form_data.address_line|default:'' }}</textarea>
     </div>
 
 </div>
@@ -731,13 +734,15 @@ value="{{ request.GET.next }}"
     <div class="type-options">
 
         <input
-            type="radio"
-            id="home"
-            name="address_type"
-            value="home"
-            checked
-            hidden
-        >
+    type="radio"
+    id="home"
+    name="address_type"
+    value="home"
+    {% if form_data.address_type|default:"home" == "home" %}
+    checked
+    {% endif %}
+    hidden
+>
 
         <label for="home" class="type-btn">
             HOME
@@ -745,12 +750,15 @@ value="{{ request.GET.next }}"
 
 
         <input
-            type="radio"
-            id="work"
-            name="address_type"
-            value="work"
-            hidden
-        >
+    type="radio"
+    id="work"
+    name="address_type"
+    value="work"
+    {% if form_data.address_type|default:"work" == "work" %}
+    checked
+    {% endif %}
+    hidden
+>
 
         <label for="work" class="type-btn">
             WORK
@@ -758,12 +766,15 @@ value="{{ request.GET.next }}"
 
 
         <input
-            type="radio"
-            id="other"
-            name="address_type"
-            value="other"
-            hidden
-        >
+    type="radio"
+    id="other"
+    name="address_type"
+    value="other"
+    {% if form_data.address_type|default:"other" == "other" %}
+    checked
+    {% endif %}
+    hidden
+>
 
         <label for="other" class="type-btn">
             OTHER
@@ -778,11 +789,14 @@ value="{{ request.GET.next }}"
 <div class="default-switch">
 
     <input
-        type="checkbox"
-        id="default"
-        name="is_default"
-        hidden
-    >
+    type="checkbox"
+    id="default"
+    name="is_default"
+    {% if form_data.is_default %}
+    checked
+    {% endif %}
+    hidden
+>
 
     <label for="default" class="switch">
         <span class="slider"></span>

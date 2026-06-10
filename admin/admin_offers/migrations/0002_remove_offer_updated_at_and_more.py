@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_offers', '0001_initial'),
+        ("admin_offers", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='offer',
-            name='updated_at',
+            model_name="offer",
+            name="updated_at",
         ),
         migrations.AlterField(
-            model_name='offer',
-            name='discount_percentage',
+            model_name="offer",
+            name="discount_percentage",
             field=models.DecimalField(decimal_places=2, max_digits=5),
         ),
     ]

@@ -577,7 +577,10 @@ PDF
             <label>PERIOD</label>
 
             <select name="filter">
-
+<option value="all"
+{% if filter_type == 'all' %}selected{% endif %}>
+All Time
+</option> 
                 <option value="daily"
                     {% if filter_type == 'daily' %}selected{% endif %}>
                     Daily

@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_orders', '0009_order_razorpay_order_id_order_razorpay_payment_id_and_more'),
+        (
+            "admin_orders",
+            "0009_order_razorpay_order_id_order_razorpay_payment_id_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='wallettransaction',
-            name='transaction_id',
+            model_name="wallettransaction",
+            name="transaction_id",
             field=models.CharField(default=False, editable=False, max_length=100),
         ),
     ]

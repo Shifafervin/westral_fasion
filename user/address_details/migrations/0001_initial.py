@@ -15,19 +15,43 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Address',
+            name="Address",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('full_name', models.CharField(max_length=100)),
-                ('phone', models.CharField(max_length=15)),
-                ('pincode', models.CharField(max_length=6)),
-                ('state', models.CharField(max_length=100)),
-                ('city', models.CharField(max_length=100)),
-                ('address_line', models.TextField()),
-                ('address_type', models.CharField(choices=[('home', 'Home'), ('work', 'Work'), ('other', 'Other')], max_length=10)),
-                ('is_default', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("full_name", models.CharField(max_length=100)),
+                ("phone", models.CharField(max_length=15)),
+                ("pincode", models.CharField(max_length=6)),
+                ("state", models.CharField(max_length=100)),
+                ("city", models.CharField(max_length=100)),
+                ("address_line", models.TextField()),
+                (
+                    "address_type",
+                    models.CharField(
+                        choices=[
+                            ("home", "Home"),
+                            ("work", "Work"),
+                            ("other", "Other"),
+                        ],
+                        max_length=10,
+                    ),
+                ),
+                ("is_default", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

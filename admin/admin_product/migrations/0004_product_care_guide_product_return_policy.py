@@ -6,18 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('admin_product', '0003_remove_product_is_active_remove_product_price_and_more'),
+        (
+            "admin_product",
+            "0003_remove_product_is_active_remove_product_price_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='product',
-            name='care_guide',
+            model_name="product",
+            name="care_guide",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='product',
-            name='return_policy',
+            model_name="product",
+            name="return_policy",
             field=models.TextField(blank=True, null=True),
         ),
     ]

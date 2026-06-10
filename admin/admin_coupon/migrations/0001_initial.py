@@ -7,28 +7,52 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Coupon',
+            name="Coupon",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('code', models.CharField(max_length=50, unique=True)),
-                ('discount_type', models.CharField(choices=[('Percentage', 'Percentage'), ('Fixed', 'Fixed')], max_length=20)),
-                ('discount_value', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('minimum_purchase_amount', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('maximum_discount_amount', models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True)),
-                ('total_usage_limit', models.PositiveIntegerField(default=1)),
-                ('usage_limit_per_user', models.PositiveIntegerField(default=1)),
-                ('used_count', models.PositiveIntegerField(default=0)),
-                ('valid_from', models.DateField()),
-                ('valid_to', models.DateField()),
-                ('is_active', models.BooleanField(default=True)),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("code", models.CharField(max_length=50, unique=True)),
+                (
+                    "discount_type",
+                    models.CharField(
+                        choices=[("Percentage", "Percentage"), ("Fixed", "Fixed")],
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "discount_value",
+                    models.DecimalField(decimal_places=2, max_digits=10),
+                ),
+                (
+                    "minimum_purchase_amount",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
+                ),
+                (
+                    "maximum_discount_amount",
+                    models.DecimalField(
+                        blank=True, decimal_places=2, max_digits=10, null=True
+                    ),
+                ),
+                ("total_usage_limit", models.PositiveIntegerField(default=1)),
+                ("usage_limit_per_user", models.PositiveIntegerField(default=1)),
+                ("used_count", models.PositiveIntegerField(default=0)),
+                ("valid_from", models.DateField()),
+                ("valid_to", models.DateField()),
+                ("is_active", models.BooleanField(default=True)),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
         ),
     ]
