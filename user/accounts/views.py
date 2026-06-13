@@ -22,6 +22,9 @@ from user.user_products.models import Variant
 from django.http import JsonResponse
 from django.db.models import Q
 from django.urls import reverse
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 User = get_user_model()
 
@@ -64,6 +67,7 @@ def signup_view(request):
         referral_code = request.POST.get("referral_code", "").strip().upper()
         password = request.POST.get("password", "")
         confirm = request.POST.get("confirm_password", "")
+        terms = request.POST.get("terms", "")
 
         errors = {}
 
@@ -75,7 +79,7 @@ def signup_view(request):
 
             errors["name"] = "Name must be at least 3 characters"
 
-        elif not re.match(r"^[A-Za-z ]+$", name):
+        elif not re.match(r"^[A-Za-z\s\.\'-]+$", name):
 
             errors["name"] = "Name must contain only letters"
 
@@ -86,11 +90,20 @@ def signup_view(request):
         if not email:
             errors["email"] = "Email is required"
 
+        else:
+            try:
+                validate_email(email)
+            except ValidationError:
+                errors["email"] = "Enter a valid email address"    
+
         if not password:
             errors["password"] = "Password is required"
 
         if password != confirm:
             errors["confirm_password"] = "Passwords do not match"
+
+        if not terms:
+            errors["terms"] = "You must accept the Terms of Service and Privacy Policy"    
 
         password_error = validate_password_strength(password)
         if password_error:
@@ -98,6 +111,12 @@ def signup_view(request):
 
         if User.objects.filter(email=email).exists():
             errors["email"] = "Email already exists"
+
+        if referral_code:
+            if not User.objects.filter(
+                referral_code=referral_code
+            ).exists():
+                errors["referral_code"] = "Invalid referral code"
 
         if errors:
             return render(
@@ -111,7 +130,32 @@ def signup_view(request):
                 },
             )
 
+        last_sent = request.session.get("otp_sent_time")
+
+        if last_sent:
+
+            elapsed = time.time() - last_sent
+
+            if elapsed < 60:
+
+                errors["email"] = (
+                    f"Please wait {int(60 - elapsed)} seconds before requesting another OTP."
+                )
+
+                return render(
+                    request,
+                    "signup.html",
+                    {
+                        "errors": errors,
+                        "name": name,
+                        "email": email,
+                        "referral_code": referral_code,
+                    },
+                )
+
         otp = str(random.randint(100000, 999999))
+
+        otp_expiry = timezone.now() + timedelta(minutes=1)
 
         request.session["signup_data"] = {
             "name": name,
@@ -119,6 +163,7 @@ def signup_view(request):
             "password": password,
             "otp": otp,
             "referral_code": referral_code,
+            "otp_expiry": otp_expiry.isoformat(),
         }
 
         request.session["otp_message"] = f"A new OTP has been sent to {email}"
@@ -130,6 +175,7 @@ def signup_view(request):
             [email],
             fail_silently=False,
         )
+        request.session["otp_sent_time"] = time.time()
 
         return redirect("signup_verify")
 
@@ -151,8 +197,41 @@ def signup_verify(request):
         if not data:
             messages.error(request, "Session expired. Signup again.")
             return redirect("signup")
+        
+        expiry = data.get("otp_expiry")
+
+        if not expiry:
+            messages.error(request, "OTP expired. Please signup again.")
+            return redirect("signup")
+
+        expiry_time = timezone.datetime.fromisoformat(expiry)
+
+        if timezone.now() > expiry_time:
+
+            request.session.pop("signup_data", None)
+
+            messages.error(
+                request,
+                "OTP has expired. Please signup again."
+            )
+
+            return redirect("signup")
 
         if user_otp == data["otp"]:
+            existing_user = User.objects.filter(
+                username=data["email"]
+            ).first()
+
+            if existing_user:
+
+                request.session.pop("signup_data", None)
+
+                messages.error(
+                    request,
+                    "An account with this email already exists."
+                )
+
+                return redirect("login")
 
             parts = data["name"].split()
             first = parts[0]
@@ -166,32 +245,45 @@ def signup_verify(request):
                 last_name=last,
             )
 
-        referral_code = data.get("referral_code")
+            referral_code = data.get("referral_code")
 
-        if referral_code:
+            if referral_code:
 
-            referrer = User.objects.filter(referral_code=referral_code).first()
+                referrer = User.objects.filter(
+                    referral_code=referral_code
+                ).first()
 
-            if referrer and referrer.id != user.id:
+                if referrer and referrer.id != user.id:
 
-                user.referred_by = referrer
-
-                user.save()
-
-            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
-
+                    user.referred_by = referrer
+                    user.save()
+            login(
+                request,
+                user,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
             del request.session["signup_data"]
 
-            messages.success(request, "Account created successfully")
+            messages.success(
+                request,
+                "Account created successfully"
+            )
 
             return redirect("home")
-
         else:
-            messages.error(request, "Invalid OTP")
+
+            messages.error(
+                request,
+                "Invalid OTP"
+            )
             return redirect("signup_verify")
-
-    return render(request, "signup_verify.html")
-
+    return render(
+        request,
+        "signup_verify.html",
+        {
+            "otp_image": "https://your-image-url.com/image.jpg"
+        }
+    )
 
 @never_cache
 def login_view(request):
@@ -204,6 +296,15 @@ def login_view(request):
 
         email = request.POST.get("email", "").strip().lower()
         password = request.POST.get("password", "")
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.error(
+                request,
+                "Please enter a valid email address.",
+                extra_tags="login",
+            )
+            return render(request, "login.html", {"email": email})
         remember = request.POST.get("remember")
 
         context = {"email": email}

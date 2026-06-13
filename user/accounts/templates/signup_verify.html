@@ -161,7 +161,9 @@ body {
 
 <!-- LEFT IMAGE -->
 <div class="left">
-    <img src="{{ otp_image }}">
+   <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1200&q=80"
+    alt="OTP Banner"
+>
     
     <div class="brand">WESTRAL FASHION</div>
 
@@ -200,7 +202,7 @@ body {
         <a href="{% url 'resend_otp' %}">Resend</a>
     </div>
 
-    <div class="timer" id="timer">02:00</div>
+   <div class="timer" id="timer">01:00</div>
 
     <div class="back">
         <a href="{% url 'login' %}">← Back to login</a>
@@ -230,16 +232,31 @@ inputs.forEach((input, index) => {
 });
 
 /* TIMER */
-let time = 120;
+/* TIMER */
+let time = 60;
 let timerEl = document.getElementById("timer");
 
-setInterval(() => {
+const countdown = setInterval(() => {
+
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
-    timerEl.textContent = 
-        (minutes < 10 ? "0" : "") + minutes + ":" +
-        (seconds < 10 ? "0" : "") + seconds;
-    if (time > 0) time--;
+
+    timerEl.textContent =
+        String(minutes).padStart(2, "0") +
+        ":" +
+        String(seconds).padStart(2, "0");
+
+    if (time <= 0) {
+
+        clearInterval(countdown);
+
+        timerEl.textContent = "OTP Expired";
+
+        return;
+    }
+
+    time--;
+
 }, 1000);
 </script>
 
