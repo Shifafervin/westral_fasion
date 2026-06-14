@@ -11,8 +11,14 @@ from .forms import ProductForm
 from admin.admin_category.models import Category
 from .forms import VariantForm
 from django.db.models import Sum
+from admin.decorators import admin_required
+from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_control
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_required
 def product_management(request):
 
     search = request.GET.get("search", "").strip()
@@ -37,11 +43,6 @@ def product_management(request):
 
     if category_id and category_id != "None":
 
-        print("Before Category Filter:", products.count())
-
-        products = products.filter(category_id=category_id)
-
-        print("After Category Filter:", products.count())
         products = products.filter(category_id=category_id)
 
     if status == "None":
@@ -91,6 +92,8 @@ def product_management(request):
     return render(request, "product_management.html", context)
 
 
+@never_cache
+@admin_required
 def add_product(request):
 
     categories = Category.objects.filter(is_active=True, is_deleted=False)
@@ -130,6 +133,8 @@ def add_product(request):
     return render(request, "add_product.html", context)
 
 
+@never_cache
+@admin_required
 def edit_product(request, id):
 
     product = get_object_or_404(Product, id=id, is_deleted=False)
@@ -167,14 +172,15 @@ def edit_product(request, id):
     return render(request, "edit_product.html", context)
 
 
+@never_cache
+@admin_required
 def delete_product(request, id):
 
     product = get_object_or_404(Product, id=id, is_deleted=False)
 
     if request.method == "POST":
 
-        product.is_deleted = True
-        product.save()
+        Product.objects.filter(id=product.id).update(is_deleted=True)
 
         messages.success(request, "Product deleted successfully")
 
@@ -185,6 +191,8 @@ def delete_product(request, id):
     return render(request, "delete_product.html", context)
 
 
+@never_cache
+@admin_required
 def toggle_product_status(request, id):
 
     product = get_object_or_404(Product, id=id, is_deleted=False)
@@ -200,6 +208,9 @@ def toggle_product_status(request, id):
     return redirect("product_management")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_required
 def variant_management(request, product_id):
 
     product = get_object_or_404(Product, id=product_id, is_deleted=False)
@@ -273,6 +284,8 @@ def variant_management(request, product_id):
     return render(request, "varient_management.html", context)
 
 
+@never_cache
+@admin_required
 def edit_variant(request, variant_id):
 
     variant = get_object_or_404(Variant, id=variant_id)
@@ -356,6 +369,8 @@ def edit_variant(request, variant_id):
     return render(request, "edit_varient.html", context)
 
 
+@never_cache
+@admin_required
 def add_variant(request, product_id):
 
     product = get_object_or_404(Product, id=product_id, is_deleted=False)
@@ -429,6 +444,8 @@ def add_variant(request, product_id):
     return render(request, "add_varient.html", context)
 
 
+@never_cache
+@admin_required
 def delete_variant_page(request, variant_id):
 
     variant = get_object_or_404(Variant, id=variant_id, is_deleted=False)

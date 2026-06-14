@@ -49,6 +49,8 @@ def validate_password_strength(password):
     return None
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def signup_view(request):
 
     if request.user.is_authenticated:
@@ -182,6 +184,8 @@ def signup_view(request):
     return render(request, "signup.html")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def signup_verify(request):
 
     if request.method == "POST":
@@ -374,6 +378,8 @@ def home_view(request):
     return render(request, "homepage.html", context)
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def logout_view(request):
     logout(request)
     messages.success(request, "Logged out successfully.")
@@ -385,7 +391,6 @@ def _send_otp(request, email):
 
     expiry = time.time() + 60
 
-    print("EXPIRY TYPE:", type(expiry), expiry)
 
     request.session["reset_otp"] = otp
     request.session["reset_email"] = email
@@ -556,7 +561,6 @@ def navbar_search(request):
             .distinct()[:8]
         )
 
-        print(variants)
 
         for variant in variants:
 

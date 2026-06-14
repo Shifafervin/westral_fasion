@@ -645,22 +645,12 @@ class="action-btn"
 
         </a>
 
-        <a
-        href="{% url 'toggle_coupon_status' coupon.id %}"
-        class="action-link"
-        >
-
-            {% if coupon.is_active %}
-
-                Deactivate
-
-            {% else %}
-
-                Activate
-
-            {% endif %}
-
-        </a>
+        <form method="POST" action="{% url 'toggle_coupon_status' coupon.id %}" style="display:inline; margin:0; padding:0;">
+            {% csrf_token %}
+            <button type="submit" class="action-link" style="background:none; border:none; padding:0; cursor:pointer; font-family:inherit; font-size:inherit; font-weight:inherit; color:inherit;">
+                {% if coupon.is_active %}Deactivate{% else %}Activate{% endif %}
+            </button>
+        </form>
 
 <a
 href="#"
@@ -770,13 +760,12 @@ class="delete-overlay"
 
         <div class="delete-actions">
 
-            <a
-            id="deleteLink"
-            href="#"
-            class="modal-delete-btn"
-            >
-                DELETE
-            </a>
+            <form method="POST" id="deleteForm" action="" style="flex:1; display:flex;">
+                {% csrf_token %}
+                <button type="submit" class="modal-delete-btn" style="flex:1; border:none; cursor:pointer; font-family:inherit;">
+                    DELETE
+                </button>
+            </form>
 
             <button
             type="button"
@@ -805,10 +794,9 @@ document
 <script>
 
 function openDeleteModal(couponId){
-
     document.getElementById(
-        "deleteLink"
-    ).href =
+        "deleteForm"
+    ).action =
     "/admin_coupon/delete/" +
     couponId +
     "/";

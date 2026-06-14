@@ -5,7 +5,7 @@ from django.contrib.auth import logout
 from .models import Profile
 import re
 from django.core.mail import send_mail
-from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import never_cache, cache_control
 from django.contrib.auth import get_user_model
 from django.contrib.auth import update_session_auth_hash
 import random, time
@@ -273,10 +273,14 @@ def change_password(request):
     return render(request, "change_password.html")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def logout_confirm(request):
     return render(request, "logout_confirmation.html")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def logout_view(request):
     logout(request)
     return redirect("login")

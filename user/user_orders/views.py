@@ -23,8 +23,11 @@ from admin.admin_coupon.models import Coupon
 from decimal import Decimal
 from django.utils.timezone import now
 from admin.admin_offers.utils import calculate_discounted_price
+from django.views.decorators.cache import never_cache, cache_control
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_required
 def checkout_page(request):
 
@@ -543,9 +546,6 @@ def payment_success(request):
     shipping_charge = 0
 
     final_total = subtotal - discount + shipping_charge
-    print("SUBTOTAL =", subtotal)
-    print("DISCOUNT =", discount)
-    print("FINAL TOTAL =", final_total)
 
     with transaction.atomic():
 
@@ -641,6 +641,7 @@ def payment_success(request):
         return redirect("razorpay_success", order_id=order.order_id)
 
 
+@never_cache
 @user_required
 def razorpay_success(request, order_id):
 
@@ -659,6 +660,7 @@ def razorpay_success(request, order_id):
     return render(request, "razorpay_success.html", context)
 
 
+@never_cache
 @user_required
 def order_success(request, order_id):
 
@@ -675,6 +677,7 @@ def order_success(request, order_id):
     return render(request, "order_success.html", context)
 
 
+@never_cache
 @login_required(login_url="login")
 def my_orders(request):
 
@@ -995,14 +998,18 @@ def cancel_order_item(request, item_id):
 @user_required
 def return_order(request, order_id):
 
-    order = Order.objects.filter(order_id=order_id, user=request.user).first()
-    returnable_items = order.items.filter(item_status="Active")
+    order = Order.objects.filter(
+        order_id=order_id,
+        user=request.user
+    ).first()
+
     if not order:
 
         messages.error(request, "Order not found")
 
         return redirect("my_orders")
 
+    returnable_items = order.items.filter(item_status="Delivered")
     if order.order_status != "Delivered":
 
         messages.error(request, "Only delivered orders can be returned")

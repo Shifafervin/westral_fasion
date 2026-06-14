@@ -393,13 +393,53 @@ a{
     font-weight:700;
 }
 
+/* RESPONSIVE DESIGN */
+@media (max-width: 1200px) {
+    .cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .top-actions {
+        width: 100%;
+    }
+    .report-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .cards {
+        grid-template-columns: 1fr;
+    }
+    .orders-box, .low-stock-box {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .order-row {
+        min-width: 600px;
+    }
+    .low-stock-row {
+        min-width: 450px;
+    }
+}
+
 </style>
 {% endblock %}
 
 
-{% block content %}
 
-<body>
+{% block content %}
 
 <!-- ================= MAIN ================= -->
 

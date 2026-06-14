@@ -15,6 +15,7 @@ import csv
 from django.http import HttpResponse
 
 
+@never_cache
 @admin_required
 def order_management(request):
 
@@ -153,6 +154,7 @@ def update_order_status(request, order_id):
     return redirect("admin_order_detail", order_id=order.order_id)
 
 
+@never_cache
 @admin_required
 def return_management(request):
 

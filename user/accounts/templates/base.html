@@ -43,24 +43,27 @@
             position:relative;
             display:flex;
             align-items:center;
+            justify-content:space-between;
             padding:15px 40px;
             background:#F5F1ED;
             border-bottom:1px solid #e5ddd5;
+            flex-wrap:nowrap;
+            gap:12px;
         }
 
         .logo{
             font-weight:700;
             color:#6B4F3B;
             font-size:20px;
+            flex-shrink:0;
+            text-decoration:none;
         }
 
         /* CENTER MENU */
         .nav-links{
-            position:absolute;
-            left:50%;
-            transform:translateX(-50%);
             display:flex;
             gap:35px;
+            align-items:center;
         }
 
         .nav-links a{
@@ -69,6 +72,7 @@
             font-size:14px;
             position:relative;
             transition:0.3s;
+            white-space:nowrap;
         }
 
         .nav-links a:hover{
@@ -92,9 +96,10 @@
 
         /* RIGHT ICONS */
         .nav-icons{
-            margin-left:auto;
             display:flex;
             align-items:center;
+            gap:0;
+            flex-shrink:0;
         }
 
         .nav-icons a{
@@ -119,6 +124,113 @@
         .main-content{
             padding:30px 40px;
         }
+
+        /* HAMBURGER (mobile) */
+        .nav-hamburger{
+            display:none;
+            flex-direction:column;
+            gap:5px;
+            background:none;
+            border:none;
+            cursor:pointer;
+            padding:6px;
+            flex-shrink:0;
+        }
+        .nav-hamburger span{
+            display:block;
+            width:22px;
+            height:2px;
+            background:#6B4F3B;
+            border-radius:2px;
+            transition:.3s;
+        }
+        .nav-hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+        .nav-hamburger.open span:nth-child(2){opacity:0;}
+        .nav-hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+        /* MOBILE NAV DRAWER */
+        .mobile-nav-drawer{
+            display:none;
+            flex-direction:column;
+            background:#F5F1ED;
+            border-top:1px solid #e5ddd5;
+            padding:16px 24px;
+            gap:14px;
+        }
+        .mobile-nav-drawer.open{
+            display:flex;
+        }
+        .mobile-nav-drawer a{
+            text-decoration:none;
+            color:#666;
+            font-size:15px;
+            padding:8px 0;
+            border-bottom:1px solid #ede7e1;
+            transition:.2s;
+        }
+        .mobile-nav-drawer a:hover{
+            color:#6B4F3B;
+        }
+
+        /* SEARCH */
+        .search-wrapper{
+            position:relative;
+            flex:1;
+            max-width:450px;
+            min-width:0;
+        }
+
+        /* RESPONSIVE NAVBAR */
+        @media(max-width:900px){
+            .navbar{
+                padding:12px 20px;
+            }
+            .nav-links{
+                display:none;
+            }
+            .nav-hamburger{
+                display:flex;
+            }
+            .search-wrapper{
+                max-width:200px;
+            }
+            .main-content{
+                padding:20px 16px;
+            }
+        }
+
+        @media(max-width:600px){
+            .navbar{
+                padding:12px 14px;
+                gap:8px;
+            }
+            .logo{
+                font-size:16px;
+            }
+            .search-wrapper{
+                max-width:140px;
+            }
+            .nav-icons a{
+                margin-left:14px;
+            }
+            .main-content{
+                padding:16px 12px;
+            }
+            .profile-menu{
+                width:280px;
+                right:-10px;
+            }
+        }
+
+        @media(max-width:380px){
+            .search-wrapper{
+                display:none;
+            }
+            .logo{
+                font-size:14px;
+            }
+        }
+
         /* ================= NAV ICON BADGES ================= */
 
 .cart-icon-wrap,
@@ -178,7 +290,8 @@
 
 .alert{
 
-    min-width:320px;
+    min-width:280px;
+    max-width:90vw;
 
     padding:16px 18px;
 
@@ -597,12 +710,13 @@
     border:none;
     outline:none;
 
-    padding:12px 18px;
+    padding:10px 14px;
 
-    font-size:14px;
+    font-size:13px;
 
     background:transparent;
     box-shadow: none;
+    min-width:0;
 }
 
 .navbar-search-input::placeholder{
@@ -615,8 +729,9 @@
 
     color:#fff;
 
-    width:50px;
-    height:45px;
+    width:44px;
+    height:40px;
+    flex-shrink:0;
 
     cursor:pointer;
 
@@ -666,6 +781,11 @@
             <a href="{% url "shop" %}">Shop</a>
             <a href="#">About</a>
         </div>
+
+        <!-- HAMBURGER (mobile) -->
+        <button class="nav-hamburger" id="navHamburger" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
 
         <!-- NAV ICONS -->
         <div class="nav-icons">
@@ -870,6 +990,12 @@ class="login-btn"
 
 </div>
 
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'shop' %}">Shop</a>
+    <a href="#">About</a>
+</div>
 
     <!-- PAGE CONTENT -->
     <div class="main-content">
@@ -1187,6 +1313,32 @@ document.addEventListener(
 
 );
 
+</script>
+
+<script>
+// ===== USER NAVBAR MOBILE TOGGLE =====
+(function(){
+    var hamburger = document.getElementById('navHamburger');
+    var drawer    = document.getElementById('mobileNavDrawer');
+    if(!hamburger || !drawer) return;
+    hamburger.addEventListener('click', function(){
+        hamburger.classList.toggle('open');
+        drawer.classList.toggle('open');
+    });
+    // Close drawer when a link inside is clicked
+    drawer.querySelectorAll('a').forEach(function(link){
+        link.addEventListener('click', function(){
+            hamburger.classList.remove('open');
+            drawer.classList.remove('open');
+        });
+    });
+    window.addEventListener('resize', function(){
+        if(window.innerWidth > 900){
+            hamburger.classList.remove('open');
+            drawer.classList.remove('open');
+        }
+    });
+})();
 </script>
 </body>
 </html>

@@ -11,10 +11,14 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from datetime import datetime
 from django.utils import timezone
-
+from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_control
+from django.views.decorators.http import require_POST
 from django.core.exceptions import ValidationError
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_required
 def offer_list(request):
 
@@ -67,6 +71,7 @@ def offer_list(request):
     return render(request, "offer_list.html", context)
 
 
+@never_cache
 @admin_required
 def add_offer(request):
 
@@ -156,6 +161,7 @@ def add_offer(request):
     return render(request, "add_offer.html", context)
 
 
+@never_cache
 @admin_required
 def edit_offer(request, offer_id):
 
@@ -232,6 +238,8 @@ def edit_offer(request, offer_id):
     return render(request, "edit_offer.html", context)
 
 
+@never_cache
+@require_POST
 @admin_required
 def activate_offer(request, offer_id):
 
@@ -246,6 +254,8 @@ def activate_offer(request, offer_id):
     return redirect("offer_list")
 
 
+@never_cache
+@require_POST
 @admin_required
 def deactivate_offer(request, offer_id):
 
@@ -260,6 +270,8 @@ def deactivate_offer(request, offer_id):
     return redirect("offer_list")
 
 
+@never_cache
+@require_POST
 @admin_required
 def delete_offer(request, offer_id):
 

@@ -406,7 +406,6 @@ def add_address(request):
 
 @user_required
 def delete_address(request, id):
-    print("DELETE VIEW HIT")
 
     address = get_object_or_404(
 

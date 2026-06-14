@@ -576,13 +576,40 @@ Admin Category
 
     cursor:pointer;
 }
+
+@media (max-width: 768px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .top-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+    .top-actions form {
+        width: 100%;
+    }
+    .top-actions input {
+        width: 100% !important;
+    }
+    .table-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .table-head, .row {
+        min-width: 650px;
+    }
+}
 </style>
 {% endblock %}
 
 
-{% block content %}
 
-<body>
+{% block content %}
 
     <!-- HEADER -->
 

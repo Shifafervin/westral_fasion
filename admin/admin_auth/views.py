@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 from django.views.decorators.cache import cache_control
 from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
 from admin.decorators import admin_required
 from django.db.models import Q
@@ -216,11 +217,15 @@ def admin_dashboard(request):
     return render(request, "admin_dashboard.html", context)
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def admin_logout(request):
     logout(request)
     return redirect("admin_login")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_required
 def user_management(request):
 
@@ -273,7 +278,9 @@ def user_management(request):
     return render(request, "user_management.html", context)
 
 
+@never_cache
 @admin_required
+@require_POST
 def toggle_user_status(request, user_id):
 
     user = get_object_or_404(User, id=user_id)
@@ -310,6 +317,8 @@ def toggle_user_status(request, user_id):
     return redirect("user_management")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_required
 def sales_report(request):
     sales_orders = (
