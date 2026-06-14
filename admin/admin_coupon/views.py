@@ -7,8 +7,13 @@ from admin.decorators import admin_required
 from django.db.models import Q
 import csv
 from django.http import HttpResponse
+from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_control
+from django.views.decorators.http import require_POST
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @admin_required
 def coupon_list(request):
 
@@ -85,6 +90,7 @@ def coupon_list(request):
     return render(request, "coupon_list.html", context)
 
 
+@never_cache
 @admin_required
 def create_coupon(request):
 
@@ -111,6 +117,7 @@ def create_coupon(request):
     return render(request, "add_coupon.html", {"form": form})
 
 
+@never_cache
 @admin_required
 def edit_coupon(request, coupon_id):
 
@@ -139,6 +146,8 @@ def edit_coupon(request, coupon_id):
     return render(request, "edit_coupon.html", {"form": form, "coupon": coupon})
 
 
+@never_cache
+@require_POST
 @admin_required
 def delete_coupon(request, coupon_id):
 
@@ -153,6 +162,8 @@ def delete_coupon(request, coupon_id):
     return redirect("coupon_list")
 
 
+@never_cache
+@require_POST
 @admin_required
 def toggle_coupon_status(request, coupon_id):
 

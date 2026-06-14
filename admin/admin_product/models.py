@@ -244,26 +244,25 @@ class Variant(models.Model):
     def final_price(self):
 
         return self.price
-
+    
     @property
     def is_low_stock(self):
-
         return self.stock <= self.low_stock_threshold
 
     def clean(self):
 
         if self.stock < 0:
-
             raise ValidationError({"stock": "Stock cannot be negative"})
 
         if self.product_id and self.is_default:
 
             default_variant = Variant.objects.filter(
-                product=self.product, is_default=True, is_deleted=False
+                product=self.product,
+                is_default=True,
+                is_deleted=False
             ).exclude(id=self.id)
 
             if default_variant.exists():
-
                 raise ValidationError(
                     {"is_default": "Only one default variant is allowed"}
                 )
@@ -276,8 +275,7 @@ class Variant(models.Model):
 
     def __str__(self):
 
-        return f"{self.product.product_name}" f" - {self.size}"
-
+        return f"{self.product.product_name} - {self.size}"
 
 # ================= PRODUCT IMAGE MODEL =================
 
@@ -298,122 +296,11 @@ class ProductImage(models.Model):
 
         ordering = ["id"]
 
-    def clean(self):
-
-        allowed_sizes = ["S", "M", "L", "XL"]
-
-        if not self.size:
-
-            raise ValidationError({"size": "Size is required."})
-
-        if self.size not in allowed_sizes:
-
-            raise ValidationError({"size": "Invalid size selected."})
-
-        if not self.color:
-
-            raise ValidationError({"color": "Color is required."})
-
-        self.color = self.color.strip()
-
-        if len(self.color) < 3:
-
-            raise ValidationError(
-                {"color": "Color must contain at least 3 characters."}
-            )
-
-        if "_" in self.color:
-
-            raise ValidationError({"color": "Underscores are not allowed."})
-
-        if self.color.isdigit():
-
-            raise ValidationError({"color": "Color cannot contain only numbers."})
-
-        if not re.match(r"^[A-Za-z\s]+$", self.color):
-
-            raise ValidationError({"color": "Color can contain only letters."})
-
-        if not self.sku:
-
-            raise ValidationError({"sku": "SKU is required."})
-
-        self.sku = self.sku.strip().upper()
-
-        if len(self.sku) < 5:
-
-            raise ValidationError({"sku": "SKU must contain at least 5 characters."})
-
-        if "_" in self.sku:
-
-            raise ValidationError({"sku": "Underscores are not allowed in SKU."})
-
-        if not re.match(r"^[A-Z0-9\-]+$", self.sku):
-
-            raise ValidationError(
-                {"sku": "SKU can contain only letters, numbers and hyphens."}
-            )
-
-        duplicate_sku = Variant.objects.filter(sku__iexact=self.sku).exclude(id=self.id)
-
-        if duplicate_sku.exists():
-
-            raise ValidationError({"sku": "SKU already exists."})
-
-        if self.price is None:
-
-            raise ValidationError({"price": "Price is required."})
-
-        if self.price <= 0:
-
-            raise ValidationError({"price": "Price must be greater than 0."})
-
-        if self.price < 10:
-
-            raise ValidationError({"price": "Price must be at least ₹10."})
-
-        if self.price > 100000:
-
-            raise ValidationError({"price": "Price exceeds maximum limit."})
-
-        if self.weight <= 0:
-
-            raise ValidationError({"weight": "Weight must be greater than 0."})
-
-        if self.weight < 10:
-
-            raise ValidationError({"weight": "Weight must be at least 10 grams."})
-
-        if self.weight > 50000:
-
-            raise ValidationError({"weight": "Weight exceeds maximum limit."})
-
-        if self.stock < 0:
-
-            raise ValidationError({"stock": "Stock cannot be negative."})
-
-        if self.stock > 100000:
-
-            raise ValidationError({"stock": "Stock exceeds maximum limit."})
-
-        if self.product_id and self.is_default:
-
-            default_variant = Variant.objects.filter(
-                product=self.product, is_default=True, is_deleted=False
-            ).exclude(id=self.id)
-
-            if default_variant.exists():
-
-                raise ValidationError(
-                    {"is_default": "Only one default variant is allowed."}
-                )
-
-    def save(self, *args, **kwargs):
-
-        self.full_clean()
-
-        super().save(*args, **kwargs)
-
     def __str__(self):
 
         return self.variant.sku
+
+
+
+
+

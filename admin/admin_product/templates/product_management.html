@@ -679,13 +679,53 @@ Product Management
 
     }
 }
+
+@media (max-width: 1200px) {
+    .stats-wrapper {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .topbar, .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .search-box {
+        width: 100%;
+    }
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .filter-btn {
+        width: 100%;
+    }
+    .filter-right {
+        width: 100%;
+    }
+    .select {
+        flex: 1;
+    }
+    .table-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .table-head, .row {
+        min-width: 800px;
+    }
+}
 </style>
 {% endblock %}
 
 
-{% block content %}
 
-<body>
+{% block content %}
 
     <!-- TOPBAR -->
 

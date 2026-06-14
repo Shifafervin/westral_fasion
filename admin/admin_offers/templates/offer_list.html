@@ -77,205 +77,39 @@
 .table-wrapper{
     background:#fff;
     border-radius:20px;
-    overflow:hidden;
+    overflow-x:auto;
     box-shadow:0 2px 15px rgba(0,0,0,.05);
 }
 
-table{
-    width:100%;
-    border-collapse:collapse;
+.inline-form{
+    display:inline;
+    margin:0;
+    padding:0;
 }
 
-thead{
-    background:#faf7f5;
-}
-
-th{
-    padding:24px;
-    font-size:13px;
-    font-weight:700;
-    color:#444;
-    text-transform:uppercase;
-    letter-spacing:.5px;
-}
-
-td{
-    padding:24px;
-    border-top:1px solid #efefef;
-    vertical-align:middle;
-}
-
-tbody tr:hover{
-    background:#fafafa;
-}
-.status-active{
-    background:#d4edda;
-    color:#155724;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
-}
-
-.status-inactive{
-    background:#f8d7da;
-    color:#721c24;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
-}
-
-.status-expired{
-    background:#fff3cd;
-    color:#856404;
-    padding:6px 12px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:600;
-}
-.action-buttons{
-    display:flex;
-    align-items:center;
-    gap:18px;
-    flex-wrap:wrap;
-}
-
-.action-btn{
-    text-decoration:none;
-    font-size:15px;
-    font-weight:600;
-    transition:0.2s ease;
-}
-
-.edit-btn{
-    color:#1f1f1f;
-}
-
-.edit-btn:hover{
-    text-decoration:underline;
-}
-
-.deactivate-btn{
-    color:#1f1f1f;
-}
-
-.deactivate-btn:hover{
-    text-decoration:underline;
-}
-
-.activate-btn{
-    color:#198754;
-}
-
-.activate-btn:hover{
-    text-decoration:underline;
-}
-
-.delete-btn{
-    color:#dc3545;
-}
-
-.delete-btn:hover{
-    text-decoration:underline;
-}
-.action-buttons{
-    display:flex;
-    align-items:center;
-    gap:15px;
-    flex-wrap:nowrap;
-    white-space:nowrap;
-}
-
-.action-btn{
-    text-decoration:none;
-    font-size:15px;
-    font-weight:600;
-    transition:.2s;
-}
-
-.edit-btn,
-.deactivate-btn{
-    color:#1f1f1f;
-}
-
-.activate-btn{
-    color:#198754;
-}
-
-.delete-btn{
-    color:#dc3545;
-}
-
-.action-btn:hover{
-    text-decoration:underline;
-}
-.delete-overlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.35);
-    backdrop-filter:blur(4px);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-}
-
-.delete-modal{
-    width:420px;
-    background:#fff;
-    border-radius:18px;
-    padding:35px;
-    text-align:center;
-    box-shadow:0 20px 60px rgba(0,0,0,.15);
-}
-
-.delete-icon{
-    font-size:32px;
-    margin-bottom:18px;
-}
-
-.delete-modal h3{
-    font-size:24px;
-    font-weight:500;
-    color:#3b1d1d;
-    line-height:1.5;
-    margin-bottom:30px;
-}
-
-.delete-actions{
-    display:flex;
-    gap:12px;
-}
-
-.modal-delete-btn{
-    flex:1;
-    height:50px;
-    background:#4a2a2a;
-    color:white;
-    border-radius:10px;
-    text-decoration:none;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:700;
-    letter-spacing:2px;
-}
-
-.modal-delete-btn:hover{
-    background:#341d1d;
-}
-
-.modal-cancel-btn{
-    flex:1;
-    height:50px;
+.form-action-btn{
+    background:none;
     border:none;
-    border-radius:10px;
-    background:#ead8c6;
-    color:#5f4636;
-    font-weight:700;
-    letter-spacing:2px;
+    padding:0;
+    font-size:15px;
+    font-weight:600;
     cursor:pointer;
+    transition:0.2s ease;
+    text-decoration:none;
+    font-family:inherit;
+}
+
+.form-action-btn:hover{
+    text-decoration:underline;
+}
+
+@media(max-width:900px){
+    .content{ padding:20px; }
+    .top-header{ flex-direction:column; align-items:flex-start; gap:16px; }
+    .filter-section{ flex-wrap:wrap; }
+    .filter-section input{ width:100%; }
+    .page-title{ font-size:36px; }
+    .delete-modal{ width:90vw; padding:24px; }
 }
 </style>
 {% endblock %}
@@ -425,32 +259,24 @@ tbody tr:hover{
         </a>
 
         {% if offer.is_active %}
-
-            <a
-            href="{% url 'deactivate_offer' offer.id %}"
-            class="action-btn deactivate-btn"
-            >
-                Deactivate
-            </a>
-
+            <form method="POST" action="{% url 'deactivate_offer' offer.id %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="action-btn deactivate-btn form-action-btn">Deactivate</button>
+            </form>
         {% else %}
-
-            <a
-            href="{% url 'activate_offer' offer.id %}"
-            class="action-btn activate-btn"
-            >
-                Activate
-            </a>
-
+            <form method="POST" action="{% url 'activate_offer' offer.id %}" class="inline-form">
+                {% csrf_token %}
+                <button type="submit" class="action-btn activate-btn form-action-btn">Activate</button>
+            </form>
         {% endif %}
 
-    <a
-    href="#"
-    class="action-btn delete-btn"
-    onclick="openDeleteModal('{{ offer.id }}')"
-    >
-        Delete
-    </a>
+        <button
+        type="button"
+        class="action-btn delete-btn"
+        onclick="openDeleteModal('{{ offer.id }}')"
+        >
+            Delete
+        </button>
 
     </div>
 
@@ -494,13 +320,12 @@ class="delete-overlay"
 
         <div class="delete-actions">
 
-            <a
-            id="deleteLink"
-            href="#"
-            class="modal-delete-btn"
-            >
-                DELETE
-            </a>
+            <form method="POST" id="deleteForm" action="#" style="flex:1;display:flex;">
+                {% csrf_token %}
+                <button type="submit" class="modal-delete-btn" style="flex:1;border:none;cursor:pointer;">
+                    DELETE
+                </button>
+            </form>
 
             <button
             type="button"
@@ -527,54 +352,23 @@ function submitFilters() {
 
 </script>
 <script>
-
 function submitFilters(){
-
-    document.getElementById(
-        "filterForm"
-    ).submit();
-
+    document.getElementById('filterForm').submit();
 }
 
 function openDeleteModal(offerId){
-
-    document.getElementById(
-        "deleteLink"
-    ).href =
-    "/admin-offers/delete-offer/" +
-    offerId +
-    "/";
-
-    document.getElementById(
-        "deleteModal"
-    ).style.display =
-    "flex";
-
+    var baseUrl = '/admin-offers/delete-offer/';
+    document.getElementById('deleteForm').action = baseUrl + offerId + '/';
+    document.getElementById('deleteModal').style.display = 'flex';
 }
 
 function closeDeleteModal(){
-
-    document.getElementById(
-        "deleteModal"
-    ).style.display =
-    "none";
-
+    document.getElementById('deleteModal').style.display = 'none';
 }
 
 window.onclick = function(event){
-
-    const modal =
-    document.getElementById(
-        "deleteModal"
-    );
-
-    if(event.target === modal){
-
-        closeDeleteModal();
-
-    }
-
-}
-
+    var modal = document.getElementById('deleteModal');
+    if(event.target === modal){ closeDeleteModal(); }
+};
 </script>
 {% endblock %}

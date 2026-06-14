@@ -17,7 +17,6 @@ from user.user_products.models import Cart
 
 @user_required
 def apply_coupon(request):
-    print("APPLY COUPON VIEW HIT")
 
     if request.method != "POST":
 
@@ -25,13 +24,11 @@ def apply_coupon(request):
 
     coupon_code = request.POST.get("coupon_code", "").strip()
 
-    print("Entered Coupon:", coupon_code)
 
     coupon = Coupon.objects.filter(
         code__iexact=coupon_code, is_active=True, is_deleted=False
     ).first()
 
-    print("Coupon Found:", coupon)
 
     if not coupon_code:
 
@@ -147,9 +144,6 @@ def apply_coupon(request):
 
     request.session["coupon_id"] = coupon.id
 
-    print("PAYMENT FROM POST:", request.POST.get("payment_method"))
-
-    print("ADDRESS FROM POST:", request.POST.get("selected_address"))
 
     request.session["selected_payment_method"] = request.POST.get(
         "payment_method", "COD"
@@ -157,9 +151,6 @@ def apply_coupon(request):
 
     request.session["selected_address"] = request.POST.get("selected_address")
 
-    print("SESSION PAYMENT:", request.session.get("selected_payment_method"))
-
-    print("SESSION ADDRESS:", request.session.get("selected_address"))
 
     # ================= SUCCESS =================
 

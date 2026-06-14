@@ -269,6 +269,11 @@ name="referral_code"
 value="{{ referral_code }}"
 placeholder="Enter referral code"
 >
+{% if errors.referral_code %}
+<p style="color:red; font-size:12px;">
+    {{ errors.referral_code }}
+</p>
+{% endif %}
 
         <div class="row">
             <div style="width:100%">
@@ -290,9 +295,19 @@ placeholder="Enter referral code"
 
         <!-- ✅ EXACT CHECKBOX LIKE IMAGE -->
         <div class="checkbox">
-            <input type="checkbox" name="terms">
-            <span>I agree to the Terms of Service and Privacy Policy</span>
-        </div>
+    <input
+    type="checkbox"
+    name="terms"
+    {% if request.POST.terms %}checked{% endif %}
+>
+    <span>I agree to the Terms of Service and Privacy Policy</span>
+</div>
+
+{% if errors.terms %}
+<p style="color:red; font-size:12px;">
+    {{ errors.terms }}
+</p>
+{% endif %}
 
         <button class="btn">Create Account</button>
     </form>

@@ -675,6 +675,62 @@ body{
 .top-add-btn{
     flex-shrink:0;
 }
+
+@media (max-width: 900px) {
+    .main {
+        padding: 20px 15px;
+    }
+    .header-top {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    .top-add-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .product-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 20px;
+    }
+    .product-left {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .product-stats {
+        justify-content: space-around;
+        gap: 15px;
+    }
+    .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    .variant-search {
+        width: 100%;
+    }
+    .filter-actions {
+        width: 100%;
+    }
+    .filter-btn, .filter-select, .add-btn {
+        flex: 1;
+        justify-content: center;
+    }
+    .table-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .table-head, .row {
+        min-width: 800px;
+    }
+    .footer {
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+    }
+}
 </style>
 
 </head>

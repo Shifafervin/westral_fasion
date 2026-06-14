@@ -512,7 +512,6 @@ body {
             <div>
                 <div class="products-column">
                     {% for item in returnable_items %}
-                        {% if item.item_status == "Active" %}
                     <div class="product-card">
                         
                         <!-- SELECT CHECKBOX -->
@@ -556,7 +555,6 @@ body {
                         </div>
 
                     </div>
-                    {% endif %}
                     {% endfor %}
                 </div>
 

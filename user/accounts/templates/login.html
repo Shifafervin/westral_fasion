@@ -285,7 +285,14 @@ input {
     {% csrf_token %}
 
     <label>EMAIL ADDRESS</label>
-    <input type="email" name="email">
+    <input
+    type="email"
+    name="email"
+    value="{{ email|default:'' }}"
+    required
+    maxlength="254"
+    autocomplete="email"
+>
 
     <div class="row">
         <label>PASSWORD</label>
@@ -293,7 +300,12 @@ input {
     </div>
 
     <div class="input-box">
-        <input type="password" name="password" id="password" placeholder="••••••••">
+        <input
+    type="password"
+    name="password"
+    id="password"
+    required
+    autocomplete="current-password"placeholder="••••••••">
         
         <span class="eye" onclick="togglePassword()">
             👁

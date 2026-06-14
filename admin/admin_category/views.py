@@ -3,11 +3,17 @@ from django.contrib import messages
 from .models import Category
 from .forms import CategoryForm
 from django.db import IntegrityError
-
 from django.db.models import Count
 from django.core.paginator import Paginator
+from admin.decorators import admin_required
+from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_control
+from django.views.decorators.http import require_POST
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+@admin_required
 def admincategory_view(request):
 
     # ================= SEARCH =================
@@ -79,6 +85,8 @@ def admincategory_view(request):
     return render(request, "category_management.html", context)
 
 
+@never_cache
+@admin_required
 def add_category(request):
 
     if request.method == "POST":
@@ -116,6 +124,8 @@ def add_category(request):
     return render(request, "add_category.html", context)
 
 
+@never_cache
+@admin_required
 def edit_category(request, id):
 
     category = get_object_or_404(Category, id=id, is_deleted=False)
@@ -151,6 +161,8 @@ def edit_category(request, id):
     return render(request, "edit_category.html", context)
 
 
+@never_cache
+@admin_required
 def delete_category(request, id):
 
     category = get_object_or_404(Category, id=id, is_deleted=False)
@@ -180,6 +192,8 @@ def delete_category(request, id):
     return render(request, "delete_category.html", context)
 
 
+@never_cache
+@admin_required
 def toggle_category_status(request, id):
 
     category = get_object_or_404(Category, id=id, is_deleted=False)
