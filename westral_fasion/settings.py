@@ -29,7 +29,8 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    ".ngrok-free.dev",
+    "fervin.store",
+    "www.fervin.store",
 ]
 # DEBUG = False
 
@@ -64,7 +65,11 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1:8000"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://fervin.store",
+    "https://www.fervin.store",
+]
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 SITE_ID = 1
 
