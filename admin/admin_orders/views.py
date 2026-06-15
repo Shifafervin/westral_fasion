@@ -267,7 +267,7 @@ def approve_return(request, return_id):
             order_item.item_status = "Return Approved"
             order_item.save()
 
-        if order.payment_method in ["RAZORPAY", "WALLET"]:
+        if order.payment_method in ["RAZORPAY", "WALLET", "COD"]:
 
             wallet.balance += refund_amount
 
@@ -282,11 +282,15 @@ def approve_return(request, return_id):
                 description=f"Refund for order {return_request.order.order_id}",
             )
 
+            order.return_status = "Refunded"
+            order.payment_status = "REFUNDED"
+            order.save()
+
     messages.success(request, "Return approved and refund added to wallet")
     return redirect("return_management")
 
 
-@require_POST
+@require_POST   
 @admin_required
 def reject_return(request, return_id):
 
