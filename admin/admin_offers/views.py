@@ -273,15 +273,21 @@ def deactivate_offer(request, offer_id):
 @never_cache
 @require_POST
 @admin_required
+@admin_required
 def delete_offer(request, offer_id):
 
-    offer = get_object_or_404(Offer, id=offer_id)
-
-    # Remove offer from products first
-    Product.objects.filter(offer=offer).update(offer=None)
+    offer = get_object_or_404(
+        Offer,
+        id=offer_id
+    )
 
     offer.delete()
 
-    messages.success(request, "Offer deleted successfully")
+    messages.success(
+        request,
+        "Offer deleted successfully"
+    )
 
-    return redirect("offer_list")
+    return redirect(
+        "offer_list"
+    )

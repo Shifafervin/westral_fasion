@@ -164,12 +164,11 @@ class Offer(models.Model):
 
         if self.offer_type == "CATEGORY":
             existing_offer = Offer.objects.filter(
-                product=self.category,
+                category=self.category,
                 is_active=True,
                 is_deleted=False,
                 end_date__gte=timezone.now(),
             ).exclude(pk=self.pk)
-
             if existing_offer.exists():
 
                 raise ValidationError(

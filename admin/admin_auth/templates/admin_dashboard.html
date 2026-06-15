@@ -393,7 +393,8 @@ a{
     font-weight:700;
 }
 
-/* RESPONSIVE DESIGN */
+/* ============ RESPONSIVE DESIGN ============ */
+
 @media (max-width: 1200px) {
     .cards {
         grid-template-columns: repeat(2, 1fr);
@@ -401,10 +402,15 @@ a{
 }
 
 @media (max-width: 900px) {
+    .main {
+        padding: 20px 16px;
+        padding-top: 70px;
+    }
     .header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+        gap: 12px;
+        margin-bottom: 20px;
     }
     .top-actions {
         width: 100%;
@@ -412,25 +418,67 @@ a{
     .report-btn {
         width: 100%;
         text-align: center;
+        display: block;
     }
     .dashboard-grid {
         grid-template-columns: 1fr;
     }
-}
-
-@media (max-width: 600px) {
-    .cards {
-        grid-template-columns: 1fr;
-    }
-    .orders-box, .low-stock-box {
+    .orders-box,
+    .low-stock-box {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
     .order-row {
-        min-width: 600px;
+        min-width: 560px;
     }
     .low-stock-row {
-        min-width: 450px;
+        min-width: 420px;
+    }
+    .chart-card {
+        padding: 18px;
+    }
+    .dashboard-box {
+        padding: 18px;
+    }
+    .table-card {
+        padding: 18px;
+    }
+}
+
+@media (max-width: 600px) {
+    .main {
+        padding: 16px 12px;
+        padding-top: 70px;
+    }
+    .cards {
+        grid-template-columns: 1fr;
+    }
+    .card {
+        padding: 16px;
+    }
+    .card-bottom h2 {
+        font-size: 24px;
+    }
+    .title {
+        font-size: 24px;
+    }
+    .chart-card,
+    .dashboard-box,
+    .orders-box,
+    .low-stock-box {
+        border-radius: 14px;
+        padding: 16px;
+    }
+    .orders-box,
+    .low-stock-box {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .order-row {
+        min-width: 560px;
+    }
+    .low-stock-row {
+        min-width: 420px;
     }
 }
 

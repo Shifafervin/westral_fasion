@@ -2,27 +2,32 @@
 {% load static %}
 {% block extra_css %}
 <style>
+
+/* ============ OFFER LIST PAGE ============ */
+
 .content{
-    flex:1;
-    padding:40px 50px;
+    padding: 0;
 }
 
 .top-header{
     display:flex;
     justify-content:space-between;
     align-items:flex-start;
-    margin-bottom:40px;
+    margin-bottom:32px;
+    flex-wrap:wrap;
+    gap:16px;
 }
 
 .page-title{
-    font-size:58px;
+    font-size:42px;
     font-weight:800;
     color:#3b1d1d;
-    margin-bottom:8px;
+    margin-bottom:6px;
+    line-height:1.1;
 }
 
 .page-subtitle{
-    font-size:16px;
+    font-size:14px;
     color:#6f6f6f;
 }
 
@@ -30,55 +35,168 @@
     background:#3b1d1d;
     color:#fff;
     text-decoration:none;
-    padding:14px 28px;
-    border-radius:14px;
-    font-size:16px;
+    padding:13px 24px;
+    border-radius:12px;
+    font-size:14px;
     font-weight:600;
-    transition:.3s;
+    transition:.2s;
+    white-space:nowrap;
+    align-self:flex-start;
 }
 
 .add-btn:hover{
-    opacity:.9;
+    opacity:.88;
 }
+
+/* ============ FILTERS ============ */
 
 .filter-section{
     display:flex;
-    gap:18px;
+    gap:14px;
     align-items:center;
-    margin-bottom:35px;
+    margin-bottom:28px;
+    flex-wrap:wrap;
 }
 
 .filter-section input{
-    width:300px;
+    flex:1;
+    min-width:180px;
 }
 
 .filter-section input,
 .filter-section select{
-    height:54px;
+    height:50px;
     border:1px solid #d8d2cc;
     background:#f7f5f3;
     border-radius:12px;
-    padding:0 18px;
-    font-size:15px;
+    padding:0 16px;
+    font-size:14px;
     outline:none;
-    color:#555;
+    color:#444;
+    font-family:inherit;
 }
-.filter-btn{
-    height:54px;
-    padding:0 24px;
-    border:none;
-    border-radius:12px;
-    background:#3b1d1d;
-    color:white;
-    cursor:pointer;
-    font-weight:600;
+
+.filter-section select{
+    min-width:140px;
 }
+
+/* ============ TABLE ============ */
 
 .table-wrapper{
     background:#fff;
     border-radius:20px;
     overflow-x:auto;
     box-shadow:0 2px 15px rgba(0,0,0,.05);
+    -webkit-overflow-scrolling:touch;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
+}
+
+thead{
+    background:#f8f6f4;
+}
+
+th{
+    text-align:left;
+    padding:18px 20px;
+    font-size:13px;
+    font-weight:700;
+    color:#3b1d1d;
+    white-space:nowrap;
+}
+
+td{
+    padding:16px 20px;
+    border-top:1px solid #eee;
+    font-size:13px;
+    color:#444;
+    vertical-align:middle;
+}
+
+tbody tr:hover{
+    background:#fafafa;
+}
+
+/* ============ STATUS BADGES ============ */
+
+.status-active{
+    background:#dcfce7;
+    color:#166534;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.status-inactive{
+    background:#fef3c7;
+    color:#92400e;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.status-expired{
+    background:#fee2e2;
+    color:#991b1b;
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+/* ============ ACTION BUTTONS ============ */
+
+.action-buttons{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+.action-btn{
+    text-decoration:none;
+    border:none;
+    padding:7px 13px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:600;
+    font-family:inherit;
+    transition:.2s;
+    white-space:nowrap;
+}
+
+.action-btn:hover{
+    opacity:.82;
+}
+
+.edit-btn{
+    background:#eef2ff;
+    color:#4338ca;
+}
+
+.activate-btn{
+    background:#e8f8ee;
+    color:#15803d;
+}
+
+.deactivate-btn{
+    background:#fff7ed;
+    color:#c2410c;
+}
+
+.delete-btn{
+    background:#fee2e2;
+    color:#dc2626;
 }
 
 .inline-form{
@@ -87,30 +205,101 @@
     padding:0;
 }
 
-.form-action-btn{
-    background:none;
-    border:none;
-    padding:0;
-    font-size:15px;
-    font-weight:600;
-    cursor:pointer;
-    transition:0.2s ease;
-    text-decoration:none;
-    font-family:inherit;
+/* ============ DELETE MODAL ============ */
+
+.delete-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999999;
 }
 
-.form-action-btn:hover{
-    text-decoration:underline;
+.delete-modal{
+    width:420px;
+    max-width:90vw;
+    background:white;
+    border-radius:20px;
+    padding:32px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,.2);
 }
+
+.delete-icon{
+    font-size:44px;
+    margin-bottom:14px;
+}
+
+.delete-modal h3{
+    font-size:22px;
+    color:#222;
+    margin-bottom:8px;
+}
+
+.delete-modal p{
+    font-size:14px;
+    color:#777;
+    margin-bottom:24px;
+}
+
+.delete-actions{
+    display:flex;
+    gap:12px;
+}
+
+.modal-delete-btn{
+    flex:1;
+    background:#dc2626;
+    color:white;
+    border:none;
+    padding:14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:700;
+    font-family:inherit;
+    font-size:14px;
+    transition:.2s;
+}
+
+.modal-delete-btn:hover{
+    background:#b91c1c;
+}
+
+.modal-cancel-btn{
+    flex:1;
+    border:none;
+    background:#e5e5e5;
+    color:#444;
+    padding:14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+    font-family:inherit;
+    font-size:14px;
+    transition:.2s;
+}
+
+.modal-cancel-btn:hover{
+    background:#d4d4d4;
+}
+
+/* ============ RESPONSIVE ============ */
 
 @media(max-width:900px){
-    .content{ padding:20px; }
-    .top-header{ flex-direction:column; align-items:flex-start; gap:16px; }
-    .filter-section{ flex-wrap:wrap; }
-    .filter-section input{ width:100%; }
-    .page-title{ font-size:36px; }
-    .delete-modal{ width:90vw; padding:24px; }
+    .page-title{ font-size:32px; }
+    .top-header{ margin-bottom:24px; }
 }
+
+@media(max-width:600px){
+    .page-title{ font-size:26px; }
+    .filter-section{ gap:10px; }
+    .filter-section input,
+    .filter-section select{ min-width:100%; }
+    .delete-modal{ padding:24px; }
+}
+
 </style>
 {% endblock %}
 
@@ -135,53 +324,43 @@
 
     <form method="GET" class="filter-section" id="filterForm">
 
-    <input
-        type="text"
-        name="search"
-        placeholder="Search offers..."
-        value="{{ search_query }}"
-        onkeydown="if(event.key==='Enter'){this.form.submit();}"
-    >
+        <input
+            type="text"
+            name="search"
+            placeholder="Search offers..."
+            value="{{ search_query }}"
+            onkeydown="if(event.key==='Enter'){this.form.submit();}"
+        >
 
-    <select name="type" onchange="submitFilters()">
-        <option value="">All Types</option>
-        <option value="PRODUCT" {% if type_filter == "PRODUCT" %}selected{% endif %}>
-            Product
-        </option>
-        <option value="CATEGORY" {% if type_filter == "CATEGORY" %}selected{% endif %}>
-            Category
-        </option>
-    </select>
+        <select name="type" onchange="submitFilters()">
+            <option value="">All Types</option>
+            <option value="PRODUCT" {% if type_filter == "PRODUCT" %}selected{% endif %}>Product</option>
+            <option value="CATEGORY" {% if type_filter == "CATEGORY" %}selected{% endif %}>Category</option>
+        </select>
 
-    <select name="status" onchange="submitFilters()">
-        <option value="">All Status</option>
-        <option value="active" {% if status_filter == "active" %}selected{% endif %}>
-            Active
-        </option>
-        <option value="inactive" {% if status_filter == "inactive" %}selected{% endif %}>
-            Inactive
-        </option>
-    </select>
+        <select name="status" onchange="submitFilters()">
+            <option value="">All Status</option>
+            <option value="active" {% if status_filter == "active" %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if status_filter == "inactive" %}selected{% endif %}>Inactive</option>
+        </select>
 
-</form>
+    </form>
 
     <div class="table-wrapper">
 
         <table>
 
             <thead>
-
                 <tr>
-                <th>Offer Name</th>
-                <th>Offer Type</th>
-                <th>Target</th>
-                <th>Discount</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-
+                    <th>Offer Name</th>
+                    <th>Type</th>
+                    <th>Target</th>
+                    <th>Discount</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
 
             <tbody>
@@ -190,106 +369,73 @@
 
                 <tr>
 
-    <td>
-        <strong>{{ offer.offer_name }}</strong>
-    </td>
+                    <td><strong>{{ offer.offer_name }}</strong></td>
 
-    <td>
-        {{ offer.offer_type }}
-    </td>
+                    <td>{{ offer.offer_type }}</td>
 
-    <td>
-        {% if offer.offer_type == "PRODUCT" %}
-            {{ offer.product.product_name }}
-        {% else %}
-            {{ offer.category.category_name }}
-        {% endif %}
-    </td>
+                    <td>
+                        {% if offer.offer_type == "PRODUCT" %}
+                            {{ offer.product.product_name }}
+                        {% else %}
+                            {{ offer.category.category_name }}
+                        {% endif %}
+                    </td>
 
-    <td>
-        {{ offer.discount_value }}
-        {% if offer.discount_type == "PERCENTAGE" %}
-            %
-        {% else %}
-            ₹
-        {% endif %}
-    </td>
+                    <td>
+                        {{ offer.discount_value }}
+                        {% if offer.discount_type == "PERCENTAGE" %}%{% else %}₹{% endif %}
+                    </td>
 
-    <td>
-        {{ offer.start_date }}
-    </td>
+                    <td>{{ offer.start_date|date:"d M Y" }}</td>
 
-    <td>
-        {{ offer.end_date }}
-    </td>
+                    <td>{{ offer.end_date|date:"d M Y" }}</td>
 
-    <td>
+                    <td>
+                        {% if offer.end_date < today %}
+                            <span class="status-expired">EXPIRED</span>
+                        {% elif offer.is_active %}
+                            <span class="status-active">ACTIVE</span>
+                        {% else %}
+                            <span class="status-inactive">INACTIVE</span>
+                        {% endif %}
+                    </td>
 
-    {% if offer.end_date < today %}
+                    <td>
+                        <div class="action-buttons">
 
-        <span class="status-expired">
-            EXPIRED
-        </span>
+                            <a href="{% url 'edit_offer' offer.id %}" class="action-btn edit-btn">Edit</a>
 
-    {% elif offer.is_active %}
+                            {% if offer.is_active %}
+                                <form method="POST" action="{% url 'deactivate_offer' offer.id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn deactivate-btn">Deactivate</button>
+                                </form>
+                            {% else %}
+                                <form method="POST" action="{% url 'activate_offer' offer.id %}" class="inline-form">
+                                    {% csrf_token %}
+                                    <button type="submit" class="action-btn activate-btn">Activate</button>
+                                </form>
+                            {% endif %}
 
-        <span class="status-active">
-            ACTIVE
-        </span>
+                            <button
+                                type="button"
+                                class="action-btn delete-btn"
+                                onclick="openDeleteModal('{% url 'delete_offer' offer.id %}')"
+                            >
+                                Delete
+                            </button>
 
-    {% else %}
+                        </div>
+                    </td>
 
-        <span class="status-inactive">
-            INACTIVE
-        </span>
+                </tr>
 
-    {% endif %}
-
-</td>
-
-   <td>
-
-    <div class="action-buttons">
-
-        <a
-        href="{% url 'edit_offer' offer.id %}"
-        class="action-btn edit-btn"
-        >
-            Edit
-        </a>
-
-        {% if offer.is_active %}
-            <form method="POST" action="{% url 'deactivate_offer' offer.id %}" class="inline-form">
-                {% csrf_token %}
-                <button type="submit" class="action-btn deactivate-btn form-action-btn">Deactivate</button>
-            </form>
-        {% else %}
-            <form method="POST" action="{% url 'activate_offer' offer.id %}" class="inline-form">
-                {% csrf_token %}
-                <button type="submit" class="action-btn activate-btn form-action-btn">Activate</button>
-            </form>
-        {% endif %}
-
-        <button
-        type="button"
-        class="action-btn delete-btn"
-        onclick="openDeleteModal('{{ offer.id }}')"
-        >
-            Delete
-        </button>
-
-    </div>
-
-</td>
-</tr>
                 {% empty %}
 
                 <tr>
-
-                    <td colspan="8">
+                    <td colspan="8" style="text-align:center;padding:40px;color:#999;">
                         No offers found.
                     </td>
-
                 </tr>
 
                 {% endfor %}
@@ -300,38 +446,52 @@
 
     </div>
 
+    <!-- PAGINATION -->
+    {% if page_obj.has_other_pages %}
+    <div style="display:flex;justify-content:center;gap:8px;margin-top:24px;flex-wrap:wrap;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}&search={{ search_query }}&type={{ type_filter }}&status={{ status_filter }}"
+               style="padding:8px 16px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:13px;text-decoration:none;color:#3b1d1d;">
+                &laquo; Prev
+            </a>
+        {% endif %}
+        {% for num in page_obj.paginator.page_range %}
+            <a href="?page={{ num }}&search={{ search_query }}&type={{ type_filter }}&status={{ status_filter }}"
+               style="padding:8px 14px;border-radius:8px;font-size:13px;text-decoration:none;
+                      {% if page_obj.number == num %}background:#3b1d1d;color:white;{% else %}background:#fff;border:1px solid #ddd;color:#3b1d1d;{% endif %}">
+                {{ num }}
+            </a>
+        {% endfor %}
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&search={{ search_query }}&type={{ type_filter }}&status={{ status_filter }}"
+               style="padding:8px 16px;border-radius:8px;background:#fff;border:1px solid #ddd;font-size:13px;text-decoration:none;color:#3b1d1d;">
+                Next &raquo;
+            </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
 </div>
-<div
-id="deleteModal"
-class="delete-overlay"
->
+
+<!-- DELETE CONFIRMATION MODAL -->
+<div id="deleteModal" class="delete-overlay">
 
     <div class="delete-modal">
 
-        <div class="delete-icon">
+        <div class="delete-icon">🗑️</div>
 
-            🗑
+        <h3>Delete Offer?</h3>
 
-        </div>
-
-        <h3>
-            Are you sure want to delete this offer?
-        </h3>
+        <p>This action cannot be undone. The offer will be permanently removed.</p>
 
         <div class="delete-actions">
 
             <form method="POST" id="deleteForm" action="#" style="flex:1;display:flex;">
                 {% csrf_token %}
-                <button type="submit" class="modal-delete-btn" style="flex:1;border:none;cursor:pointer;">
-                    DELETE
-                </button>
+                <button type="submit" class="modal-delete-btn">DELETE</button>
             </form>
 
-            <button
-            type="button"
-            class="modal-cancel-btn"
-            onclick="closeDeleteModal()"
-            >
+            <button type="button" class="modal-cancel-btn" onclick="closeDeleteModal()">
                 CANCEL
             </button>
 
@@ -340,25 +500,14 @@ class="delete-overlay"
     </div>
 
 </div>
-<script>
 
-function submitFilters() {
-
-    document.getElementById(
-        "filterForm"
-    ).submit();
-
-}
-
-</script>
 <script>
 function submitFilters(){
     document.getElementById('filterForm').submit();
 }
 
-function openDeleteModal(offerId){
-    var baseUrl = '/admin-offers/delete-offer/';
-    document.getElementById('deleteForm').action = baseUrl + offerId + '/';
+function openDeleteModal(deleteUrl){
+    document.getElementById('deleteForm').action = deleteUrl;
     document.getElementById('deleteModal').style.display = 'flex';
 }
 
@@ -366,9 +515,9 @@ function closeDeleteModal(){
     document.getElementById('deleteModal').style.display = 'none';
 }
 
-window.onclick = function(event){
+window.addEventListener('click', function(event){
     var modal = document.getElementById('deleteModal');
     if(event.target === modal){ closeDeleteModal(); }
-};
+});
 </script>
 {% endblock %}
