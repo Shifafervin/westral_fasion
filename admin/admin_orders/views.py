@@ -285,15 +285,11 @@ def approve_return(request, return_id):
             order.return_status = "Refunded"
             order.payment_status = "REFUNDED"
             order.save()
-<<<<<<< HEAD
-
-=======
->>>>>>> development
     messages.success(request, "Return approved and refund added to wallet")
     return redirect("return_management")
 
 
-@require_POST   
+@require_POST
 @admin_required
 def reject_return(request, return_id):
 
