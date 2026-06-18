@@ -1,15 +1,27 @@
 from decimal import Decimal
 from .models import Offer
-
+from django.utils import timezone
 
 def get_best_offer(product):
 
+    now = timezone.now()
+
     product_offer = Offer.objects.filter(
-        offer_type="PRODUCT", product=product, is_active=True
+        offer_type="PRODUCT",
+        product=product,
+        is_active=True,
+        is_deleted=False,
+        start_date__lte=now,
+        end_date__gte=now,
     ).first()
 
     category_offer = Offer.objects.filter(
-        offer_type="CATEGORY", category=product.category, is_active=True
+        offer_type="CATEGORY",
+        category=product.category,
+        is_active=True,
+        is_deleted=False,
+        start_date__lte=now,
+        end_date__gte=now,
     ).first()
 
     best_offer = None
@@ -50,9 +62,24 @@ def calculate_discounted_price(variant):
             "offer": None,
         }
 
+    # Minimum purchase validation
+    if (
+        offer.minimum_purchase_amount > 0
+        and original_price < offer.minimum_purchase_amount
+    ):
+
+        return {
+            "original_price": original_price,
+            "final_price": original_price,
+            "discount_amount": Decimal("0"),
+            "offer": None,
+        }
+
     if offer.discount_type == "PERCENTAGE":
 
-        discount_amount = (original_price * offer.discount_value) / Decimal("100")
+        discount_amount = (
+            original_price * offer.discount_value
+        ) / Decimal("100")
 
     else:
 
