@@ -132,6 +132,17 @@ def shop(request):
 
         available_stock = get_available_stock(default_variant)
         offer_data = calculate_discounted_price(default_variant)
+        average_rating = product.reviews.filter(
+            is_deleted=False,
+            is_visible=True
+        ).aggregate(
+            Avg("rating")
+        )["rating__avg"]
+
+        review_count = product.reviews.filter(
+            is_deleted=False,
+            is_visible=True
+        ).count()
 
         # ================= APPEND DATA =================
 
@@ -143,6 +154,8 @@ def shop(request):
                 "in_wishlist": in_wishlist,
                 "available_stock": available_stock,
                 "offer_data": offer_data,
+                "average_rating": average_rating,
+                "review_count": review_count,
             }
         )
 
