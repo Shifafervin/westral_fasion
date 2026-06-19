@@ -3,7 +3,9 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
+    
     path("admin/", admin.site.urls),
     path("", include("user.accounts.urls")),
     path("profile/", include("user.user_details.urls")),
@@ -18,6 +20,7 @@ urlpatterns = [
     path("admin_coupon/", include("admin.admin_coupon.urls")),
     path("admin-offers/", include("admin.admin_offers.urls")),
     path("accounts/", include("allauth.urls")),
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

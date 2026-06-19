@@ -605,39 +605,7 @@ def referral_page(request):
     return render(request, "referral.html", context)
 
 
-def error_404(request, exception):
 
+
+def custom_404(request, exception):
     return render(request, "404.html", status=404)
-
-# from django.db.models import Q
-
-# def search_products(request):
-
-#     query = request.GET.get("q", "").strip()
-
-#     products = Product.objects.filter(
-#         Q(product_name__icontains=query) |
-#         Q(category__category_name__icontains=query) |
-#         Q(variants__color__icontains=query) |
-#         Q(variants__size__icontains=query) |
-#         Q(variants__sku__icontains=query),
-
-#         is_active=True,
-#         is_deleted=False,
-
-#         category__is_active=True,
-#         category__is_deleted=False,
-#     ).distinct()
-
-#     context = {
-
-#         "products": products,
-
-#         "query": query,
-#     }
-
-#     return render(
-#         request,
-#         "search_results.html",
-#         context
-#     )

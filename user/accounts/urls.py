@@ -1,5 +1,7 @@
 from django.urls import path
 from . import views
+from django.conf.urls import handler404
+
 
 urlpatterns = [
     path("", views.home_view, name="home"),
@@ -13,5 +15,7 @@ urlpatterns = [
     path("reset-password/", views.reset_password, name="reset_password"),
     path("search/", views.navbar_search, name="navbar_search"),
     path("referral/", views.referral_page, name="referral_page"),
-    # path("search-products/",views.search_products,name="search_products")
+    
 ]
+
+handler404 = "westral_fasion.views.custom_404"
