@@ -146,9 +146,7 @@ def edit_profile(request):
             )
         phone = request.POST.get("phone", "").strip()
         image = request.FILES.get("profile_image")
-
-    
-    
+        print("IMAGE =", image)
 
         if not phone:
 
@@ -239,14 +237,10 @@ def edit_profile(request):
 
                 return render(request, "edit_profile.html")
 
-            if profile.image and profile.image.name != "default.png":
-                profile.image.delete(save=False)
+            if user.profile_image:
+                user.profile_image.delete(save=False)
 
-            profile.image = image
-            profile.save()
-
-        profile.phone = phone
-        profile.save()
+            user.profile_image = image
 
 
         if full_name:
