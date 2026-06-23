@@ -121,7 +121,8 @@ def signup_view(request):
                 errors["referral_code"] = "Invalid referral code"
 
         if errors:
-            return render(
+
+            response = render(
                 request,
                 "signup.html",
                 {
@@ -131,6 +132,10 @@ def signup_view(request):
                     "referral_code": referral_code,
                 },
             )
+
+            response.status_code = 400
+
+            return response
 
         last_sent = request.session.get("otp_sent_time")
 
@@ -166,6 +171,7 @@ def signup_view(request):
             "otp": otp,
             "referral_code": referral_code,
             "otp_expiry": otp_expiry.isoformat(),
+            "otp_created": timezone.now().isoformat(),
         }
 
         request.session["otp_message"] = f"A new OTP has been sent to {email}"
@@ -212,14 +218,12 @@ def signup_verify(request):
 
         if timezone.now() > expiry_time:
 
-            request.session.pop("signup_data", None)
-
             messages.error(
                 request,
-                "OTP has expired. Please signup again."
+                "OTP expired. Please click Resend OTP."
             )
 
-            return redirect("signup")
+            return redirect("signup_verify")
 
         if user_otp == data["otp"]:
             existing_user = User.objects.filter(
@@ -270,7 +274,7 @@ def signup_verify(request):
 
             messages.success(
                 request,
-                "Account created successfully"
+                "Welcome to Westral Fashion. Account created successfully."
             )
 
             return redirect("home")
@@ -281,11 +285,27 @@ def signup_verify(request):
                 "Invalid OTP"
             )
             return redirect("signup_verify")
+    data = request.session.get("signup_data")
+
+    remaining_seconds = 0
+
+    if data and data.get("otp_expiry"):
+
+        expiry_time = timezone.datetime.fromisoformat(
+            data["otp_expiry"]
+        )
+
+        remaining_seconds = max(
+            0,
+            int((expiry_time - timezone.now()).total_seconds())
+        )
+
     return render(
         request,
         "signup_verify.html",
         {
-            "otp_image": "https://your-image-url.com/image.jpg"
+            "otp_image": "https://your-image-url.com/image.jpg",
+            "remaining_seconds": remaining_seconds,
         }
     )
 
@@ -414,8 +434,16 @@ def forgot_password(request):
         email = request.POST.get("email")
 
         if not User.objects.filter(email=email).exists():
-            return render(request, "forgot_password.html", {"error": "Email not found"})
 
+            response = render(
+                request,
+                "forgot_password.html",
+                {"error": "Email not found"}
+            )
+
+            response.status_code = 400
+
+            return response
         _send_otp(request, email)
 
         return redirect("verify_otp")
@@ -484,10 +512,19 @@ def verify_otp(request):
 
                 return redirect("reset_password")
 
-    return render(
-        request, "verify_otp.html", {"otp_message": otp_message, "error": error}
+    response = render(
+        request,
+        "verify_otp.html",
+        {
+            "otp_message": otp_message,
+            "error": error,
+        }
     )
 
+    if error:
+        response.status_code = 400
+
+    return response
 
 @never_cache
 def reset_password(request):
@@ -604,6 +641,42 @@ def referral_page(request):
 
     return render(request, "referral.html", context)
 
+def signup_resend_otp(request):
+
+    data = request.session.get("signup_data")
+
+    if not data:
+
+        messages.error(
+            request,
+            "Signup session expired."
+        )
+
+        return redirect("signup")
+
+    otp = str(random.randint(100000, 999999))
+
+    expiry = timezone.now() + timedelta(minutes=1)
+
+    data["otp"] = otp
+    data["otp_expiry"] = expiry.isoformat()
+
+    request.session["signup_data"] = data
+
+    send_mail(
+        "Your OTP Code",
+        f"Your OTP is {otp}",
+        settings.DEFAULT_FROM_EMAIL,
+        [data["email"]],
+        fail_silently=False,
+    )
+
+    messages.success(
+        request,
+        "New OTP sent successfully."
+    )
+
+    return redirect("signup_verify")
 
 
 

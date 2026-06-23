@@ -90,6 +90,33 @@
     {% endblock %}
 
 {% block content %}
+{% if messages %}
+<div style="
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:9999;
+">
+    {% for message in messages %}
+    <div style="
+        {% if message.tags == 'success' %}
+        background:#d4edda;
+        color:#155724;
+        {% elif message.tags == 'error' %}
+        background:#f8d7da;
+        color:#721c24;
+        {% endif %}
+        padding:12px 20px;
+        border-radius:8px;
+        margin-bottom:10px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.15);
+    ">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
 <!-- TopNavBar -->
 <!-- Navigation Links -->
 <!-- Actions: Search + Icons -->

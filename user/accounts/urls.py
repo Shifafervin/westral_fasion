@@ -15,6 +15,11 @@ urlpatterns = [
     path("reset-password/", views.reset_password, name="reset_password"),
     path("search/", views.navbar_search, name="navbar_search"),
     path("referral/", views.referral_page, name="referral_page"),
+    path(
+    "signup-resend-otp/",
+    views.signup_resend_otp,
+    name="signup_resend_otp",
+),
     
 ]
 

@@ -181,6 +181,17 @@ body {
     <div class="subtitle">
         We sent a 6-digit code to your email. Enter it below.
     </div>
+    {% if messages %}
+    {% for message in messages %}
+        <p style="
+            color:red;
+            margin-bottom:15px;
+            font-size:14px;
+        ">
+            {{ message }}
+        </p>
+    {% endfor %}
+{% endif %}
 
     <form method="POST" action="{% url 'signup_verify' %}">
         {% csrf_token %}
@@ -199,7 +210,11 @@ body {
 
     <div class="resend">
         Didn't receive the code? 
-        <a href="{% url 'resend_otp' %}">Resend</a>
+       <a
+href="{% url 'signup_resend_otp' %}"
+id="resendLink"
+style="pointer-events:none;opacity:0.5;"
+>Resend</a>
     </div>
 
    <div class="timer" id="timer">01:00</div>
@@ -233,7 +248,7 @@ inputs.forEach((input, index) => {
 
 /* TIMER */
 /* TIMER */
-let time = 60;
+let time = {{ remaining_seconds|default:0 }};
 let timerEl = document.getElementById("timer");
 
 const countdown = setInterval(() => {
