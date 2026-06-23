@@ -5,10 +5,8 @@ import uuid
 
 class CustomUser(AbstractUser):
 
-    # 🔥 make email unique (important)
     email = models.EmailField(unique=True)
 
-    # 🔥 block system
     is_blocked = models.BooleanField(default=False)
 
     referral_code = models.CharField(max_length=20, unique=True, blank=True, null=True)

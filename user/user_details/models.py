@@ -9,8 +9,6 @@ from datetime import timedelta
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15, blank=True)
-
-    # 🔥 ADD THIS
     image = models.ImageField(upload_to="profile_images/", default="default.png")
 
     def __str__(self):

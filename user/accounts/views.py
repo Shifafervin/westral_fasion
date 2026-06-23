@@ -498,7 +498,11 @@ def verify_otp(request):
                 )
 
             if time.time() > expiry:
-                error = "OTP expired. Please resend."
+
+                request.session.pop("reset_otp", None)
+                request.session.pop("otp_expiry", None)
+
+                error = "OTP expired. Please click Resend OTP."
 
             elif entered_otp != session_otp:
                 error = "Invalid OTP"
@@ -511,6 +515,24 @@ def verify_otp(request):
                 request.session.pop("otp_expiry", None)
 
                 return redirect("reset_password")
+            
+    remaining_seconds = 0
+
+    expiry = request.session.get("otp_expiry")
+
+    if expiry:
+
+        try:
+
+            remaining_seconds = max(
+                0,
+                int(float(expiry) - time.time())
+            )
+
+        except:
+
+            remaining_seconds = 0    
+            
 
     response = render(
         request,
@@ -518,6 +540,7 @@ def verify_otp(request):
         {
             "otp_message": otp_message,
             "error": error,
+            "remaining_seconds": remaining_seconds,
         }
     )
 
@@ -644,15 +667,29 @@ def referral_page(request):
 def signup_resend_otp(request):
 
     data = request.session.get("signup_data")
+    last_sent = request.session.get("otp_sent_time")
 
-    if not data:
+    if last_sent:
 
-        messages.error(
-            request,
-            "Signup session expired."
-        )
+        elapsed = time.time() - last_sent
 
-        return redirect("signup")
+        if elapsed < 60:
+
+            messages.error(
+                request,
+                f"Please wait {int(60 - elapsed)} seconds before requesting another OTP."
+            )
+
+            return redirect("signup_verify")
+
+        if not data:
+
+            messages.error(
+                request,
+                "Signup session expired."
+            )
+
+            return redirect("signup")
 
     otp = str(random.randint(100000, 999999))
 
@@ -662,6 +699,7 @@ def signup_resend_otp(request):
     data["otp_expiry"] = expiry.isoformat()
 
     request.session["signup_data"] = data
+    request.session["otp_sent_time"] = time.time()
 
     send_mail(
         "Your OTP Code",

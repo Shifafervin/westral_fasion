@@ -205,7 +205,13 @@ body {
     <input type="text" name="otp6" maxlength="1">
 </div>
 
-        <button type="submit" class="btn">VERIFY & PROCEED</button>
+        <button
+    type="submit"
+    class="btn"
+    id="verifyBtn"
+>
+    VERIFY & PROCEED
+</button>
     </form>
 
     <div class="resend">
@@ -251,6 +257,7 @@ inputs.forEach((input, index) => {
 let time = {{ remaining_seconds|default:0 }};
 let timerEl = document.getElementById("timer");
 
+const resendLink = document.getElementById("resendLink");
 const countdown = setInterval(() => {
 
     let minutes = Math.floor(time / 60);
@@ -266,6 +273,12 @@ const countdown = setInterval(() => {
         clearInterval(countdown);
 
         timerEl.textContent = "OTP Expired";
+
+        resendLink.style.pointerEvents = "auto";
+        resendLink.style.opacity = "1";
+        
+
+        document.getElementById("verifyBtn").disabled = true;
 
         return;
     }

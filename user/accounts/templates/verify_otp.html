@@ -182,7 +182,13 @@ body {
             <input type="text" name="otp6" maxlength="1">
         </div>
 
-        <button type="submit" class="btn">VERIFY & PROCEED</button>   
+       <button
+    type="submit"
+    class="btn"
+    id="verifyBtn"
+>
+    VERIFY & PROCEED
+</button>
  </form>
 
     <!-- replace the dead href="#" -->
@@ -226,7 +232,7 @@ inputs.forEach((input, index) => {
     });
 });
 
-let time = 60; // 🔥 1 minute
+let time = {{ remaining_seconds|default:0 }};
 let timerEl = document.getElementById("timer");
 let resendBtn = document.getElementById("resendLink");
 
@@ -239,12 +245,17 @@ let interval = setInterval(() => {
         (seconds < 10 ? "0" : "") + seconds;
 
     if (time <= 0) {
+
         clearInterval(interval);
 
-        // 🔥 ENABLE RESEND
         resendBtn.style.pointerEvents = "auto";
         resendBtn.style.opacity = "1";
-        timerEl.textContent = "Expired";
+
+        document.getElementById("verifyBtn").disabled = true;
+
+        timerEl.textContent = "OTP Expired";
+
+        return;
     }
 
     time--;

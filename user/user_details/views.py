@@ -14,6 +14,8 @@ from django.conf import settings
 from datetime import timedelta
 from django.utils import timezone
 from user.decorators import user_required
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
 
 User = get_user_model()
 
@@ -92,26 +94,167 @@ def edit_profile(request):
     if request.method == "POST":
 
         full_name = request.POST.get("full_name", "").strip()
-        new_email = request.POST.get("email", "").strip()
+        full_name = " ".join(full_name.split())
+        if not full_name:
+            messages.error(request, "Full name is required.")
+            return render(request, "edit_profile.html")
+
+        if len(full_name) < 3:
+            messages.error(request, "Name must be at least 3 characters.")
+            return render(request, "edit_profile.html")
+
+        if len(full_name) > 50:
+            messages.error(request, "Name cannot exceed 50 characters.")
+            return render(request, "edit_profile.html")
+
+        if not re.match(r"^[A-Za-z\s\.\'-]+$", full_name):
+    
+                messages.error(
+                    request,
+                    "Name can contain letters, spaces, dots, hyphens and apostrophes only."
+                )
+                return render(request, "edit_profile.html")
+
+        new_email = request.POST.get("email", "").strip().lower()
+        if not new_email:
+            messages.error(request, "Email is required.")
+            return render(request, "edit_profile.html")
+
+        try:
+            validate_email(new_email)
+
+        except ValidationError:
+            messages.error(
+                request,
+                "Enter a valid email address."
+            )
+            return render(request, "edit_profile.html")
+        if User.objects.filter(
+            email=new_email
+        ).exclude(
+            id=request.user.id
+        ).exists():
+
+            messages.error(
+                request,
+                "Email already exists."
+            )
+
+            return render(
+                request,
+                "edit_profile.html"
+            )
         phone = request.POST.get("phone", "").strip()
         image = request.FILES.get("profile_image")
 
-        # ✅ PHONE VALIDATION
-        if phone:
-            if not re.fullmatch(r"\d{10}", phone):
-                messages.error(request, "Phone number must be exactly 10 digits")
-                return redirect("user_details:profile")  # or edit page
-            else:
-                profile.phone = phone
-                profile.save()
+    
+    
 
-        # NAME
+        if not phone:
+
+            messages.error(
+                request,
+                "Phone number is required."
+            )
+
+            return render(
+                request,
+                "edit_profile.html"
+            )
+
+        if not re.fullmatch(
+            r"\d{10}",
+            phone
+        ):
+
+            messages.error(
+                request,
+                "Phone number must contain exactly 10 digits."
+            )
+
+            return render(
+                request,
+                "edit_profile.html"
+            )
+
+        if phone[0] not in ["6", "7", "8", "9"]:
+
+            messages.error(
+                request,
+                "Enter a valid Indian mobile number."
+            )
+
+            return render(
+                request,
+                "edit_profile.html"
+            )
+
+        invalid_numbers = [
+            "0000000000",
+            "1111111111",
+            "2222222222",
+            "3333333333",
+            "4444444444",
+            "5555555555",
+            "6666666666",
+            "7777777777",
+            "8888888888",
+            "9999999999",
+            "1234567890",
+        ]
+
+        if phone in invalid_numbers:
+
+            messages.error(
+                request,
+                "Enter a valid phone number."
+            )
+
+            return render(
+                request,
+                "edit_profile.html"
+            )
+        
+        if image:
+
+            allowed_extensions = ["jpg", "jpeg", "png", "webp"]
+
+            extension = image.name.split(".")[-1].lower()
+
+            if extension not in allowed_extensions:
+
+                messages.error(
+                    request,
+                    "Only JPG, JPEG, PNG and WEBP images are allowed."
+                )
+
+                return render(request, "edit_profile.html")
+
+            if image.size > 2 * 1024 * 1024:
+
+                messages.error(
+                    request,
+                    "Image size must be less than 2MB."
+                )
+
+                return render(request, "edit_profile.html")
+
+            if profile.image and profile.image.name != "default.png":
+                profile.image.delete(save=False)
+
+            profile.image = image
+            profile.save()
+
+        profile.phone = phone
+        profile.save()
+
+
         if full_name:
             parts = full_name.split(" ", 1)
             user.first_name = parts[0]
             user.last_name = parts[1] if len(parts) > 1 else ""
 
-        # EMAIL OTP LOGIC (keep as is)
+
         if new_email and new_email != user.email:
             otp = str(random.randint(100000, 999999))
             request.session["otp"] = otp
@@ -128,13 +271,7 @@ def edit_profile(request):
 
             user.save()
             return redirect("user_details:verify_email_otp")
-
-        # IMAGE
-        if image:
-            if user.profile_image:
-                user.profile_image.delete(save=False)
-            user.profile_image = image
-
+        
         user.save()
 
         messages.success(request, "Profile updated successfully")
@@ -221,7 +358,19 @@ def change_password(request):
 
     if request.method == "POST":
         current_password = request.POST.get("current_password")
-        new_password = request.POST.get("new_password")
+        new_password = request.POST.get("new_password", "")
+        if new_password.strip() != new_password:
+
+            messages.error(
+                request,
+                "Password cannot start or end with spaces.",
+                extra_tags="password"
+            )
+
+            return render(
+                request,
+                "change_password.html"
+            )
         confirm_password = request.POST.get("confirm_password")
 
         user = request.user
@@ -239,25 +388,83 @@ def change_password(request):
             return render(request, "change_password.html")
 
         if len(new_password) < 8:
+
             messages.error(
                 request,
-                "Password must be at least 8 characters.",
-                extra_tags="password",
+                "Password must be at least 8 characters long.",
+                extra_tags="password"
             )
 
-            return render(request, "change_password.html")
+            return render(
+                request,
+                "change_password.html"
+            )
 
+        if len(new_password) > 128:
+
+            messages.error(
+                request,
+                "Password is too long.",
+                extra_tags="password"
+            )
+
+            return render(
+                request,
+                "change_password.html"
+            )
         if not re.search(r"[A-Z]", new_password):
-            messages.error(request, "Must include uppercase letter.")
+            messages.error(
+                request,
+                "Password must contain at least one uppercase letter.",
+                extra_tags="password"
+            )
             return render(request, "change_password.html")
 
         if not re.search(r"[0-9]", new_password):
-            messages.error(request, "Must include a number.")
+            messages.error(
+                request,
+                "Password must contain at least one number.",
+                extra_tags="password"
+            )
             return render(request, "change_password.html")
 
         if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", new_password):
-            messages.error(request, "Must include a special character.")
-            return render(request, "change_password.html")
+            messages.error(
+                request,
+                "Password must contain at least one special character.",
+                extra_tags="password"
+            )
+
+            return render(
+                request,
+                "change_password.html"
+            )
+
+        if not re.search(r"[a-z]", new_password):
+
+            messages.error(
+                request,
+                "Password must contain at least one lowercase letter.",
+                extra_tags="password"
+            )
+
+            return render(
+                request,
+                "change_password.html"
+            )  
+        if user.check_password(new_password):
+
+            messages.error(
+                request,
+                "New password cannot be the same as your current password.",
+                extra_tags="password"
+            )
+
+            return render(
+                request,
+                "change_password.html"
+            )
+                
 
         user.set_password(new_password)
         user.save()

@@ -374,12 +374,22 @@
         Update your personal information and profile picture
 
     </div>
+    {% if messages %}
+    {% for message in messages %}
+        <p style="color:red;margin-top:10px;">
+            {{ message }}
+        </p>
+    {% endfor %}
+{% endif %}
 
 </div>
 <div class="edit-wrapper">
 
-<form method="POST" enctype="multipart/form-data">
-
+<form
+method="POST"
+enctype="multipart/form-data"
+id="profile-form"
+>
 {% csrf_token %}
 
 <!-- ================= TOP ================= -->
@@ -415,15 +425,17 @@
 
             </span>
 
-            <span
-            class="image-btn remove-btn"
-            onclick="removeImage()"
-            >
 
-                Remove Photo
+{% if request.user.profile_image and request.user.profile_image.name != 'default.png' %}
 
-            </span>
+<span
+class="image-btn remove-btn"
+onclick="removeImage()"
+>
+    Remove Photo
+</span>
 
+{% endif %}
             <div class="image-note">
 
                 JPG, PNG OR GIF · MAX 800KB
@@ -546,7 +558,7 @@ function removeImage() {
     input.name = "remove_image";
     input.value = "true";
 
-    document.getElementById("checkout-form").appendChild(input);
+    document.getElementById("profile-form").appendChild(input);
 }
 </script>
 </body>
