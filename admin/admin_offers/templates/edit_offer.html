@@ -184,7 +184,13 @@
     <h1>Edit Offer</h1>
 
 </div>
-
+{% if errors.__all__ %}
+    {% for error in errors.__all__ %}
+        <div class="validation-alert">
+            {{ error }}
+        </div>
+    {% endfor %}
+{% endif %}
 <form
     method="POST"
     action="{% url 'edit_offer' offer.id %}"
@@ -243,9 +249,14 @@
 type="text"
 name="offer_name"
 class="form-control"
-value="{{ offer.offer_name }}"
+value="{{ form_data.offer_name|default:offer.offer_name }}"
 required
 >
+{% if errors.offer_name %}
+<small style="color:red;">
+    {{ errors.offer_name.0 }}
+</small>
+{% endif %}
 
 </div>
 
@@ -257,9 +268,14 @@ required
     name="discount_value"
     class="form-control"
     step="0.01"
-    value="{{ offer.discount_value }}"
+    value="{{ form_data.discount_value|default:offer.discount_value }}"
     required
 >
+{% if errors.discount_value %}
+<small style="color:red;">
+    {{ errors.discount_value.0 }}
+</small>
+{% endif %}
 
 </div>
     
@@ -274,9 +290,11 @@ required
     type="radio"
     name="discount_type"
     value="PERCENTAGE"
-    {% if offer.discount_type == "PERCENTAGE" %}
-        checked
-    {% endif %}
+    {% if form_data.discount_type == "PERCENTAGE" %}
+checked
+{% elif not form_data and offer.discount_type == "PERCENTAGE" %}
+checked
+{% endif %}
     >
     Percentage
 </label>
@@ -286,9 +304,11 @@ required
     type="radio"
     name="discount_type"
     value="FLAT"
-    {% if offer.discount_type == "FLAT" %}
-        checked
-    {% endif %}
+    {% if form_data.discount_type == "FLAT" %}
+checked
+{% elif not form_data and offer.discount_type == "FLAT" %}
+checked
+{% endif %}
     >
     Flat
 </label>
@@ -308,7 +328,11 @@ required
     type="radio"
     name="offer_type"
     value="PRODUCT"
-    {% if offer.offer_type == "PRODUCT" %}checked{% endif %}
+    {% if form_data.offer_type == "PRODUCT" %}
+checked
+{% elif not form_data and offer.offer_type == "PRODUCT" %}
+checked
+{% endif %}
     >
     Product
 </label>
@@ -318,7 +342,11 @@ required
     type="radio"
     name="offer_type"
     value="CATEGORY"
-    {% if offer.offer_type == "CATEGORY" %}checked{% endif %}
+    {% if form_data.offer_type == "CATEGORY" %}
+checked
+{% elif not form_data and offer.offer_type == "CATEGORY" %}
+checked
+{% endif %}
     >
     Category
 </label>
@@ -350,9 +378,11 @@ required
 
     <option
         value="{{ product.id }}"
-        {% if offer.product and offer.product.id == product.id %}
-            selected
-        {% endif %}
+        {% if form_data.product == product.id|stringformat:"s" %}
+selected
+{% elif offer.product and offer.product.id == product.id %}
+selected
+{% endif %}
     >
         {{ product.product_name }}
     </option>
@@ -360,6 +390,11 @@ required
     {% endfor %}
 
 </select>
+{% if errors.product %}
+<small style="color:red;">
+    {{ errors.product.0 }}
+</small>
+{% endif %}
 
     </div>
 
@@ -386,9 +421,11 @@ required
 
 <option
     value="{{ category.id }}"
-    {% if offer.category and offer.category.id == category.id %}
-        selected
-    {% endif %}
+    {% if form_data.category == category.id|stringformat:"s" %}
+selected
+{% elif offer.category and offer.category.id == category.id %}
+selected
+{% endif %}
 >
     {{ category.category_name }}
 </option>
@@ -396,6 +433,11 @@ required
 {% endfor %}
 
         </select>
+        {% if errors.category %}
+<small style="color:red;">
+    {{ errors.category.0 }}
+</small>
+{% endif %}
 
     </div>
 
@@ -410,8 +452,13 @@ required
         name="minimum_purchase_amount"
         class="form-control"
         step="0.01"
-        value="{{ offer.minimum_purchase_amount }}"
+        value="{{ form_data.minimum_purchase_amount|default:offer.minimum_purchase_amount }}"
         >
+        {% if errors.minimum_purchase_amount %}
+<small style="color:red;">
+    {{ errors.minimum_purchase_amount.0 }}
+</small>
+{% endif %}
 
     </div>
 
@@ -424,8 +471,13 @@ required
         name="maximum_discount_amount"
         class="form-control"
         step="0.01"
-        value="{{ offer.maximum_discount_amount }}"
+        value="{{ form_data.maximum_discount_amount|default:offer.maximum_discount_amount }}"
         >
+        {% if errors.maximum_discount_amount %}
+<small style="color:red;">
+    {{ errors.maximum_discount_amount.0 }}
+</small>
+{% endif %}
 
     </div>
 
@@ -441,9 +493,14 @@ required
         type="datetime-local"
         name="start_date"
         class="form-control"
-        value="{{ offer.start_date|date:'Y-m-d\\TH:i' }}"
+        value="{{ form_data.start_date|default:offer.start_date|date:'Y-m-d\\TH:i' }}"
         required
         >
+        {% if errors.start_date %}
+<small style="color:red;">
+    {{ errors.start_date.0 }}
+</small>
+{% endif %}
 
     </div>
 
@@ -455,9 +512,15 @@ required
         type="datetime-local"
         name="end_date"
         class="form-control"
-        value="{{ offer.end_date|date:'Y-m-d\\TH:i' }}"
+        value="{{ form_data.end_date|default:offer.end_date|date:'Y-m-d\\TH:i' }}"
         required
         >
+        {% if errors.end_date %}
+<small style="color:red;">
+    {{ errors.end_date.0 }}
+</small>
+
+{% endif %}
 
     </div>
 
@@ -483,8 +546,14 @@ required
     <input
 type="checkbox"
 name="is_active"
-{% if offer.is_active %}
-checked
+{% if form_data %}
+    {% if form_data.is_active %}
+        checked
+    {% endif %}
+{% else %}
+    {% if offer.is_active %}
+        checked
+    {% endif %}
 {% endif %}
 >
 

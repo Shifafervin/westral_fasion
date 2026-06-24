@@ -135,8 +135,10 @@ class Coupon(models.Model):
 
         if self.valid_from >= self.valid_to:
 
-            raise ValidationError("Invalid coupon date range.")
-
+            raise ValidationError({
+                "valid_to":
+                "End date must be after start date."
+            })
     def save(self, *args, validate=True, **kwargs):
 
         self.code = self.code.upper().strip()

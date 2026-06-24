@@ -54,6 +54,7 @@ class Product(models.Model):
     def clean(self):
 
         self.product_name = self.product_name.strip()
+        self.product_name = " ".join(self.product_name.split())
 
         if not self.product_name:
 
@@ -65,7 +66,7 @@ class Product(models.Model):
                 {"product_name": "Product name must be at least 3 characters long."}
             )
 
-        if len(self.product_name) > 200:
+        if len(self.product_name) > 100:
 
             raise ValidationError(
                 {"product_name": "Product name cannot exceed 200 characters."}
@@ -89,7 +90,7 @@ class Product(models.Model):
                 {"product_name": "Product name must contain at least one letter."}
             )
 
-        if not re.match(r"^[A-Za-z0-9\s\-&()]+$", self.product_name):
+        if not re.match(r"^[A-Za-z0-9\s\-&()']+$", self.product_name):
 
             raise ValidationError(
                 {
@@ -98,6 +99,10 @@ class Product(models.Model):
             )
 
         cleaned_name = self.product_name.replace(" ", "")
+        if len(set(cleaned_name.lower())) <= 2:
+            raise ValidationError(
+                {"product_name": "Enter a meaningful product name."}
+            )
 
         if len(set(cleaned_name)) == 1:
 

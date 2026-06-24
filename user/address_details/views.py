@@ -113,252 +113,31 @@ def add_address(request):
             )
 
 
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            full_name
-
-        ):
-
-            messages.error(
-
-                request,
-                "Full name must contain only letters"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-        if len(full_name) < 3:
-
-            messages.error(
-
-                request,
-                "Full name is too short"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-
-        if not phone.isdigit():
-
-            messages.error(
-
-                request,
-                "Phone number must contain only digits"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-        if len(phone) != 10:
-
-            messages.error(
-
-                request,
-
-                "Phone number must be exactly 10 digits"
-
-            )
-
-            return render(
-
-                request,
-
-                "add_address.html",
-
-                {
-
-                    "form_data": request.POST
-
-                }
-
-            )
-        if not pincode.isdigit():
-
-            messages.error(
-
-                request,
-                "Pincode must contain only digits"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-        if len(pincode) != 6:
-
-            messages.error(
-
-                request,
-                "Pincode must be exactly 6 digits"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            city
-
-        ):
-
-            messages.error(
-
-                request,
-                "City must contain only letters"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            state
-
-        ):
-
-            messages.error(
-
-                request,
-                "State must contain only letters"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            country
-
-        ):
-
-            messages.error(
-
-                request,
-                "Country must contain only letters"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-
-
-        if len(address_line) < 10:
-
-            messages.error(
-
-                request,
-                "Address is too short"
-
-            )
-
-            return render(
-                request,
-                "add_address.html",
-                {
-                    "form_data": request.POST
-                }
-            )
-
-
-
         if is_default:
 
             Address.objects.filter(
-
                 user=request.user,
-
                 is_default=True
-
             ).update(
-
                 is_default=False
-
             )
 
         try:
 
-            Address.objects.create(
-
+            address = Address.objects.create(
                 user=request.user,
-
                 full_name=full_name,
-
                 phone=phone,
-
                 pincode=pincode,
-
                 state=state,
-
                 city=city,
-
                 country=country,
-
                 address_line=address_line,
-
                 address_type=address_type,
-
                 is_default=is_default
-
             )
+
+            request.session["selected_address"] = address.id
 
         except ValidationError as e:
 
@@ -367,11 +146,8 @@ def add_address(request):
                 for error in errors:
 
                     messages.error(
-
                         request,
-
                         error
-
                     )
 
             return render(
@@ -381,7 +157,6 @@ def add_address(request):
                     "form_data": request.POST
                 }
             )
-        
         messages.success(
 
             request,
@@ -400,7 +175,7 @@ def add_address(request):
         request,
         "add_address.html",
         {
-            "form_data": request.POST
+            "form_data": {}
         }
     )
 
@@ -456,81 +231,58 @@ def delete_address(request, id):
 def edit_address(request, id):
 
     address = get_object_or_404(
-
         Address,
         id=id,
         user=request.user
-
     )
 
     if request.method == "POST":
 
         full_name = request.POST.get(
-
             "full_name",
             ""
-
         ).strip()
 
         phone = request.POST.get(
-
             "phone",
             ""
-
         ).strip()
 
         city = request.POST.get(
-
             "city",
             ""
-
         ).strip()
 
         pincode = request.POST.get(
-
             "pincode",
             ""
-
         ).strip()
 
         state = request.POST.get(
-
             "state",
             ""
-
         ).strip()
 
         country = request.POST.get(
-
             "country",
             ""
-
         ).strip()
 
         address_line = request.POST.get(
-
             "address_line",
             ""
-
         ).strip()
 
         address_type = request.POST.get(
-
             "address_type",
-
             "home"
-
         ).strip()
-        
+
         is_default = request.POST.get(
-
             "is_default"
-
         ) == "on"
 
-
         if not all([
-
             full_name,
             phone,
             city,
@@ -538,67 +290,11 @@ def edit_address(request, id):
             state,
             country,
             address_line
-
         ]):
 
             messages.error(
-
                 request,
                 "All fields are required"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            full_name
-
-        ):
-
-            messages.error(
-
-                request,
-                "Full name must contain only letters"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-        if len(full_name) < 3:
-
-            messages.error(
-
-                request,
-                "Full name is too short"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if not phone.isdigit():
-            messages.error(
-                request,
-                "Phone number must be exactly 10 digits"
             )
 
             return render(
@@ -608,159 +304,6 @@ def edit_address(request, id):
                     "address": address,
                     "form_data": request.POST
                 }
-            )
-
-        if len(phone) != 10:
-
-            messages.error(
-
-                request,
-                "Phone number must be exactly 10 digits"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if not pincode.isdigit():
-
-            messages.error(
-
-                request,
-                "Pincode must contain only digits"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-        if len(pincode) != 6:
-
-            messages.error(
-
-                request,
-                "Pincode must be exactly 6 digits"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            city
-
-        ):
-
-            messages.error(
-
-                request,
-                "City must contain only letters"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            state
-
-        ):
-
-            messages.error(
-
-                request,
-                "State must contain only letters"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if not re.match(
-
-            r"^[A-Za-z ]+$",
-
-            country
-
-        ):
-
-            messages.error(
-
-                request,
-                "Country must contain only letters"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if len(address_line) < 10:
-
-            messages.error(
-
-                request,
-                "Address is too short"
-
-            )
-
-            return redirect(
-
-                "address_details:edit_address",
-                address.id
-
-            )
-
-
-        if is_default:
-
-            Address.objects.filter(
-
-                user=request.user,
-                is_default=True
-
-            ).exclude(
-
-                id=address.id
-
-            ).update(
-
-                is_default=False
-
             )
 
         address.full_name = full_name
@@ -776,6 +319,21 @@ def edit_address(request, id):
         try:
 
             address.save()
+            request.session["selected_address"] = address.id
+
+            if is_default:
+
+                Address.objects.filter(
+                    user=request.user,
+                    is_default=True
+                ).exclude(
+                    id=address.id
+                ).update(
+                    is_default=False
+                )
+
+                address.is_default = True
+                address.save()
 
         except ValidationError as e:
 
@@ -784,46 +342,36 @@ def edit_address(request, id):
                 for error in errors:
 
                     messages.error(
-
                         request,
-
                         error
-
                     )
 
-            return redirect(
-
-                "address_details:edit_address",
-
-                address.id
-
+            return render(
+                request,
+                "edit_address.html",
+                {
+                    "address": address,
+                    "form_data": request.POST
+                }
             )
 
         messages.success(
-
             request,
-
             "Address updated successfully"
-
         )
 
         next_page = request.GET.get("next") or request.POST.get("next")
 
         if next_page == "checkout":
+
             return redirect("checkout_page")
 
         return redirect("address_details:address_view")
 
     return render(
-
         request,
-
         "edit_address.html",
-
         {
-
             "address": address
-
         }
-
     )

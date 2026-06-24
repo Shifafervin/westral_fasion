@@ -83,39 +83,6 @@ def checkout_page(request):
 
             checkout_disabled = True
 
-            discount = 0
-
-            applied_coupon = None
-
-            coupon_id = request.session.get("coupon_id")
-
-            if coupon_id:
-
-                applied_coupon = Coupon.objects.filter(
-                    id=coupon_id, is_active=True, is_deleted=False
-                ).first()
-
-                if applied_coupon:
-
-                    if applied_coupon.discount_type == "Percentage":
-
-                        discount = (subtotal * applied_coupon.discount_value) / 100
-
-                        if (
-                            applied_coupon.maximum_discount_amount
-                            and discount > applied_coupon.maximum_discount_amount
-                        ):
-
-                            discount = applied_coupon.maximum_discount_amount
-
-                    elif applied_coupon.discount_type == "Fixed":
-
-                        discount = applied_coupon.discount_value
-
-                    if discount > subtotal:
-
-                        discount = subtotal
-
     discount = Decimal("0")
 
     applied_coupon = None
@@ -130,24 +97,41 @@ def checkout_page(request):
 
         if applied_coupon:
 
-            if applied_coupon.discount_type == "Percentage":
+            if subtotal < applied_coupon.minimum_purchase_amount:
 
-                discount = (subtotal * applied_coupon.discount_value) / Decimal("100")
+                request.session.pop("coupon_id", None)
 
-                if (
-                    applied_coupon.maximum_discount_amount
-                    and discount > applied_coupon.maximum_discount_amount
-                ):
+                messages.warning(
+                    request,
+                    f"Coupon '{applied_coupon.code}' was removed because the minimum purchase amount is no longer met."
+                )
 
-                    discount = applied_coupon.maximum_discount_amount
+                applied_coupon = None
 
-            elif applied_coupon.discount_type == "Fixed":
+                discount = Decimal("0")
 
-                discount = applied_coupon.discount_value
+            else:
 
-            if discount > subtotal:
+                if applied_coupon.discount_type == "Percentage":
 
-                discount = subtotal
+                    discount = (
+                        subtotal * applied_coupon.discount_value
+                    ) / Decimal("100")
+
+                    if (
+                        applied_coupon.maximum_discount_amount
+                        and discount > applied_coupon.maximum_discount_amount
+                    ):
+
+                        discount = applied_coupon.maximum_discount_amount
+
+                elif applied_coupon.discount_type == "Fixed":
+
+                    discount = applied_coupon.discount_value
+
+                if discount > subtotal:
+
+                    discount = subtotal
 
     shipping_charge = 0
 
@@ -156,8 +140,31 @@ def checkout_page(request):
         "-is_default", "-created_at"
     )
 
-    selected_address = addresses.filter(is_default=True).first()
+    selected_address = None
 
+    if selected_address_id:
+
+        selected_address = addresses.filter(
+            id=selected_address_id
+        ).first()
+
+    if selected_address_id and not selected_address:
+
+        request.session.pop(
+            "selected_address",
+            None
+        )
+
+    if not selected_address:
+
+        selected_address = addresses.filter(
+            is_default=True
+        ).first()
+
+    if not selected_address:
+
+        selected_address = addresses.first()
+        
     context = {
         "cart_items": cart_items,
         "subtotal": subtotal,

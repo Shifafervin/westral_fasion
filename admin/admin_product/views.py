@@ -115,15 +115,7 @@ def add_product(request):
             )
 
             return redirect("variant_management", product.id)
-
-        else:
-
-            for field, errors in form.errors.items():
-
-                for error in errors:
-
-                    messages.error(request, error, extra_tags="product")
-
+        
     else:
 
         form = ProductForm()
@@ -154,14 +146,6 @@ def edit_product(request, id):
             )
 
             return redirect("product_management")
-
-        else:
-
-            for field, errors in form.errors.items():
-
-                for error in errors:
-
-                    messages.error(request, error, extra_tags="product")
 
     else:
 

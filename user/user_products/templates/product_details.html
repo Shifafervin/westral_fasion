@@ -1370,6 +1370,15 @@ if(addToCartBtn) {
             });
             const data = await response.json();
 
+            if (!response.ok) {
+
+                if (typeof showToast === "function") {
+                    showToast(data.message, "error");
+                }
+
+                return;
+            }
+
             if (typeof showToast === "function") {
                 showToast(data.message, "success");
             }

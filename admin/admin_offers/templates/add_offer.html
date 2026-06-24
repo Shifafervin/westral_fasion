@@ -228,11 +228,17 @@
     <label>Offer Name</label>
 
     <input
-    type="text"
-    name="offer_name"
-    class="form-control"
-    required
-    >
+type="text"
+name="offer_name"
+class="form-control"
+value="{{ form_data.offer_name|default:'' }}"
+required
+>
+{% if errors.offer_name %}
+    <small style="color:red;">
+        {{ errors.offer_name.0 }}
+    </small>
+{% endif %}
 
 </div>
 
@@ -241,12 +247,18 @@
     <label>Discount Value</label>
 
     <input
-    type="number"
-    name="discount_value"
-    class="form-control"
-    step="0.01"
-    required
-    >
+type="number"
+name="discount_value"
+class="form-control"
+step="0.01"
+value="{{ form_data.discount_value|default:'' }}"
+required
+>
+{% if errors.discount_value %}
+    <small style="color:red;">
+        {{ errors.discount_value.0 }}
+    </small>
+{% endif %}
 
 </div>
     
@@ -258,20 +270,25 @@
 
         <label>
             <input
-            type="radio"
-            name="discount_type"
-            value="PERCENTAGE"
-            checked
-            >
+type="radio"
+name="discount_type"
+value="PERCENTAGE"
+{% if form_data.discount_type == "PERCENTAGE" %}
+checked
+{% endif %}
+>
             Percentage
         </label>
 
         <label>
-            <input
-            type="radio"
-            name="discount_type"
-            value="FLAT"
-            >
+           <input
+type="radio"
+name="discount_type"
+value="FLAT"
+{% if form_data.discount_type == "FLAT" %}
+checked
+{% endif %}
+>
             Flat
         </label>
 
@@ -287,20 +304,25 @@
 
         <label>
             <input
-            type="radio"
-            name="offer_type"
-            value="PRODUCT"
-            checked
-            >
+type="radio"
+name="offer_type"
+value="PRODUCT"
+{% if form_data.offer_type != "CATEGORY" %}
+checked
+{% endif %}
+>
             Product
         </label>
 
         <label>
             <input
-            type="radio"
-            name="offer_type"
-            value="CATEGORY"
-            >
+type="radio"
+name="offer_type"
+value="CATEGORY"
+{% if form_data.offer_type == "CATEGORY" %}
+checked
+{% endif %}
+>
             Category
         </label>
 
@@ -308,11 +330,13 @@
 
 </div>
 
-    <div
-    id="product-container"
-    class="form-group"
+   <div
+id="product-container"
+class="form-group"
+{% if form_data.offer_type == "CATEGORY" %}
+style="display:none;"
+{% endif %}
 >
-
         <label>Select Product</label>
 
         <select
@@ -326,20 +350,32 @@
 
             {% for product in products %}
 
-            <option value="{{ product.id }}">
+           <option
+value="{{ product.id }}"
+{% if form_data.product == product.id|stringformat:"s" %}
+selected
+{% endif %}
+>
                 {{ product.product_name }}
             </option>
 
             {% endfor %}
 
         </select>
+        {% if errors.product %}
+    <small style="color:red;">
+        {{ errors.product.0 }}
+    </small>
+{% endif %}
 
     </div>
 
     <div
-    id="category-container"
-    class="form-group"
-    style="display:none;"
+id="category-container"
+class="form-group"
+{% if form_data.offer_type != "CATEGORY" %}
+style="display:none;"
+{% endif %}
 >
 
         <label>Select Category</label>
@@ -355,13 +391,23 @@
 
             {% for category in categories %}
 
-            <option value="{{ category.id }}">
+            <option
+value="{{ category.id }}"
+{% if form_data.category == category.id|stringformat:"s" %}
+selected
+{% endif %}
+>
                 {{ category.category_name }}
             </option>
 
             {% endfor %}
 
         </select>
+        {% if errors.category %}
+    <small style="color:red;">
+        {{ errors.category.0 }}
+    </small>
+{% endif %}
 
     </div>
 
@@ -374,13 +420,18 @@
     <div class="form-group">
 
         <label>Minimum Purchase</label>
-
-        <input
+<input
 type="number"
 name="minimum_purchase_amount"
 class="form-control"
 step="0.01"
+value="{{ form_data.minimum_purchase_amount|default:'' }}"
 >
+{% if errors.minimum_purchase_amount %}
+    <small style="color:red;">
+        {{ errors.minimum_purchase_amount.0 }}
+    </small>
+{% endif %}
 
     </div>
 
@@ -393,7 +444,13 @@ type="number"
 name="maximum_discount_amount"
 class="form-control"
 step="0.01"
+value="{{ form_data.maximum_discount_amount|default:'' }}"
 >
+{% if errors.maximum_discount_amount %}
+    <small style="color:red;">
+        {{ errors.maximum_discount_amount.0 }}
+    </small>
+{% endif %}
 
     </div>
 
@@ -401,10 +458,11 @@ step="0.01"
 
         <label>Start Date</label>
 
-        <input
+       <input
 type="datetime-local"
 name="start_date"
 class="form-control"
+value="{{ form_data.start_date|default:'' }}"
 required
 >
 
@@ -418,8 +476,14 @@ required
 type="datetime-local"
 name="end_date"
 class="form-control"
+value="{{ form_data.end_date|default:'' }}"
 required
 >
+{% if errors.end_date %}
+    <small style="color:red;">
+        {{ errors.end_date.0 }}
+    </small>
+{% endif %}
     </div>
 
     <div class="switch-wrapper">
@@ -441,10 +505,12 @@ required
     </div>
 
     <input
-    type="checkbox"
-    name="is_active"
-    checked
-    >
+type="checkbox"
+name="is_active"
+{% if form_data.is_active %}
+checked
+{% endif %}
+>
 
 </div>
 

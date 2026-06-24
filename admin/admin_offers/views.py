@@ -150,13 +150,19 @@ def add_offer(request):
 
         except ValidationError as e:
 
-            for errors in e.message_dict.values():
+            context = {
+                "products": products,
+                "categories": categories,
+                "form_data": request.POST,
+                "errors": e.message_dict,
+            }
 
-                for error in errors:
-
-                    messages.error(request, error)
-
-    context = {"products": products, "categories": categories}
+            return render(
+                request,
+                "add_offer.html",
+                context
+            )
+    context = {"products": products, "categories": categories, "form_data": request.POST,}
 
     return render(request, "add_offer.html", context)
 
@@ -227,13 +233,21 @@ def edit_offer(request, offer_id):
 
         except ValidationError as e:
 
-            for errors in e.message_dict.values():
+            context = {
+                "offer": offer,
+                "products": products,
+                "categories": categories,
+                "form_data": request.POST,
+                "errors": e.message_dict,
+            }
 
-                for error in errors:
+            return render(
+                request,
+                "edit_offer.html",
+                context
+            )
 
-                    messages.error(request, error)
-
-    context = {"offer": offer, "products": products, "categories": categories}
+    context = {"offer": offer, "products": products, "categories": categories, "form_data": request.POST,}
 
     return render(request, "edit_offer.html", context)
 

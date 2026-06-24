@@ -309,14 +309,21 @@ def product_details(request, product_id):
         )
 
     wishlist_count = 0
+    in_wishlist = False
 
     if request.user.is_authenticated:
-
-        wishlist = Wishlist.objects.filter(user=request.user).first()
+        wishlist = Wishlist.objects.filter(
+            user=request.user
+        ).first()
 
         if wishlist:
 
             wishlist_count = wishlist.items.count()
+
+            in_wishlist = WishlistItem.objects.filter(
+                wishlist=wishlist,
+                variant=selected_variant
+            ).exists()
 
     can_review = False
 
@@ -386,6 +393,7 @@ def product_details(request, product_id):
         "review_count": review_count,
         "can_review": can_review,
         "edit_review": edit_review,
+        "in_wishlist": in_wishlist,
     }
 
     return render(request, "product_details.html", context)

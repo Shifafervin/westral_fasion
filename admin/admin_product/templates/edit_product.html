@@ -447,35 +447,6 @@ body::-webkit-scrollbar-thumb{
     Edit Product:
     {{ product.product_name }}
 
-
-
-{% if messages %}
-
-    {% for message in messages %}
-
-        {% if "product" in message.tags %}
-
-            <div
-            style="
-            background:#f8ece8;
-            color:#7a4b42;
-            padding:14px 16px;
-            border-radius:10px;
-            margin-top:18px;
-            font-size:13px;
-            max-width:850px;
-            "
-            >
-
-                {{ message }}
-
-            </div>
-
-        {% endif %}
-
-    {% endfor %}
-
-{% endif %}
             
         </div>
 
@@ -541,6 +512,11 @@ body::-webkit-scrollbar-thumb{
             name="product_name"
             value="{{ request.POST.product_name|default:product.product_name }}"
             required>
+            {% if form.product_name.errors %}
+    <small style="color:red;">
+        {{ form.product_name.errors.0 }}
+    </small>
+{% endif %}
 
         </div>
 
@@ -577,6 +553,11 @@ body::-webkit-scrollbar-thumb{
         {% endfor %}
 
     </select>
+    {% if form.category.errors %}
+    <small style="color:red;">
+        {{ form.category.errors.0 }}
+    </small>
+{% endif %}
 
 </div>
         <!-- MATERIALS -->
@@ -589,6 +570,11 @@ body::-webkit-scrollbar-thumb{
             type="text"
             name="materials"
             value="{{ request.POST.materials|default:product.materials }}">
+            {% if form.materials.errors %}
+    <small style="color:red;">
+        {{ form.materials.errors.0 }}
+    </small>
+{% endif %}
 
         </div>
 
@@ -602,6 +588,11 @@ body::-webkit-scrollbar-thumb{
             type="text"
             name="fit_type"
             value="{{ request.POST.fit_type|default:product.fit_type }}">
+            {% if form.fit_type.errors %}
+    <small style="color:red;">
+        {{ form.fit_type.errors.0 }}
+    </small>
+{% endif %}
 
         </div>
 
@@ -614,6 +605,11 @@ body::-webkit-scrollbar-thumb{
             <textarea
             name="description"
             required>{{request.POST.description|default:product.description }}</textarea>
+            {% if form.description.errors %}
+    <small style="color:red;">
+        {{ form.description.errors.0 }}
+    </small>
+{% endif %}
 
         </div>
         <!-- ACTIVE STATUS -->

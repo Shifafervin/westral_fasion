@@ -474,33 +474,6 @@ enctype="multipart/form-data">
     Create New Product
 
 </div>
-{% if messages %}
-
-    {% for message in messages %}
-
-        {% if "product" in message.tags %}
-
-            <div
-            style="
-            background:#f8ece8;
-            color:#7a4b42;
-            padding:14px 16px;
-            border-radius:10px;
-            margin-bottom:18px;
-            font-size:13px;
-            "
-            >
-
-                {{ message }}
-
-            </div>
-
-        {% endif %}
-
-    {% endfor %}
-
-{% endif %}
-
 
 <!-- ================= GENERAL CARD ================= -->
 
@@ -527,10 +500,16 @@ enctype="multipart/form-data">
                 <label>PRODUCT NAME</label>
 
                 <input
-                type="text"
-                name="product_name"
-                value="{{ request.POST.product_name }}"
-                required>
+type="text"
+name="product_name"
+value="{{ request.POST.product_name }}"
+required>
+
+{% if form.product_name.errors %}
+    <small style="color:red;">
+        {{ form.product_name.errors.0 }}
+    </small>
+{% endif %}
 
             </div>
 
@@ -541,11 +520,16 @@ enctype="multipart/form-data">
                 <label>FABRIC / MATERIAL COMPOSITION</label>
 
                 <input
-                type="text"
-                name="materials"
-                value="{{ request.POST.materials }}"
-                required>
+type="text"
+name="materials"
+value="{{ request.POST.materials }}"
+required>
 
+{% if form.materials.errors %}
+    <small style="color:red;">
+        {{ form.materials.errors.0 }}
+    </small>
+{% endif %}
             </div>
 
             <!-- FIT TYPE -->
@@ -555,9 +539,15 @@ enctype="multipart/form-data">
                 <label>FIT TYPE</label>
 
                 <input
-                type="text"
-                name="fit_type"
-                value="{{ request.POST.fit_type }}">
+type="text"
+name="fit_type"
+value="{{ request.POST.fit_type }}">
+
+{% if form.fit_type.errors %}
+    <small style="color:red;">
+        {{ form.fit_type.errors.0 }}
+    </small>
+{% endif %}
 
             </div>
 
@@ -594,6 +584,11 @@ enctype="multipart/form-data">
                     {% endfor %}
 
                 </select>
+                  {% if form.category.errors %}
+    <small style="color:red;">
+        {{ form.category.errors.0 }}
+    </small>
+{% endif %}
 
             </div>
 
@@ -610,6 +605,11 @@ enctype="multipart/form-data">
         <textarea
         name="description"
         required>{{ request.POST.description }}</textarea>
+        {% if form.description.errors %}
+    <small style="color:red;">
+        {{ form.description.errors.0 }}
+    </small>
+{% endif %}
 
     </div>
 

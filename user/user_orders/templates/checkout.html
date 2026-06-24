@@ -641,26 +641,11 @@ body {
                     </div>
 
                     <div class="address-grid" id="addressGrid">
-                        {% if addresses|length > 1 %}
-<div class="address-toggle-wrap">
-
-    <button
-        type="button"
-        id="toggleAddresses"
-        class="address-toggle-btn"
-    >
-        View More Addresses
-    </button>
-
-</div>
-{% endif %}
 {% for address in addresses %}
 <label
 class="address-card
 
-{% if selected_address_id|stringformat:'s' == address.id|stringformat:'s' %}
-active
-{% elif not selected_address_id and address.is_default %}
+{% if selected_address and selected_address.id == address.id %}
 active
 {% endif %}
 
@@ -678,7 +663,9 @@ style="display:none;"
                                 name="selected_address" 
                                 value="{{ address.id }}" 
                                 hidden
-                                {% if selected_address_id|stringformat:"s" == address.id|stringformat:"s" %}checked{% elif not selected_address_id and address.is_default %}checked{% endif %}
+                               {% if selected_address and selected_address.id == address.id %}
+checked
+{% endif %}
                             >
 
                             <div class="address-top">
@@ -704,6 +691,19 @@ style="display:none;"
                         </label>
                         {% endfor %}
                     </div>
+                    {% if addresses|length > 1 %}
+<div class="address-toggle-wrap">
+
+    <button
+        type="button"
+        id="toggleAddresses"
+        class="address-toggle-btn"
+    >
+        View More Addresses
+    </button>
+
+</div>
+{% endif %}
                 </div>
 
                 <!-- PAYMENT METHOD -->

@@ -102,13 +102,12 @@ def create_coupon(request):
 
             form.save()
 
-            messages.success(request, "Coupon created successfully.")
+            messages.success(
+                request,
+                "Coupon created successfully."
+            )
 
             return redirect("coupon_list")
-
-        else:
-
-            messages.error(request, "Please correct the form errors and try again.")
 
     else:
 
@@ -131,14 +130,12 @@ def edit_coupon(request, coupon_id):
 
             form.save()
 
-            messages.success(request, "Coupon updated successfully.")
+            messages.success(
+                request,
+                "Coupon updated successfully."
+            )
 
             return redirect("coupon_list")
-
-        else:
-
-            messages.error(request, "Please correct the form errors and try again.")
-
     else:
 
         form = CouponForm(instance=coupon)

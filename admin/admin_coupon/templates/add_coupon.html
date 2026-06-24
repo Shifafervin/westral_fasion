@@ -474,7 +474,13 @@ Add Coupon
 
                             </label>
 
-                            {{ form.code }}
+                           {{ form.code }}
+
+{% for error in form.code.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
 
                         </div>
 
@@ -502,7 +508,13 @@ Add Coupon
 
                             </label>
 
-                            {{ form.discount_value }}
+                          {{ form.discount_value }}
+
+{% for error in form.discount_value.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
 
                         </div>
 
@@ -532,6 +544,12 @@ Add Coupon
 
                             {{ form.minimum_purchase_amount }}
 
+{% for error in form.minimum_purchase_amount.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
+
                         </div>
 
                         <div class="form-group">
@@ -543,6 +561,12 @@ Add Coupon
                             </label>
 
                             {{ form.maximum_discount_amount }}
+
+{% for error in form.maximum_discount_amount.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
 
                         </div>
 
@@ -556,6 +580,12 @@ Add Coupon
 
                             {{ form.total_usage_limit }}
 
+{% for error in form.total_usage_limit.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
+
                         </div>
 
                         <div class="form-group">
@@ -566,7 +596,13 @@ Add Coupon
 
                             </label>
 
-                            {{ form.usage_limit_per_user }}
+                           {{ form.usage_limit_per_user }}
+
+{% for error in form.usage_limit_per_user.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
 
                         </div>
 
@@ -628,7 +664,13 @@ Add Coupon
 
                             </label>
 
-                            {{ form.valid_from }}
+                           {{ form.valid_from }}
+
+{% for error in form.valid_from.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
 
                         </div>
 
@@ -640,7 +682,13 @@ Add Coupon
 
                             </label>
 
-                            {{ form.valid_to }}
+                           {{ form.valid_to }}
+
+{% for error in form.valid_to.errors %}
+    <small style="color:#c0392b;">
+        {{ error }}
+    </small>
+{% endfor %}
 
                         </div>
 
