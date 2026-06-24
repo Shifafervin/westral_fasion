@@ -239,6 +239,7 @@ def edit_offer(request, offer_id):
                 "categories": categories,
                 "form_data": request.POST,
                 "errors": e.message_dict,
+                "non_field_errors": e.messages,
             }
 
             return render(

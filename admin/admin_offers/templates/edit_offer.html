@@ -184,11 +184,9 @@
     <h1>Edit Offer</h1>
 
 </div>
-{% if errors.__all__ %}
-    {% for error in errors.__all__ %}
-        <div class="validation-alert">
-            {{ error }}
-        </div>
+{% if non_field_errors %}
+    {% for error in non_field_errors %}
+        <div class="error-message">{{ error }}</div>
     {% endfor %}
 {% endif %}
 <form
