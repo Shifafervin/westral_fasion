@@ -199,8 +199,38 @@ def signup_verify(request):
         user_otp = "".join([request.POST.get(f"otp{i}", "") for i in range(1, 7)])
 
         if len(user_otp) != 6:
-            messages.error(request, "Enter complete OTP")
-            return redirect("signup_verify")
+
+            messages.error(
+                request,
+                "Enter complete OTP"
+            )
+
+            data = request.session.get("signup_data")
+
+            remaining_seconds = 0
+
+            if data and data.get("otp_expiry"):
+
+                expiry_time = timezone.datetime.fromisoformat(
+                    data["otp_expiry"]
+                )
+
+                remaining_seconds = max(
+                    0,
+                    int((expiry_time - timezone.now()).total_seconds())
+                )
+
+            response = render(
+                request,
+                "signup_verify.html",
+                {
+                    "remaining_seconds": remaining_seconds,
+                }
+            )
+
+            response.status_code = 400
+
+            return response
 
         data = request.session.get("signup_data")
 
@@ -223,7 +253,19 @@ def signup_verify(request):
                 "OTP expired. Please click Resend OTP."
             )
 
-            return redirect("signup_verify")
+            remaining_seconds = 0
+
+            response = render(
+                request,
+                "signup_verify.html",
+                {
+                    "remaining_seconds": remaining_seconds,
+                }
+            )
+
+            response.status_code = 400
+
+            return response
 
         if user_otp == data["otp"]:
             existing_user = User.objects.filter(
@@ -284,7 +326,28 @@ def signup_verify(request):
                 request,
                 "Invalid OTP"
             )
-            return redirect("signup_verify")
+
+            expiry_time = timezone.datetime.fromisoformat(
+                data["otp_expiry"]
+            )
+
+            remaining_seconds = max(
+                0,
+                int((expiry_time - timezone.now()).total_seconds())
+            )
+
+            response = render(
+                request,
+                "signup_verify.html",
+                {
+                    "remaining_seconds": remaining_seconds,
+                }
+            )
+
+            response.status_code = 400
+
+            return response
+        
     data = request.session.get("signup_data")
 
     remaining_seconds = 0

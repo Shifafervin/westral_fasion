@@ -649,12 +649,12 @@ class="address-card
 active
 {% endif %}
 
-{% if not address.is_default %}
+{% if addresses|length > 1 and selected_address.id != address.id %}
 extra-address
 {% endif %}
 "
 
-{% if not address.is_default %}
+{% if addresses|length > 1 and selected_address.id != address.id %}
 style="display:none;"
 {% endif %}
 >

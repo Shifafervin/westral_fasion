@@ -62,7 +62,7 @@ def calculate_discounted_price(variant):
             "offer": None,
         }
 
-    # Minimum purchase validation
+   
     if (
         offer.minimum_purchase_amount > 0
         and original_price < offer.minimum_purchase_amount
