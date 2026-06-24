@@ -101,13 +101,25 @@ class Coupon(models.Model):
                     {"discount_value": "Flat discount cannot exceed ₹300."}
                 )
 
-        if self.maximum_discount_amount <= 0:
+        if self.discount_type == self.PERCENTAGE:
 
-            raise ValidationError(
-                {
-                    "maximum_discount_amount": "Maximum discount must be greater than zero."
-                }
-            )
+            if not self.maximum_discount_amount:
+
+                raise ValidationError(
+                    {
+                        "maximum_discount_amount":
+                        "Maximum discount amount is required for percentage coupons."
+                    }
+                )
+
+            if self.maximum_discount_amount <= 0:
+
+                raise ValidationError(
+                    {
+                        "maximum_discount_amount":
+                        "Maximum discount must be greater than zero."
+                    }
+                )
 
         if self.total_usage_limit <= 0:
 
