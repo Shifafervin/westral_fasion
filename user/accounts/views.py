@@ -362,6 +362,7 @@ def signup_verify(request):
             0,
             int((expiry_time - timezone.now()).total_seconds())
         )
+        print("WRONG OTP REMAINING =", remaining_seconds)
 
     return render(
         request,
@@ -591,6 +592,7 @@ def verify_otp(request):
                 0,
                 int(float(expiry) - time.time())
             )
+            print("REMAINING =", remaining_seconds)
 
         except:
 

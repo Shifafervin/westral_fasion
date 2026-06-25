@@ -351,9 +351,10 @@ body{
     <div class="modal">
 
         <form
-        method="POST"
-        enctype="multipart/form-data"
-        >
+    id="editVariantForm"
+    method="POST"
+    enctype="multipart/form-data"
+>
 
             {% csrf_token %}
 
@@ -369,6 +370,7 @@ onclick="window.location.href='{% url 'variant_management' product.id %}'"
             <!-- TITLE -->
 
            <h2>Edit Variant</h2>
+<div id="variantMessages">
 
 {% if messages %}
 
@@ -396,6 +398,8 @@ onclick="window.location.href='{% url 'variant_management' product.id %}'"
     {% endfor %}
 
 {% endif %}
+
+</div>
 
             <!-- FILE INPUT -->
 
@@ -1020,6 +1024,97 @@ cancelCrop.onclick = function(){
 
 
 </script>
+<script>
+
+const editVariantForm =
+document.getElementById("editVariantForm");
+
+editVariantForm.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const formData =
+    new FormData(editVariantForm);
+
+    const response =
+    await fetch(window.location.href,{
+
+        method:"POST",
+
+        headers:{
+            "X-Requested-With":"XMLHttpRequest"
+        },
+
+        body:formData
+
+    });
+
+    const data =
+    await response.json();
+
+    const messageBox =
+    document.getElementById("variantMessages");
+
+    messageBox.innerHTML = "";
+
+    if(data.success){
+
+        window.location.href =
+        data.redirect_url;
+
+        return;
+
+    }
+
+    let html = "";
+
+    if(data.message){
+
+        html += `
+        <div
+        style="
+        background:#f8ece8;
+        color:#7a4b42;
+        padding:14px 16px;
+        border-radius:10px;
+        margin-bottom:20px;
+        font-size:13px;
+        ">
+            ${data.message}
+        </div>
+        `;
+
+    }
+
+    if(data.errors){
+
+        data.errors.forEach(function(error){
+
+            html += `
+            <div
+            style="
+            background:#f8ece8;
+            color:#7a4b42;
+            padding:14px 16px;
+            border-radius:10px;
+            margin-bottom:20px;
+            font-size:13px;
+            ">
+                ${error}
+            </div>
+            `;
+
+        });
+
+    }
+
+    messageBox.innerHTML = html;
+
+});
+
+</script>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 </body>
 </html>

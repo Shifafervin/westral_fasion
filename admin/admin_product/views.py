@@ -14,6 +14,7 @@ from django.db.models import Sum
 from admin.decorators import admin_required
 from django.views.decorators.cache import never_cache
 from django.views.decorators.cache import cache_control
+from django.http import JsonResponse
 
 
 @never_cache
@@ -275,6 +276,7 @@ def edit_variant(request, variant_id):
     variant = get_object_or_404(Variant, id=variant_id)
 
     if request.method == "POST":
+        is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest"
 
         form = VariantForm(request.POST, instance=variant)
 
@@ -288,14 +290,28 @@ def edit_variant(request, variant_id):
 
         if images and len(images) < 3:
 
+            if is_ajax:
+
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "message": "Minimum 3 images required",
+                    },
+                    status=400,
+                )
+
             messages.error(request, "Minimum 3 images required", extra_tags="variant")
 
             return render(
                 request,
                 "edit_varient.html",
-                {"variant": variant, "product": variant.product, "form": form},
+                {
+                    "variant": variant,
+                    "product": variant.product,
+                    "form": form,
+                },
             )
-
+        
         if form.is_valid():
 
             with transaction.atomic():
@@ -330,20 +346,48 @@ def edit_variant(request, variant_id):
                                 is_primary=True if index == 0 else False,
                             )
 
+            if is_ajax:
+
+                return JsonResponse(
+                    {
+                        "success": True,
+                        "redirect_url": redirect(
+                            "variant_management",
+                            variant.product.id,
+                        ).url,
+                    }
+                )
+
             messages.success(
-                request, "Variant updated successfully", extra_tags="variant"
+                request,
+                "Variant updated successfully",
+                extra_tags="variant",
             )
 
             return redirect("variant_management", variant.product.id)
-
         else:
+
+            if is_ajax:
+
+                errors = []
+
+                for field_errors in form.errors.values():
+
+                    errors.extend(field_errors)
+
+                return JsonResponse(
+                    {
+                        "success": False,
+                        "errors": errors,
+                    },
+                    status=400,
+                )
 
             for field, errors in form.errors.items():
 
                 for error in errors:
 
                     messages.error(request, error, extra_tags="variant")
-
     else:
 
         form = VariantForm(instance=variant)

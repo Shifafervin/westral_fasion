@@ -30,10 +30,9 @@ class CustomUser(AbstractUser):
 
         super().save(*args, **kwargs)
 
-    # 🔥 optional profile image
     profile_image = models.ImageField(upload_to="profiles/", blank=True, null=True)
 
-    # 🔥 use email as login (optional but recommended)
+
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
