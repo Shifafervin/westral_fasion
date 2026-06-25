@@ -253,12 +253,12 @@ def edit_profile(request):
             otp = str(random.randint(100000, 999999))
             request.session["otp"] = otp
             request.session["pending_email"] = new_email
-            request.session["otp_time"] = str(timezone.now())
+            request.session["otp_expiry"] = time.time() + 60
 
             send_mail(
                 "Verify your new email",
                 f"Your OTP is {otp}",
-                "your_email@gmail.com",
+                settings.DEFAULT_FROM_EMAIL,
                 [new_email],
                 fail_silently=False,
             )
@@ -274,37 +274,63 @@ def edit_profile(request):
     return render(request, "edit_profile.html")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_required
 def verify_email_otp(request):
+
+    def _remaining():
+        expiry = request.session.get("otp_expiry")
+        if expiry:
+            try:
+                return max(0, int(float(expiry) - time.time()))
+            except (TypeError, ValueError):
+                pass
+        return 0
 
     if request.method == "POST":
 
         otp_digits = [request.POST.get(f"otp{i}", "") for i in range(1, 7)]
-
-        if not all(d.isdigit() and len(d) == 1 for d in otp_digits):
-            return render(
-                request, "verify_otp.html", {"error": "Enter complete 6-digit OTP"}
-            )
-
-        entered_otp = "".join(otp_digits)
-
         session_otp = request.session.get("otp")
         new_email = request.session.get("pending_email")
-        otp_time = request.session.get("otp_time")
+        expiry = request.session.get("otp_expiry")
 
         if not session_otp or not new_email:
             messages.error(request, "Session expired. Try again.")
             return redirect("user_details:edit_profile")
 
-        if otp_time:
-            otp_time = timezone.datetime.fromisoformat(otp_time)
-            if timezone.now() > otp_time + timedelta(minutes=1):
-                return render(
-                    request, "verify_otp.html", {"error": "OTP expired. Resend again."}
-                )
+        if not all(d.isdigit() and len(d) == 1 for d in otp_digits):
+            response = render(
+                request,
+                "profile_emailverify.html",
+                {"error": "Enter complete 6-digit OTP", "remaining_seconds": _remaining()}
+            )
+            response.status_code = 400
+            return response
+
+        entered_otp = "".join(otp_digits)
+
+        if expiry:
+            try:
+                if time.time() > float(expiry):
+                    response = render(
+                        request,
+                        "profile_emailverify.html",
+                        {"error": "OTP expired. Please click Resend OTP.", "remaining_seconds": 0}
+                    )
+                    response.status_code = 400
+                    return response
+            except (TypeError, ValueError):
+                pass
 
         if entered_otp != session_otp:
-            return render(request, "profile_emailverify.html", {"error": "Invalid OTP"})
+            response = render(
+                request,
+                "profile_emailverify.html",
+                {"error": "Invalid OTP", "remaining_seconds": _remaining()}
+            )
+            response.status_code = 400
+            return response
 
         user = request.user
         user.email = new_email
@@ -312,15 +338,16 @@ def verify_email_otp(request):
 
         request.session.pop("otp", None)
         request.session.pop("pending_email", None)
-        request.session.pop("otp_time", None)
+        request.session.pop("otp_expiry", None)
 
         messages.success(request, "Email updated successfully")
-
         return redirect("user_details:profile")
 
-    return render(request, "profile_emailverify.html")
+    return render(request, "profile_emailverify.html", {"remaining_seconds": _remaining()})
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 @user_required
 def resend_email_otp(request):
 
@@ -333,12 +360,12 @@ def resend_email_otp(request):
     otp = str(random.randint(100000, 999999))
 
     request.session["otp"] = otp
-    request.session["otp_time"] = str(timezone.now())
+    request.session["otp_expiry"] = time.time() + 60
 
     send_mail(
         "Resend OTP - Verify your email",
         f"Your new OTP is {otp}",
-        "your_email@gmail.com",
+        settings.DEFAULT_FROM_EMAIL,
         [new_email],
         fail_silently=False,
     )
@@ -517,17 +544,37 @@ def profile_forgotpassword(request):
     return render(request, "profileforgot_password.html")
 
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def profile_verify_otp(request):
     error = None
     email = request.session.get("reset_email")
 
     if not email:
-        return redirect("profile_forgotpassword")
+        return redirect("user_details:profile_forgotpassword")
 
     user = User.objects.get(email=email)
 
+    def _remaining():
+        otp_obj = PasswordResetOTP.objects.filter(
+            user=user, is_used=False
+        ).last()
+        if otp_obj:
+            secs = int((otp_obj.created_at + timedelta(minutes=1) - timezone.now()).total_seconds())
+            return max(0, secs)
+        return 0
+
     if request.method == "POST":
         entered_otp = "".join([request.POST.get(f"otp{i}", "") for i in range(1, 7)])
+
+        if len(entered_otp) != 6:
+            response = render(
+                request,
+                "profile_verifyemail.html",
+                {"error": "Enter complete OTP", "remaining_seconds": _remaining()}
+            )
+            response.status_code = 400
+            return response
 
         otp_obj = PasswordResetOTP.objects.filter(
             user=user, otp=entered_otp, is_used=False
@@ -537,7 +584,7 @@ def profile_verify_otp(request):
             error = "Invalid OTP"
 
         elif otp_obj.is_expired():
-            error = "OTP expired. Please resend."
+            error = "OTP expired. Please click Resend OTP."
 
         else:
             otp_obj.is_used = True
@@ -546,7 +593,15 @@ def profile_verify_otp(request):
             request.session["otp_verified"] = True
             return redirect("user_details:profilereset_password")
 
-    return render(request, "profile_verifyemail.html", {"error": error})
+        response = render(
+            request,
+            "profile_verifyemail.html",
+            {"error": error, "remaining_seconds": _remaining()}
+        )
+        response.status_code = 400
+        return response
+
+    return render(request, "profile_verifyemail.html", {"remaining_seconds": _remaining()})
 
 
 def profile_resend_otp(request):

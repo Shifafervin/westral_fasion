@@ -252,39 +252,39 @@ inputs.forEach((input, index) => {
     });
 });
 
-/* TIMER */
-/* TIMER */
-let time = {{ remaining_seconds|default:0 }};
-let timerEl = document.getElementById("timer");
+// 🔥 BLOCK BACK BUTTON
+history.pushState(null, null, location.href);
+window.onpopstate = function () {
+    history.go(1);
+};
 
+const timerEl = document.getElementById("timer");
 const resendLink = document.getElementById("resendLink");
-const countdown = setInterval(() => {
+const verifyBtn = document.getElementById("verifyBtn");
 
+let time = {{ remaining_seconds|default:0 }};
+
+const interval = setInterval(() => {
     let minutes = Math.floor(time / 60);
     let seconds = time % 60;
 
     timerEl.textContent =
-        String(minutes).padStart(2, "0") +
-        ":" +
-        String(seconds).padStart(2, "0");
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
 
     if (time <= 0) {
-
-        clearInterval(countdown);
-
-        timerEl.textContent = "OTP Expired";
+        clearInterval(interval);
 
         resendLink.style.pointerEvents = "auto";
         resendLink.style.opacity = "1";
-        
 
-        document.getElementById("verifyBtn").disabled = true;
+        verifyBtn.disabled = true;
 
+        timerEl.textContent = "OTP Expired";
         return;
     }
 
     time--;
-
 }, 1000);
 </script>
 

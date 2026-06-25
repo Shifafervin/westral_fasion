@@ -189,7 +189,6 @@ def signup_view(request):
 
     return render(request, "signup.html")
 
-
 @never_cache
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def signup_verify(request):
@@ -225,6 +224,7 @@ def signup_verify(request):
                 "signup_verify.html",
                 {
                     "remaining_seconds": remaining_seconds,
+                    "otp_expiry": data.get("otp_expiry"),
                 }
             )
 
@@ -260,6 +260,7 @@ def signup_verify(request):
                 "signup_verify.html",
                 {
                     "remaining_seconds": remaining_seconds,
+                    "otp_expiry": data.get("otp_expiry"),
                 }
             )
 
@@ -341,9 +342,9 @@ def signup_verify(request):
                 "signup_verify.html",
                 {
                     "remaining_seconds": remaining_seconds,
+                    "otp_expiry": data.get("otp_expiry"),
                 }
             )
-
             response.status_code = 400
 
             return response
@@ -362,7 +363,7 @@ def signup_verify(request):
             0,
             int((expiry_time - timezone.now()).total_seconds())
         )
-        print("WRONG OTP REMAINING =", remaining_seconds)
+        
 
     return render(
         request,
@@ -370,6 +371,7 @@ def signup_verify(request):
         {
             "otp_image": "https://your-image-url.com/image.jpg",
             "remaining_seconds": remaining_seconds,
+            "otp_expiry": data.get("otp_expiry") if data else "",
         }
     )
 
@@ -729,9 +731,16 @@ def referral_page(request):
 
     return render(request, "referral.html", context)
 
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def signup_resend_otp(request):
 
     data = request.session.get("signup_data")
+
+    if not data:
+        messages.error(request, "Signup session expired. Please sign up again.")
+        return redirect("signup")
+
     last_sent = request.session.get("otp_sent_time")
 
     if last_sent:
@@ -746,15 +755,6 @@ def signup_resend_otp(request):
             )
 
             return redirect("signup_verify")
-
-        if not data:
-
-            messages.error(
-                request,
-                "Signup session expired."
-            )
-
-            return redirect("signup")
 
     otp = str(random.randint(100000, 999999))
 

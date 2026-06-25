@@ -127,11 +127,16 @@ body {
 
         <div class="timer" id="timer">Code expires in 01:00</div>
 
-        <button type="submit" class="btn">Verify Email</button>
+        <button type="submit" class="btn" id="verifyBtn">Verify Email</button>
     </form>
 
+    {% if error %}
+        <p style="color:red; margin-top:10px; font-size:13px;">{{ error }}</p>
+    {% endif %}
+
     <div class="links">
-        Didn’t receive code? <a href="{% url 'user_details:profile_resend_otp' %}">Resend</a><br><br>
+        Didn't receive code?
+        <a href="{% url 'user_details:profile_resend_otp' %}" id="resendLink" style="pointer-events:none; opacity:0.5;">Resend</a><br><br>
         <a href="#">Change email address</a>
     </div>
 
@@ -147,20 +152,45 @@ inputs.forEach((input, index) => {
             inputs[index + 1].focus();
         }
     });
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !input.value && index > 0) {
+            inputs[index - 1].focus();
+        }
+    });
 });
 
-/* 1 MIN TIMER */
-let time = 60;
+// 🔥 BLOCK BACK BUTTON
+history.pushState(null, null, location.href);
+window.onpopstate = function () {
+    history.go(1);
+};
+
 const timerEl = document.getElementById("timer");
+const resendLink = document.getElementById("resendLink");
+const verifyBtn = document.getElementById("verifyBtn");
+
+let time = {{ remaining_seconds|default:0 }};
 
 const interval = setInterval(() => {
-    let seconds = time;
+    let minutes = Math.floor(time / 60);
+    let seconds = time % 60;
 
-    timerEl.innerText = "Code expires in 00:" + (seconds < 10 ? "0" : "") + seconds;
+    timerEl.textContent =
+        "Code expires in " +
+        (minutes < 10 ? "0" : "") + minutes + ":" +
+        (seconds < 10 ? "0" : "") + seconds;
 
     if (time <= 0) {
         clearInterval(interval);
-        timerEl.innerText = "Code expired";
+
+        resendLink.style.pointerEvents = "auto";
+        resendLink.style.opacity = "1";
+
+        verifyBtn.disabled = true;
+
+        timerEl.textContent = "OTP Expired";
+        return;
     }
 
     time--;
