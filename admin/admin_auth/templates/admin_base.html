@@ -546,7 +546,7 @@
 
 <!-- ================= TOAST MESSAGES ================= -->
 
-{% if messages %}
+{% if messages and not hide_global_messages %}
 
 <div class="message-container">
 

@@ -119,10 +119,12 @@ def add_category(request):
 
         form = CategoryForm()
 
-    context = {"form": form}
+    context = {
+        "form": form,
+        "hide_global_messages": True,
+    }
 
     return render(request, "add_category.html", context)
-
 
 @never_cache
 @admin_required
@@ -156,7 +158,11 @@ def edit_category(request, id):
 
         form = CategoryForm(instance=category)
 
-    context = {"form": form, "category": category}
+    context = {
+        "form": form,
+        "category": category,
+        "hide_global_messages": True,
+    }
 
     return render(request, "edit_category.html", context)
 

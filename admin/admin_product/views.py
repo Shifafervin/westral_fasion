@@ -121,7 +121,11 @@ def add_product(request):
 
         form = ProductForm()
 
-    context = {"form": form, "categories": categories}
+    context = {
+        "form": form,
+        "categories": categories,
+        "hide_global_messages": True,
+    }
 
     return render(request, "add_product.html", context)
 
@@ -152,10 +156,14 @@ def edit_product(request, id):
 
         form = ProductForm(instance=product)
 
-    context = {"form": form, "product": product, "categories": categories}
+    context = {
+        "form": form,
+        "product": product,
+        "categories": categories,
+        "hide_global_messages": True,
+    }
 
     return render(request, "edit_product.html", context)
-
 
 @never_cache
 @admin_required
@@ -317,6 +325,7 @@ def edit_variant(request, variant_id):
                     "variant": variant,
                     "product": variant.product,
                     "form": form,
+                    "hide_global_messages": True,
                 },
             )
 
@@ -402,10 +411,14 @@ def edit_variant(request, variant_id):
 
         form = VariantForm(instance=variant)
 
-    context = {"variant": variant, "product": variant.product, "form": form}
+    context = {
+        "variant": variant,
+        "product": variant.product,
+        "form": form,
+        "hide_global_messages": True,
+    }
 
     return render(request, "edit_varient.html", context)
-
 
 @never_cache
 @admin_required
@@ -432,9 +445,15 @@ def add_variant(request, product_id):
             )
 
             return render(
-                request, "add_varient.html", {"product": product, "form": form}
+                request,
+                "add_varient.html",
+                {
+                    "product": product,
+                    "form": form,
+                    "hide_global_messages": True,
+                },
             )
-
+        
         if form.is_valid():
 
             with transaction.atomic():
@@ -477,7 +496,11 @@ def add_variant(request, product_id):
 
         form = VariantForm()
 
-    context = {"product": product, "form": form}
+    context = {
+        "product": product,
+        "form": form,
+        "hide_global_messages": True,
+    }
 
     return render(request, "add_varient.html", context)
 
