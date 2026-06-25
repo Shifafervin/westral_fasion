@@ -169,10 +169,14 @@ def delete_category(request, id):
 
     if request.method == "POST":
 
-        if category.products.exists():
+        active_products = category.products.filter(is_deleted=False)
+
+        if active_products.exists():
 
             messages.error(
-                request, "Cannot delete category with products", extra_tags="category"
+                request,
+                "Cannot delete category with products",
+                extra_tags="category",
             )
 
             return redirect("admincategory_view")
