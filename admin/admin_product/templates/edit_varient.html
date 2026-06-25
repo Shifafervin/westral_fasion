@@ -781,12 +781,13 @@ value="{{ form.sku.value|default:'' }}"
         </button>
 
         <button
-        type="submit"
-        class="save-btn">
+    type="submit"
+    class="save-btn"
+    id="updateVariantBtn">
 
-            Update Variant
+    Update Variant
 
-        </button>
+</button>
 
     </div>
 
@@ -1026,94 +1027,120 @@ cancelCrop.onclick = function(){
 </script>
 <script>
 
-const editVariantForm =
-document.getElementById("editVariantForm");
+const editVariantForm = document.getElementById("editVariantForm");
 
 editVariantForm.addEventListener("submit", async function(e){
 
     e.preventDefault();
 
-    const formData =
-    new FormData(editVariantForm);
+    const messageBox = document.getElementById("variantMessages");
 
-    const response =
-    await fetch(window.location.href,{
-
-        method:"POST",
-
-        headers:{
-            "X-Requested-With":"XMLHttpRequest"
-        },
-
-        body:formData
-
-    });
-
-    const data =
-    await response.json();
-
-    const messageBox =
-    document.getElementById("variantMessages");
+    const updateButton = document.getElementById("updateVariantBtn");
 
     messageBox.innerHTML = "";
+    updateButton.disabled = true;
 
-    if(data.success){
+    updateButton.innerText = "Updating...";
 
-        window.location.href =
-        data.redirect_url;
 
-        return;
+    const formData = new FormData(editVariantForm);
+    
+    try{
 
-    }
+        const response = await fetch(window.location.href,{
 
-    let html = "";
+            method:"POST",
 
-    if(data.message){
+            headers:{
+                "X-Requested-With":"XMLHttpRequest"
+            },
 
-        html += `
-        <div
-        style="
-        background:#f8ece8;
-        color:#7a4b42;
-        padding:14px 16px;
-        border-radius:10px;
-        margin-bottom:20px;
-        font-size:13px;
-        ">
-            ${data.message}
-        </div>
-        `;
+            body:formData
 
-    }
+        });
 
-    if(data.errors){
+        const data = await response.json();
 
-        data.errors.forEach(function(error){
+        if(data.success){
+
+            window.location.href = data.redirect_url;
+
+            return;
+
+        }
+        updateButton.disabled = false;
+
+        updateButton.innerText = "Update Variant";
+
+        let html = "";
+
+        if(data.message){
 
             html += `
-            <div
-            style="
+            <div style="
+                background:#f8ece8;
+                color:#7a4b42;
+                padding:14px 16px;
+                border-radius:10px;
+                margin-bottom:20px;
+                font-size:13px;
+            ">
+                ${data.message}
+            </div>
+            `;
+
+        }
+
+        if(data.errors){
+
+            data.errors.forEach(function(error){
+
+                html += `
+                <div style="
+                    background:#f8ece8;
+                    color:#7a4b42;
+                    padding:14px 16px;
+                    border-radius:10px;
+                    margin-bottom:20px;
+                    font-size:13px;
+                ">
+                    ${error}
+                </div>
+                `;
+
+            });
+
+        }
+
+        messageBox.innerHTML = html;
+
+    }
+
+    catch(error){
+
+    console.error(error);
+
+    updateButton.disabled = false;
+
+    updateButton.innerText = "Update Variant";
+
+    messageBox.innerHTML = `
+        <div style="
             background:#f8ece8;
             color:#7a4b42;
             padding:14px 16px;
             border-radius:10px;
             margin-bottom:20px;
             font-size:13px;
-            ">
-                ${error}
-            </div>
-            `;
+        ">
+            Something went wrong. Please try again.
+        </div>
+    `;
 
-        });
-
-    }
-
-    messageBox.innerHTML = html;
-
+}
 });
 
 </script>
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
 </body>
