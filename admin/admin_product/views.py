@@ -286,21 +286,29 @@ def edit_variant(request, variant_id):
             request.FILES.get("image3"),
         ]
 
-        images = [img for img in images if img]
+        uploaded_images = [img for img in images if img]
 
-        if images and len(images) < 3:
+        existing_image_count = variant.images.count()
+
+        total_images = existing_image_count
+
+        if total_images < 3:
 
             if is_ajax:
 
                 return JsonResponse(
                     {
                         "success": False,
-                        "message": "Minimum 3 images required",
+                        "message": "A variant must have at least 3 images.",
                     },
                     status=400,
                 )
 
-            messages.error(request, "Minimum 3 images required", extra_tags="variant")
+            messages.error(
+                request,
+                "A variant must have at least 3 images.",
+                extra_tags="variant",
+            )
 
             return render(
                 request,
@@ -311,7 +319,9 @@ def edit_variant(request, variant_id):
                     "form": form,
                 },
             )
-        
+
+        images = uploaded_images
+                
         if form.is_valid():
 
             with transaction.atomic():
