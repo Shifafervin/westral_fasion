@@ -633,18 +633,8 @@ def decrement_cart_item(request, item_id):
 
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
 
-    # if cart_item.quantity <= 1:
-    #     cart_item.delete
-
-    if cart_item.quantity <=0:
-    
-
-        total ,cart_count= get_cart_data(request.user)
-        cart_items=CartItem.objects.filter(cart_user=request.user)
-
-        cart_item += cart_count 
-
-        
+    if cart_item.quantity <= 1:
+        cart_item.delete()
 
         total, cart_count = get_cart_data(request.user)
         cart_items = CartItem.objects.filter(cart__user=request.user)
