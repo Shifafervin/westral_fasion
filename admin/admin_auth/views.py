@@ -33,7 +33,6 @@ User = get_user_model()
 @never_cache
 def admin_login(request):
 
-    # ================= ALREADY LOGGED IN =================
 
     if request.user.is_authenticated:
 
@@ -43,7 +42,6 @@ def admin_login(request):
 
         return redirect("home")
 
-    # ================= LOGIN =================
 
     if request.method == "POST":
 
@@ -58,7 +56,7 @@ def admin_login(request):
 
             return redirect("admin_login")
 
-        # ================= ADMIN CHECK =================
+    
 
         if not (user.is_staff and user.is_superuser):
 
@@ -72,7 +70,6 @@ def admin_login(request):
 
             return redirect("admin_login")
 
-        # ================= LOGIN =================
 
         login(request, user)
 
@@ -123,7 +120,6 @@ def admin_dashboard(request):
 
         labels.append(day.strftime("%a").upper())
 
-    # ================= BEST SELLING PRODUCTS =================
 
     best_selling_products = (
         OrderItem.objects.filter(
@@ -134,8 +130,6 @@ def admin_dashboard(request):
         .annotate(total_sold=Sum("quantity"))
         .order_by("-total_sold")[:10]
     )
-
-    # ================= BEST SELLING CATEGORIES =================
 
     best_selling_categories = (
         OrderItem.objects.filter(
@@ -258,7 +252,6 @@ def user_management(request):
 
     blocked_users = User.objects.filter(is_staff=False, is_blocked=True).count()
 
-    # ================= PAGINATION =================
 
     paginator = Paginator(users_list, 5)
 
@@ -373,7 +366,6 @@ def sales_report(request):
 
             sales_orders = sales_orders.filter(created_at__year=today.year)
 
-    # OUTSIDE THE IF/ELSE
     orders = sales_orders
     cancelled_orders = Order.objects.filter(order_status="Cancelled")
 
@@ -433,7 +425,6 @@ def sales_report(request):
 
     chart_values = [float(item["revenue"]) for item in chart_data]
 
-    # ================= TOTALS =================
 
     total_orders = orders.count()
 
@@ -601,7 +592,6 @@ def sales_report(request):
 
         return response
 
-    # ================= PAGINATION =================
 
     paginator = Paginator(orders, 10)
 

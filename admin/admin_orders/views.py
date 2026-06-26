@@ -116,8 +116,6 @@ def update_order_status(request, order_id):
         with transaction.atomic():
 
             order.order_status = new_status
-
-            # Update item statuses when order is delivered
             if new_status == "Delivered":
 
                 order.items.filter(
@@ -126,7 +124,6 @@ def update_order_status(request, order_id):
                     item_status="Delivered"
                 )
 
-            # Update item statuses when order is cancelled
             elif new_status == "Cancelled":
 
                 order.items.filter(

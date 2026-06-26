@@ -6,8 +6,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 from admin.admin_coupon.models import Coupon
 
-# ================= ORDER MODEL =================
-
 
 class Order(models.Model):
 
@@ -119,8 +117,6 @@ class Order(models.Model):
 
         super().save(*args, **kwargs)
 
-
-# ================= ORDER ITEM MODEL =================
 
 
 class OrderItem(models.Model):

@@ -238,7 +238,7 @@ def place_order(request):
 
         return redirect("cart")
 
-    # ================= TOTAL CALCULATION =================
+
 
     subtotal = Decimal("0")
 
@@ -268,7 +268,6 @@ def place_order(request):
 
         if applied_coupon:
 
-            # Percentage coupon
 
             if applied_coupon.discount_type == "Percentage":
 
@@ -281,13 +280,13 @@ def place_order(request):
 
                     discount = applied_coupon.maximum_discount_amount
 
-                # Fixed coupon
+                
 
             elif applied_coupon.discount_type == "Fixed":
 
                 discount = applied_coupon.discount_value
 
-                # Prevent negative total
+            
 
             if discount > subtotal:
 
@@ -408,16 +407,11 @@ def place_order(request):
                 discount_share=discount_share,
             )
 
-            # ================= REDUCE STOCK =================
-
             item.variant.stock -= item.quantity
 
             item.variant.save()
 
-        # ================= CLEAR CART =================
-
         cart_items.delete()
-        # ================= UPDATE COUPON USAGE =================
 
         if applied_coupon:
 
@@ -425,8 +419,6 @@ def place_order(request):
 
             applied_coupon.save()
             request.session.pop("coupon_id", None)
-
-    # ================= SUCCESS =================
 
     messages.success(request, "Order placed successfully")
 
@@ -827,7 +819,7 @@ def cancel_order(request, order_id):
 
         with transaction.atomic():
 
-            # RESTORE STOCK
+    
 
             for item in order.items.all():
 
@@ -919,7 +911,6 @@ def cancel_order_item(request, item_id):
 
         return redirect("my_orders")
 
-    # ALREADY CANCELLED
 
     if order_item.item_status == "Cancelled":
 

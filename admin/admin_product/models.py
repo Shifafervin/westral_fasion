@@ -1,16 +1,11 @@
 from django.db import models
-
 from django.core.exceptions import ValidationError
-
 from django.utils.text import slugify
-
 from admin.admin_category.models import Category
-
 import re
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 
-# ================= PRODUCT MODEL =================
 
 
 class Product(models.Model):
@@ -201,9 +196,6 @@ class Product(models.Model):
         return self.product_name
 
 
-# ================= VARIANT MODEL =================
-
-
 class Variant(models.Model):
 
     product = models.ForeignKey(
@@ -282,7 +274,6 @@ class Variant(models.Model):
 
         return f"{self.product.product_name} - {self.size}"
 
-# ================= PRODUCT IMAGE MODEL =================
 
 
 class ProductImage(models.Model):

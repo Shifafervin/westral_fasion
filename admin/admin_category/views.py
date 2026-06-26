@@ -16,27 +16,19 @@ from django.views.decorators.http import require_POST
 @admin_required
 def admincategory_view(request):
 
-    # ================= SEARCH =================
-
     search = request.GET.get("search", "").strip()
 
-    # ================= STATUS FILTER =================
-
     status = request.GET.get("status", "")
-
-    # ================= QUERYSET =================
 
     categories = Category.objects.filter(is_deleted=False).annotate(
         product_count=Count("products")
     )
 
-    # ================= SEARCH FILTER =================
 
     if search:
 
         categories = categories.filter(category_name__icontains=search)
 
-    # ================= STATUS FILTER =================
 
     if status == "active":
 
@@ -46,11 +38,9 @@ def admincategory_view(request):
 
         categories = categories.filter(is_active=False)
 
-    # ================= ORDER =================
 
     categories = categories.order_by("-id")
 
-    # ================= STATS =================
 
     total_categories = Category.objects.filter(is_deleted=False).count()
 
@@ -62,7 +52,6 @@ def admincategory_view(request):
         is_deleted=False, is_active=False
     ).count()
 
-    # ================= PAGINATION =================
 
     paginator = Paginator(categories, 5)
 
@@ -70,7 +59,6 @@ def admincategory_view(request):
 
     page_obj = paginator.get_page(page_number)
 
-    # ================= CONTEXT =================
 
     context = {
         "categories": page_obj,

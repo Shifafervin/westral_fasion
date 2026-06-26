@@ -45,8 +45,6 @@ def shop(request):
         .order_by("-id")
     )
 
-    # ================= SEARCH =================
-
     if search:
 
         products = products.filter(
@@ -65,7 +63,6 @@ def shop(request):
 
         ).distinct()
 
-    # ================= CATEGORY FILTER =================
 
     if category_id:
 
@@ -79,7 +76,6 @@ def shop(request):
 
         wishlist = Wishlist.objects.filter(user=request.user).first()
 
-    # ================= PRODUCT LOOP =================
 
     for product in products:
 
@@ -91,8 +87,6 @@ def shop(request):
 
         if not default_variant:
             continue
-
-        # ================= PRICE FILTER =================
 
         if min_price:
 
@@ -114,15 +108,11 @@ def shop(request):
             except ValueError:
                 pass
 
-        # ================= PRIMARY IMAGE =================
-
         primary_image = default_variant.images.filter(is_primary=True).first()
 
         if not primary_image:
 
             primary_image = default_variant.images.first()
-
-        # ================= WISHLIST =================
 
         in_wishlist = False
 
@@ -144,8 +134,6 @@ def shop(request):
             is_visible=True
         ).count()
 
-        # ================= APPEND DATA =================
-
         product_data.append(
             {
                 "product": product,
@@ -158,8 +146,6 @@ def shop(request):
                 "review_count": review_count,
             }
         )
-
-    # ================= SORTING =================
 
     if sort == "a-z":
 
@@ -185,7 +171,6 @@ def shop(request):
 
         product_data.sort(key=lambda x: x["product"].created_at)
 
-    # ================= PAGINATION =================
 
     paginator = Paginator(product_data, 8)
 
@@ -193,13 +178,12 @@ def shop(request):
 
     products = paginator.get_page(page_number)
 
-    # ================= CATEGORIES =================
+
 
     categories = Category.objects.filter(is_deleted=False, is_active=True).order_by(
         "category_name"
     )
 
-    # ================= WISHLIST COUNT =================
 
     wishlist_count = 0
 
@@ -649,9 +633,18 @@ def decrement_cart_item(request, item_id):
 
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
 
-    if cart_item.quantity <= 1:
+    # if cart_item.quantity <= 1:
+    #     cart_item.delete
 
-        cart_item.delete()
+    if cart_item.quantity <=0:
+    
+
+        total ,cart_count= get_cart_data(request.user)
+        cart_items=CartItem.objects.filter(cart_user=request.user)
+
+        cart_item += cart_count 
+
+        
 
         total, cart_count = get_cart_data(request.user)
         cart_items = CartItem.objects.filter(cart__user=request.user)
@@ -859,11 +852,9 @@ def add_review(request, product_id):
         existing_review.comment = comment
         existing_review.is_deleted = False
         existing_review.save()
-
-        # Delete old review images
         existing_review.images.all().delete()
 
-        # Save new images
+    
         images = request.FILES.getlist("review_images")
 
         for image in images[:3]:
