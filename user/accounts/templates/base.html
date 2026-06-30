@@ -779,8 +779,10 @@
         <div class="nav-links">
             <a href="{% url "home" %}">Home</a>
             <a href="{% url "shop" %}">Shop</a>
-            <a href="#">About</a>
+            <a href="{% url "about" %}">About</a>
+            <a href="{% url "contact" %}">Contact</a>
         </div>
+
 
         <!-- HAMBURGER (mobile) -->
         <button class="nav-hamburger" id="navHamburger" aria-label="Toggle navigation">
@@ -994,8 +996,10 @@ class="login-btn"
 <div class="mobile-nav-drawer" id="mobileNavDrawer">
     <a href="{% url 'home' %}">Home</a>
     <a href="{% url 'shop' %}">Shop</a>
-    <a href="#">About</a>
+    <a href="{% url 'about' %}">About</a>
+    <a href="{% url 'contact' %}">Contact</a>
 </div>
+
 
     <!-- PAGE CONTENT -->
     <div class="main-content">
@@ -1315,30 +1319,248 @@ document.addEventListener(
 
 </script>
 
+<!-- ===== FOOTER ===== -->
+<style>
+.wf-footer{
+    background:#1a0f0a;
+    color:#c8b9ae;
+    padding:60px 40px 0;
+    margin-top:60px;
+    font-size:13px;
+}
+.wf-footer-grid{
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr 1.4fr;
+    gap:40px;
+    padding-bottom:40px;
+    border-bottom:1px solid #2e1e16;
+}
+.wf-footer-brand h2{
+    color:#fff;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:1px;
+    margin-bottom:12px;
+}
+.wf-footer-brand p{
+    line-height:1.7;
+    color:#9e8e84;
+    max-width:240px;
+    font-size:12px;
+}
+.wf-footer-brand .wf-socials{
+    display:flex;
+    gap:12px;
+    margin-top:20px;
+}
+.wf-socials a{
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    background:#2a1810;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#c8b9ae;
+    text-decoration:none;
+    font-size:14px;
+    transition:.25s;
+    border:1px solid #3a2418;
+}
+.wf-socials a:hover{
+    background:#6B4F3B;
+    color:#fff;
+    border-color:#6B4F3B;
+}
+.wf-footer-col h4{
+    color:#fff;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.5px;
+    margin-bottom:16px;
+    text-transform:uppercase;
+}
+.wf-footer-col ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+.wf-footer-col ul li a{
+    color:#9e8e84;
+    text-decoration:none;
+    font-size:12px;
+    transition:.2s;
+}
+.wf-footer-col ul li a:hover{
+    color:#e8d5c4;
+    padding-left:4px;
+}
+.wf-newsletter-form{
+    display:flex;
+    gap:8px;
+    margin-top:14px;
+}
+.wf-newsletter-form input{
+    flex:1;
+    background:#2a1810;
+    border:1px solid #3a2418;
+    border-radius:8px;
+    padding:10px 14px;
+    color:#fff;
+    font-size:12px;
+    outline:none;
+    min-width:0;
+}
+.wf-newsletter-form input::placeholder{color:#5a4038;}
+.wf-newsletter-form button{
+    background:#6B4F3B;
+    border:none;
+    border-radius:8px;
+    color:#fff;
+    padding:10px 16px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:.2s;
+}
+.wf-newsletter-form button:hover{background:#8a6652;}
+.wf-footer-bottom{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:20px 0;
+    gap:12px;
+    flex-wrap:wrap;
+}
+.wf-footer-bottom p{
+    font-size:12px;
+    color:#5a4038;
+}
+.wf-footer-bottom-links{
+    display:flex;
+    gap:20px;
+}
+.wf-footer-bottom-links a{
+    font-size:12px;
+    color:#5a4038;
+    text-decoration:none;
+    transition:.2s;
+}
+.wf-footer-bottom-links a:hover{color:#c8b9ae;}
+@media(max-width:900px){
+    .wf-footer-grid{
+        grid-template-columns:1fr 1fr;
+        gap:28px;
+    }
+    .wf-footer{
+        padding:40px 20px 0;
+    }
+}
+@media(max-width:540px){
+    .wf-footer-grid{
+        grid-template-columns:1fr;
+    }
+    .wf-footer-bottom{
+        flex-direction:column;
+        text-align:center;
+    }
+}
+</style>
+
+<footer class="wf-footer">
+    <div class="wf-footer-grid">
+
+        <!-- Brand -->
+        <div class="wf-footer-brand">
+            <h2>WESTRAL FASHION</h2>
+            <p>Your premium fashion destination offering carefully curated clothing, footwear and accessories for modern lifestyles across India.</p>
+            <div class="wf-socials">
+                <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+        </div>
+
+        <!-- Company -->
+        <div class="wf-footer-col">
+            <h4>Company</h4>
+            <ul>
+                <li><a href="{% url 'about' %}">About Us</a></li>
+                <li><a href="{% url 'contact' %}">Contact Us</a></li>
+                <li><a href="{% url 'about' %}#faq">FAQs</a></li>
+                <li><a href="{% url 'about' %}#privacy">Privacy Policy</a></li>
+                <li><a href="{% url 'about' %}#terms">Terms &amp; Conditions</a></li>
+            </ul>
+        </div>
+
+        <!-- Shop -->
+        <div class="wf-footer-col">
+            <h4>Shop</h4>
+            <ul>
+                <li><a href="{% url 'shop' %}">All Products</a></li>
+                <li><a href="{% url 'shop' %}?search=men">Men</a></li>
+                <li><a href="{% url 'shop' %}?search=women">Women</a></li>
+                <li><a href="{% url 'shop' %}?search=accessories">Accessories</a></li>
+            </ul>
+        </div>
+
+        <!-- Help -->
+        <div class="wf-footer-col">
+            <h4>Help</h4>
+            <ul>
+                {% if request.user.is_authenticated %}
+                <li><a href="{% url 'my_orders' %}">Track Order</a></li>
+                <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                <li><a href="{% url 'wallet_page' %}">Wallet</a></li>
+                {% endif %}
+                <li><a href="{% url 'contact' %}">Support</a></li>
+                <li><a href="mailto:westralfashion@gmail.com">Email Us</a></li>
+            </ul>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="wf-footer-col">
+            <h4>Stay Updated</h4>
+            <p style="color:#9e8e84;font-size:12px;line-height:1.6;">Get exclusive deals and style updates in your inbox.</p>
+            <form class="wf-newsletter-form" onsubmit="wfNewsletterSubmit(event)">
+                <input type="email" id="wf-newsletter-email" placeholder="Your email address" required>
+                <button type="submit">Subscribe</button>
+            </form>
+            <p style="margin-top:14px;font-size:11px;color:#5a4038;">
+                <i class="fa-solid fa-envelope" style="margin-right:5px;"></i>westralfashion@gmail.com
+            </p>
+            <p style="margin-top:6px;font-size:11px;color:#5a4038;">
+                <i class="fa-solid fa-location-dot" style="margin-right:5px;"></i>Kozhikode, Kerala, India
+            </p>
+        </div>
+
+    </div>
+
+    <div class="wf-footer-bottom">
+        <p>&copy; 2026 Westral Fashion. All Rights Reserved.</p>
+        <div class="wf-footer-bottom-links">
+            <a href="{% url 'about' %}#privacy">Privacy Policy</a>
+            <a href="{% url 'about' %}#terms">Terms &amp; Conditions</a>
+            <a href="{% url 'about' %}#refund">Refund Policy</a>
+            <a href="{% url 'about' %}#shipping">Shipping Policy</a>
+        </div>
+    </div>
+</footer>
+
 <script>
-// ===== USER NAVBAR MOBILE TOGGLE =====
-(function(){
-    var hamburger = document.getElementById('navHamburger');
-    var drawer    = document.getElementById('mobileNavDrawer');
-    if(!hamburger || !drawer) return;
-    hamburger.addEventListener('click', function(){
-        hamburger.classList.toggle('open');
-        drawer.classList.toggle('open');
-    });
-    // Close drawer when a link inside is clicked
-    drawer.querySelectorAll('a').forEach(function(link){
-        link.addEventListener('click', function(){
-            hamburger.classList.remove('open');
-            drawer.classList.remove('open');
-        });
-    });
-    window.addEventListener('resize', function(){
-        if(window.innerWidth > 900){
-            hamburger.classList.remove('open');
-            drawer.classList.remove('open');
-        }
-    });
-})();
+function wfNewsletterSubmit(e){
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    btn.textContent = 'Subscribed!';
+    btn.style.background = '#059669';
+    setTimeout(()=>{ btn.textContent='Subscribe'; btn.style.background=''; e.target.reset(); }, 3000);
+}
 </script>
+
 </body>
 </html>

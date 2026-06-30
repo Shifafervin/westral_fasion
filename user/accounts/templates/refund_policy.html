@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Refund Policy — WESTRAL FASHION{% endblock %}
+
+{% block extra_css %}
+<style>
+.policy-hero{
+    background:linear-gradient(135deg,#1a0f0a 0%,#3d2011 60%,#6B4F3B 100%);
+    color:#fff;text-align:center;padding:70px 40px;
+    margin:-30px -40px 0;
+}
+.policy-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:12px;}
+.policy-hero p{font-size:15px;color:rgba(255,255,255,.75);max-width:500px;margin:0 auto;line-height:1.7;}
+
+.policy-wrap{
+    max-width:800px;margin:0 auto;
+    padding:60px 20px;
+}
+.policy-card{
+    background:#fff;border-radius:24px;padding:40px;
+    border:1px solid #f0e8e0;box-shadow:0 10px 40px rgba(107,79,59,.03);
+}
+.policy-card h2{font-size:18px;font-weight:700;color:#1a0f0a;margin:28px 0 12px;}
+.policy-card h2:first-child{margin-top:0;}
+.policy-card p{font-size:14px;color:#555;line-height:1.8;margin-bottom:16px;}
+.policy-card ul{padding-left:20px;color:#555;font-size:14px;line-height:1.8;margin-bottom:16px;}
+.policy-card ul li{margin-bottom:8px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="policy-hero">
+    <h1>Refund &amp; Return Policy</h1>
+    <p>Everything you need to know about returning items and getting refunds.</p>
+</div>
+
+<div class="policy-wrap">
+    <div class="policy-card">
+        <h2>Return Window</h2>
+        <p>We want you to love your purchases. If you are not completely satisfied, you may request a return within <strong>7 days</strong> of delivery. Return requests raised after 7 days will not be accepted.</p>
+
+        <h2>Conditions for Returns</h2>
+        <p>To be eligible for a return, your item must meet the following criteria:</p>
+        <ul>
+            <li>The product must be unused, unwashed, and in the same condition that you received it.</li>
+            <li>It must be in its original packaging with all brand tags and labels intact.</li>
+            <li>Items purchased during clearance sales or special bundle promotions may not be eligible for returns (will be specified on product detail page).</li>
+        </ul>
+
+        <h2>How Refund is Processed</h2>
+        <p>Once your returned product is collected by our courier partner and passes inspection at our warehouse (typically 3-5 business days), your refund will be processed:</p>
+        <ul>
+            <li><strong>Wallet Refund:</strong> The refund amount will be credited directly to your Westral Wallet balance.</li>
+            <li><strong>Wallet Use:</strong> Wallet credits can be used instantly to buy any products across the store.</li>
+            <li><strong>COD Orders:</strong> Refunds for Cash on Delivery orders will also be processed exclusively as Wallet credits.</li>
+        </ul>
+
+        <h2>Contact Us</h2>
+        <p>If you have any questions or issues with your returns, please reach out to our team at <strong>westralfashion@gmail.com</strong>.</p>
+    </div>
+</div>
+{% endblock %}

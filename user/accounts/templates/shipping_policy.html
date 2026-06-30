@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shipping Policy — WESTRAL FASHION{% endblock %}
+
+{% block extra_css %}
+<style>
+.policy-hero{
+    background:linear-gradient(135deg,#1a0f0a 0%,#3d2011 60%,#6B4F3B 100%);
+    color:#fff;text-align:center;padding:70px 40px;
+    margin:-30px -40px 0;
+}
+.policy-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:12px;}
+.policy-hero p{font-size:15px;color:rgba(255,255,255,.75);max-width:500px;margin:0 auto;line-height:1.7;}
+
+.policy-wrap{
+    max-width:800px;margin:0 auto;
+    padding:60px 20px;
+}
+.policy-card{
+    background:#fff;border-radius:24px;padding:40px;
+    border:1px solid #f0e8e0;box-shadow:0 10px 40px rgba(107,79,59,.03);
+}
+.policy-card h2{font-size:18px;font-weight:700;color:#1a0f0a;margin:28px 0 12px;}
+.policy-card h2:first-child{margin-top:0;}
+.policy-card p{font-size:14px;color:#555;line-height:1.8;margin-bottom:16px;}
+.policy-card ul{padding-left:20px;color:#555;font-size:14px;line-height:1.8;margin-bottom:16px;}
+.policy-card ul li{margin-bottom:8px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="policy-hero">
+    <h1>Shipping Policy</h1>
+    <p>Details about delivery coverage, processing times, and shipping fees.</p>
+</div>
+
+<div class="policy-wrap">
+    <div class="policy-card">
+        <h2>Coverage</h2>
+        <p>Westral Fashion delivers packages across all major pin codes and regions in India. We partner with reliable shipping companies to ensure your fashion arrives safely and quickly.</p>
+
+        <h2>Processing &amp; Dispatch</h2>
+        <p>Orders are processed and dispatched within <strong>1–2 business days</strong> after payment confirmation. Orders placed on Sunday or national holidays will be shipped on the next business day.</p>
+
+        <h2>Delivery Timelines</h2>
+        <ul>
+            <li><strong>Standard Shipping:</strong> Typically <strong>3–7 business days</strong> depending on your delivery location.</li>
+            <li>Metro cities usually receive packages within 3-4 days, while remote locations may take up to 7 business days.</li>
+        </ul>
+
+        <h2>Shipping Fees</h2>
+        <p>Shipping fees are calculated at checkout based on delivery location and order weight. We offer free shipping on orders above a specified threshold, which is highlighted during promotions on our homepage.</p>
+
+        <h2>Order Tracking</h2>
+        <p>Once your order is shipped, we will send you a tracking link via email. You can also view details and track your delivery in your <a href="{% url 'my_orders' %}" style="color:#6B4F3B;font-weight:600;">My Orders</a> page.</p>
+    </div>
+</div>
+{% endblock %}

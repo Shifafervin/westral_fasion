@@ -25,6 +25,7 @@ from django.urls import reverse
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+from .models import ContactMessage
 
 User = get_user_model()
 
@@ -785,3 +786,103 @@ def signup_resend_otp(request):
 
 def custom_404(request, exception):
     return render(request, "404.html", status=404)
+
+
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def about_view(request):
+    return render(request, "about.html")
+
+
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def contact_view(request):
+    if request.method == "POST":
+        name    = request.POST.get("name", "").strip()
+        email   = request.POST.get("email", "").strip()
+        subject = request.POST.get("subject", "").strip()
+        message = request.POST.get("message", "").strip()
+
+        errors = {}
+        if not name:
+            errors["name"] = "Name is required."
+        if not email:
+            errors["email"] = "Email is required."
+        else:
+            try:
+                validate_email(email)
+            except ValidationError:
+                errors["email"] = "Enter a valid email address."
+        if not subject:
+            errors["subject"] = "Subject is required."
+        if not message:
+            errors["message"] = "Message is required."
+
+        if errors:
+            return render(request, "contact.html", {
+                "errors": errors,
+                "name": name,
+                "email": email,
+                "subject": subject,
+                "message": message,
+            })
+
+        # Save to database
+        ContactMessage.objects.create(
+            name=name,
+            email=email,
+            subject=subject,
+            message=message,
+        )
+
+        # Email notification to store
+        try:
+            send_mail(
+                subject=f"[Contact] {subject} — from {name}",
+                message=(
+                    f"Name    : {name}\n"
+                    f"Email   : {email}\n"
+                    f"Subject : {subject}\n\n"
+                    f"Message :\n{message}"
+                ),
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=["westralfashion@gmail.com"],
+                fail_silently=True,
+            )
+        except Exception:
+            pass
+
+        messages.success(
+            request,
+            "Thank you! Your message has been sent successfully. Our support team will contact you soon.",
+            extra_tags="toast",
+        )
+        return redirect("contact")
+
+    return render(request, "contact.html")
+
+
+
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def privacy_view(request):
+    return render(request, "privacy_policy.html")
+
+
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def terms_view(request):
+    return render(request, "terms_conditions.html")
+
+
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def refund_view(request):
+    return render(request, "refund_policy.html")
+
+
+@never_cache
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def shipping_view(request):
+    return render(request, "shipping_policy.html")
+

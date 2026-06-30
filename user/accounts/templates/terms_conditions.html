@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Terms & Conditions — WESTRAL FASHION{% endblock %}
+
+{% block extra_css %}
+<style>
+.policy-hero{
+    background:linear-gradient(135deg,#1a0f0a 0%,#3d2011 60%,#6B4F3B 100%);
+    color:#fff;text-align:center;padding:70px 40px;
+    margin:-30px -40px 0;
+}
+.policy-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:12px;}
+.policy-hero p{font-size:15px;color:rgba(255,255,255,.75);max-width:500px;margin:0 auto;line-height:1.7;}
+
+.policy-wrap{
+    max-width:800px;margin:0 auto;
+    padding:60px 20px;
+}
+.policy-card{
+    background:#fff;border-radius:24px;padding:40px;
+    border:1px solid #f0e8e0;box-shadow:0 10px 40px rgba(107,79,59,.03);
+}
+.policy-card h2{font-size:18px;font-weight:700;color:#1a0f0a;margin:28px 0 12px;}
+.policy-card h2:first-child{margin-top:0;}
+.policy-card p{font-size:14px;color:#555;line-height:1.8;margin-bottom:16px;}
+.policy-card ul{padding-left:20px;color:#555;font-size:14px;line-height:1.8;margin-bottom:16px;}
+.policy-card ul li{margin-bottom:8px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="policy-hero">
+    <h1>Terms &amp; Conditions</h1>
+    <p>Please read these terms carefully before using Westral Fashion.</p>
+</div>
+
+<div class="policy-wrap">
+    <div class="policy-card">
+        <h2>Agreement to Terms</h2>
+        <p>By accessing or using the Westral Fashion website, you agree to be bound by these Terms and Conditions and our Privacy Policy. If you do not agree, please do not use our services.</p>
+
+        <h2>Account Registration</h2>
+        <p>To purchase products and access certain features like the Wallet and Wishlist, you must register for an account. You are responsible for keeping your credentials confidential and for all activities that occur under your account.</p>
+
+        <h2>Order Acceptance and Pricing</h2>
+        <p>All orders are subject to acceptance by us and product availability. We make every effort to display correct prices, descriptions, and stock statuses, but errors may occur. If we discover an error, we reserve the right to cancel the order and provide a full refund.</p>
+
+        <h2>Wallet and Referrals</h2>
+        <p>Credits and promotional refunds are stored securely in your Westral Wallet. Wallet balances are non-transferable and cannot be exchanged for cash. Referral rewards are subject to anti-fraud checks and we reserve the right to revoke referral credits in cases of system manipulation.</p>
+
+        <h2>Limitation of Liability</h2>
+        <p>Westral Fashion will not be liable for any indirect, incidental, or consequential damages resulting from the use of our products, site service, or delivery delays caused by courier partners.</p>
+    </div>
+</div>
+{% endblock %}

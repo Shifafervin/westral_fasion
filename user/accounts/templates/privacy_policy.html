@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Privacy Policy — WESTRAL FASHION{% endblock %}
+
+{% block extra_css %}
+<style>
+.policy-hero{
+    background:linear-gradient(135deg,#1a0f0a 0%,#3d2011 60%,#6B4F3B 100%);
+    color:#fff;text-align:center;padding:70px 40px;
+    margin:-30px -40px 0;
+}
+.policy-hero h1{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:12px;}
+.policy-hero p{font-size:15px;color:rgba(255,255,255,.75);max-width:500px;margin:0 auto;line-height:1.7;}
+
+.policy-wrap{
+    max-width:800px;margin:0 auto;
+    padding:60px 20px;
+}
+.policy-card{
+    background:#fff;border-radius:24px;padding:40px;
+    border:1px solid #f0e8e0;box-shadow:0 10px 40px rgba(107,79,59,.03);
+}
+.policy-card h2{font-size:18px;font-weight:700;color:#1a0f0a;margin:28px 0 12px;}
+.policy-card h2:first-child{margin-top:0;}
+.policy-card p{font-size:14px;color:#555;line-height:1.8;margin-bottom:16px;}
+.policy-card ul{padding-left:20px;color:#555;font-size:14px;line-height:1.8;margin-bottom:16px;}
+.policy-card ul li{margin-bottom:8px;}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="policy-hero">
+    <h1>Privacy Policy</h1>
+    <p>How we protect, collect, and handle your data at Westral Fashion.</p>
+</div>
+
+<div class="policy-wrap">
+    <div class="policy-card">
+        <h2>Introduction</h2>
+        <p>At Westral Fashion, protecting your privacy and security is one of our highest priorities. This Privacy Policy describes how we collect, use, and share your personal information when you visit or make a purchase from our site.</p>
+
+        <h2>What Information We Collect</h2>
+        <p>When you register or shop on our website, we collect personal information that you provide to us, including:</p>
+        <ul>
+            <li><strong>Account Details:</strong> Your name, username, email address, password, and contact details.</li>
+            <li><strong>Delivery Details:</strong> Your shipping and billing addresses to fulfill your orders.</li>
+            <li><strong>Device Details:</strong> Information about your browser, IP address, and cookie identifiers to enhance your user experience.</li>
+        </ul>
+
+        <h2>How We Use Your Information</h2>
+        <p>We use the collected information in the following ways:</p>
+        <ul>
+            <li>To process your orders, payments, and verify deliveries.</li>
+            <li>To communicate order status, customer support questions, or promotional deals.</li>
+            <li>To prevent fraudulent transactions and keep our platform secure.</li>
+            <li>To analyze and optimize site speed, search capabilities, and product offerings.</li>
+        </ul>
+
+        <h2>Data Security</h2>
+        <p>We implement a variety of security measures to maintain the safety of your personal information. Payment processing is handled by Razorpay through secure, industry-standard gateways, and we do not store your credit card or financial credentials on our servers.</p>
+
+        <h2>Your Rights</h2>
+        <p>You have the right to access the personal information we hold about you, request corrections, or request deletion of your account. You can manage these details in your Profile section or contact our support team at <strong>westralfashion@gmail.com</strong>.</p>
+    </div>
+</div>
+{% endblock %}
